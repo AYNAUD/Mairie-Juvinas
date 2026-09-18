@@ -60,7 +60,9 @@ const CAS = [
   ['facture d eau', '/cadre-de-vie/eau.html'],
   ['plan local d\'urbanisme', '/cadre-de-vie/urbanisme.html'],
   ['rencontrer le maire', '/demarches/rendez-vous-elu.html'],
-  ['signaler un lampadaire en panne', '/demarches/rendez-vous-elu.html']
+  ['signaler un lampadaire en panne', '/demarches/rendez-vous-elu.html'],
+  ['commerçants de juvinas', '/vie-locale/professionnels.html'],
+  ['où sont les commerces', '/vie-locale/carte-acteurs-economiques.html']
 ];
 
 const REPONSES = [

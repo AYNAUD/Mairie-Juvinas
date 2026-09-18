@@ -24,6 +24,7 @@
     "type": "editorial",
     "enfants": [
       { "libelle": "Actualités", "url": "/vie-locale/actualites.html" },
+      { "libelle": "Acteurs économiques", "url": "/vie-locale/professionnels.html" },
       { "libelle": "Consultations citoyennes", "url": "/vie-locale/consultations.html" },
       { "libelle": "S'abonner aux actualités", "url": "/vie-locale/abonnement.html" }
     ],

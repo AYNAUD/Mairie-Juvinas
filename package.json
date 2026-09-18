@@ -8,6 +8,8 @@
     "build": "node src/build.mjs",
     "dev": "node src/build.mjs && node tools/serve.mjs",
     "check": "node src/build.mjs && node tools/check.mjs && node tools/test-recherche.mjs",
+    "entreprises": "node tools/fetch-entreprises.mjs",
+    "carte": "node tools/fetch-carte-fond.mjs",
     "test": "node tools/test-recherche.mjs"
   },
   "dependencies": {

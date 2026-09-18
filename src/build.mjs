@@ -166,6 +166,8 @@ const pagesGenerees = [
   { titre: 'Conseils municipaux', resume: 'Les procès-verbaux des séances du conseil municipal.', url: '/mairie/conseils-municipaux.html', categorie: 'La mairie', mots: ['conseil municipal', 'procès verbal', 'pv', 'délibération', 'séance', 'compte rendu'], poids: 2 },
   { titre: 'Actualités', resume: 'Toutes les actualités, les manifestations et les rendez-vous réguliers de la commune.', url: '/vie-locale/actualites.html', categorie: 'Vie locale', mots: ['actualités', 'news', 'informations', 'agenda', 'événement', 'manifestation', 'fête', 'calendrier'], poids: 1.5 },
   { titre: 'Consultations citoyennes', resume: `Les consultations citoyennes en cours et passées à ${site.commune.nom}.`, url: '/vie-locale/consultations.html', categorie: 'Vie locale', mots: ['consultation', 'sondage', 'avis', 'vote', 'participation citoyenne'], poids: 1.5 },
+  { titre: 'Acteurs économiques', resume: `Les professionnels installés à ${site.commune.nom}.`, url: '/vie-locale/professionnels.html', categorie: 'Vie locale', mots: ['commerce', 'artisan', 'professionnel', 'entreprise', 'auto-entrepreneur', 'association', 'sirene'], expressions: ['où manger', 'restaurant', `commerçants de ${site.commune.nom.toLowerCase()}`], poids: 1.5 },
+  { titre: 'Cartographie des acteurs économiques', resume: `Carte de localisation des commerces, artisans et associations de ${site.commune.nom}.`, url: '/vie-locale/carte-acteurs-economiques.html', categorie: 'Vie locale', mots: ['carte', 'cartographie', 'localisation', 'plan', 'où sont les commerces'], poids: 1 },
   { titre: 'Plan du site', resume: 'Toutes les pages du site.', url: '/plan-du-site.html', categorie: 'Informations', mots: ['plan du site', 'sommaire', 'arborescence'], poids: 0.5 },
   { titre: "S'abonner aux actualités", resume: 'Recevoir par courriel les actualités de la commune, avec désabonnement en un clic.', url: '/vie-locale/abonnement.html', categorie: 'Vie locale', mots: ['abonnement', 'newsletter', 'courriel', 'inscription', 'désabonnement', 'alerte email'], poids: 1.5 }
 ];
@@ -198,6 +200,8 @@ for (const a of actualitesToutes) ecrire(`/vie-locale/actualites/${a.id}.html`, 
 ecrire('/vie-locale/consultations.html', V.listeConsultations(ctx));
 for (const c of consultations) ecrire(`/vie-locale/consultations/${c.id}.html`, V.pageConsultation(ctx, c));
 ecrire('/vie-locale/abonnement.html', V.pageAbonnement(ctx));
+ecrire('/vie-locale/professionnels.html', V.pageProfessionnels(ctx));
+ecrire('/vie-locale/carte-acteurs-economiques.html', V.pageCarteActeurs(ctx));
 
 ecrire('/mairie/contact.html', V.pageContact(ctx));
 ecrire('/mairie/elus.html', V.pageElus(ctx));
@@ -214,6 +218,11 @@ for (const rub of nav) {
     if (c.url === '/mairie/conseils-municipaux.html') {
       entree.compteur = nbSeancesConseil;
       entree.compteurTitre = `${nbSeancesConseil} séance${nbSeancesConseil > 1 ? 's' : ''} enregistrée${nbSeancesConseil > 1 ? 's' : ''}`;
+    }
+    if (c.url === '/vie-locale/professionnels.html' && entreprises.entreprises.length) {
+      const n = entreprises.entreprises.length;
+      entree.compteur = n;
+      entree.compteurTitre = `${n} acteur${n > 1 ? 's' : ''} économique${n > 1 ? 's' : ''} recensé${n > 1 ? 's' : ''} (répertoire Sirene)`;
     }
     return entree;
   });

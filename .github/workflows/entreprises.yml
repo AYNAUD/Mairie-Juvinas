@@ -1,0 +1,48 @@
+name: Mettre à jour l'annuaire des entreprises (Sirene)
+
+# Relance quotidiennement tools/fetch-entreprises.mjs et committe
+# content/entreprises.json s'il a changé. À la différence du dépôt Lecques
+# (dont ce fichier est le modèle), Juvinas n'a pas encore de déploiement
+# automatique : ce commit met seulement à jour la source de vérité du
+# dépôt, à publier au prochain "npm run build" quand le site sera en ligne.
+#
+# L'horaire cron de GitHub Actions est toujours en UTC et ne suit pas
+# l'heure d'été/hiver française : 23h UTC correspond à minuit à Paris en
+# hiver, 1h du matin en été. Sans importance pour un annuaire d'entreprises
+# qui ne change pas d'une heure à l'autre.
+
+on:
+  schedule:
+    - cron: '0 23 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  maj-entreprises:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Récupérer les données Sirene
+        run: node tools/fetch-entreprises.mjs
+
+      - name: Committer et pousser si le fichier a changé
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet content/entreprises.json; then
+            echo "Aucun changement dans content/entreprises.json."
+            exit 0
+          fi
+          git add content/entreprises.json
+          git commit -m "Met à jour l'annuaire des entreprises (Sirene) — automatique"
+          git pull --rebase origin main
+          git push

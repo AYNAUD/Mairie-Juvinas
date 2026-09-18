@@ -845,6 +845,270 @@ export function pageConsultation(ctx, c) {
   });
 }
 
+/* --------------------------------------------------------------- Annuaires */
+
+function ligneContact(c) {
+  const bits = [];
+  if (c.adresse) bits.push(`<li>${icone('lieu', 'icone--mini')}<span>${esc(c.adresse)}</span></li>`);
+  if (c.telephone) bits.push(`<li>${icone('telephone', 'icone--mini')}<a href="tel:${esc(c.telephone.replace(/[^0-9+]/g, ''))}">${esc(c.telephone)}</a></li>`);
+  if (c.email) bits.push(`<li>${icone('courriel', 'icone--mini')}<a href="mailto:${esc(c.email)}">${esc(c.email)}</a></li>`);
+  if (c.site) bits.push(`<li>${icone('externe', 'icone--mini')}${lien(c.site, esc(c.site.replace(/^https?:\/\//, '').replace(/\/$/, '')))}</li>`);
+  if (c.horaires) bits.push(`<li>${icone('horloge', 'icone--mini')}<span>${esc(c.horaires)}</span></li>`);
+  return bits.length ? `<ul class="contact-liste">${bits.join('')}</ul>` : '';
+}
+
+// Nom des voies principales, seulement là où la carte n'est pas trop dense
+// (aucun marqueur ni aucune autre étiquette à proximité) : la place manque
+// vite sur ~700 unités avec une centaine de points, mieux vaut une carte
+// lisible avec quelques noms que du texte qui se chevauche partout. Pour
+// chaque voie nommée, on essaie ses plus longs segments d'abord (plus de
+// place pour poser le texte), on garde le premier qui ne touche ni un
+// marqueur ni une étiquette déjà posée, et on renonce sinon — la voie reste
+// visible en trait, simplement sans son nom.
+// Une voie « Route de X » indique déjà une direction, mais sous une forme
+// administrative — « Vers X » se lit plus vite sur une carte. Les voies à
+// deux extrémités nommées (« Route de X à Y ») et les rues sans destination
+// restent inchangées : il n'y a pas de direction unique à afficher pour
+// elles sans risquer d'induire en erreur.
+function libelleDirection(nom) {
+  const m = nom.match(/^Route de (.+)$/);
+  if (m && !nom.includes(' à ')) return `Vers ${m[1]}`;
+  return nom;
+}
+
+function etiquettesVoies(routes, proj, marqueursXY, fenetre) {
+  const parNom = new Map();
+  for (const r of routes) {
+    if (!r.nom) continue;
+    if (!parNom.has(r.nom)) parNom.set(r.nom, []);
+    parNom.get(r.nom).push(r);
+  }
+
+  const RAYON_MARQUEUR = 13; // rayon d'exclusion autour de chaque point de la carte
+  const RAYON_ETIQUETTE = 40; // distance minimale entre deux étiquettes
+  const posees = [];
+
+  const rendues = [];
+  for (const [nom, groupe] of parNom) {
+    const candidats = [];
+    for (const route of groupe) {
+      const pts = route.points.map(proj);
+      for (let i = 0; i < pts.length - 1; i++) {
+        const [x1, y1] = pts[i], [x2, y2] = pts[i + 1];
+        const longueur = Math.hypot(x2 - x1, y2 - y1);
+        if (longueur < 24) continue; // trop court pour accueillir un nom lisiblement
+        let angle = (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI;
+        if (angle > 90) angle -= 180;
+        else if (angle < -90) angle += 180;
+        candidats.push({ x: Math.round((x1 + x2) / 2), y: Math.round((y1 + y2) / 2), angle: Math.round(angle), longueur });
+      }
+    }
+    candidats.sort((a, b) => b.longueur - a.longueur);
+
+    const libelle = libelleDirection(nom);
+    const demiLargeurEstimee = libelle.length * 2.6 + 4; // ~ demi-largeur du texte, en unités de la carte
+    const retenu = candidats.find((c) => {
+      // Marge sur les 4 bords : la rotation peut faire pencher l'étiquette
+      // dans n'importe quel sens, la même marge (demi-largeur du texte) est
+      // donc appliquée horizontalement et verticalement plutôt que de
+      // calculer l'emprise exacte selon l'angle.
+      if (c.x < fenetre.minX + demiLargeurEstimee || c.x > fenetre.maxX - demiLargeurEstimee) return false;
+      if (c.y < fenetre.minY + demiLargeurEstimee || c.y > fenetre.maxY - demiLargeurEstimee) return false;
+      const rayon = demiLargeurEstimee + RAYON_MARQUEUR;
+      if (marqueursXY.some(([mx, my]) => Math.hypot(mx - c.x, my - c.y) < rayon)) return false;
+      if (posees.some((p) => Math.hypot(p.x - c.x, p.y - c.y) < RAYON_ETIQUETTE)) return false;
+      return true;
+    });
+    if (!retenu) continue;
+    posees.push(retenu);
+    rendues.push(`<text x="${retenu.x}" y="${retenu.y}" transform="rotate(${retenu.angle} ${retenu.x} ${retenu.y})">${esc(libelle)}</text>`);
+  }
+  return rendues.join('');
+}
+
+// Carte de localisation des acteurs économiques. Fond de plan (contour de
+// la commune + voirie) issu d'OpenStreetMap, récupéré une fois pour toutes
+// par tools/fetch-carte-fond.mjs (content/carte-fond.json) : ce gabarit ne
+// fait lui-même aucun appel réseau, conformément à la règle « zéro requête
+// tierce » — cohérent avec la projection ci-dessous, faite à la main plutôt
+// qu'avec une bibliothèque de cartographie. Chaque établissement localisé
+// (coordonnées fournies par l'API Sirene, jamais devinées) devient un point
+// cliquable vers sa fiche ; ceux dont l'adresse est trop vague pour être
+// géocodée restent listés juste en dessous, sans être positionnés au hasard.
+// Les classes CSS "carte-lecques" viennent du moteur partagé avec Lecques
+// (voir CLAUDE.md) et sont réutilisées telles quelles plutôt que renommées.
+function carteActeurs(ctx) {
+  const { carteFond, entreprises, site } = ctx;
+  if (!carteFond || !carteFond.communeContour || !carteFond.communeContour.length) return '';
+  const total = entreprises.entreprises.length;
+  const points = entreprises.entreprises.filter((e) => e.lat && e.lon);
+  if (!points.length) return '';
+
+  const { bbox, communeContour, routes, riviere } = carteFond;
+  const latRef = (bbox.minlat + bbox.maxlat) / 2;
+  const mLat = 111320; // mètres par degré de latitude, quasi constant
+  const mLon = 111320 * Math.cos((latRef * Math.PI) / 180); // … de longitude, dépend de la latitude
+  const largeurM = (bbox.maxlon - bbox.minlon) * mLon;
+  const hauteurM = (bbox.maxlat - bbox.minlat) * mLat;
+  const LARGEUR = 700;
+  const echelle = LARGEUR / largeurM;
+  const HAUTEUR = Math.round(hauteurM * echelle);
+  // Coordonnées arrondies à l'entier (l'échelle rend le dixième de pixel
+  // invisible) : sur des centaines de points de voirie et des dizaines de
+  // marqueurs, l'économie de caractères n'est pas cosmétique, elle tient la
+  // page dans son budget de poids. Même logique pour les marqueurs
+  // eux-mêmes, réduits à un seul <use> vers l'un des deux points définis
+  // une fois dans <defs>.
+  const arr = (n) => Math.round(n);
+  const proj = ([lon, lat]) => [arr((lon - bbox.minlon) * mLon * echelle), arr((bbox.maxlat - lat) * mLat * echelle)];
+
+  const contourPts = communeContour.map((p) => proj(p).join(',')).join(' ');
+  const routesSvg = routes.map((r) => `<polyline points="${r.points.map((p) => proj(p).join(',')).join(' ')}"/>`).join('');
+  const riviereSvg = (riviere || []).map((r) => `<polyline points="${r.map((p) => proj(p).join(',')).join(' ')}"/>`).join('');
+
+  const [mx, my] = proj([site.commune.longitude, site.commune.latitude]);
+  const mairieSvg = `<circle cx="${mx}" cy="${my}" r="8" class="carte-lecques__mairie-halo"/><circle cx="${mx}" cy="${my}" r="3.5" class="carte-lecques__mairie-point"/>`;
+
+  const marqueurs = points.map((ent) => {
+    const [x, y] = proj([ent.lon, ent.lat]);
+    const activite = ent.association ? 'Association' : (ent.nafLibelle || 'Activité économique');
+    return `<a href="https://annuaire-entreprises.data.gouv.fr/entreprise/${esc(ent.siren)}" target="_blank" rel="noopener"><title>${esc(ent.nom)} — ${esc(activite)}</title><use href="#pz" x="${x}" y="${y}"/><use href="#pt" x="${x}" y="${y}" class="carte-lecques__point${ent.association ? ' carte-lecques__point--association' : ''}"/></a>`;
+  }).join('');
+
+  // La commune s'étend bien au-delà du village (voir carteFond.bbox) : sans
+  // recadrage, l'ouverture de la carte montre d'abord des terrains vides, les
+  // marqueurs regroupés loin dans un coin. On centre donc la fenêtre visible
+  // sur l'emprise réelle des marqueurs (+ la mairie), avec une marge — le
+  // contour et la voirie plus lointains restent dans le document, simplement
+  // hors cadre au premier affichage, comme sur n'importe quel plan.
+  const positionsInteret = [...points.map((ent) => proj([ent.lon, ent.lat])), [mx, my]];
+  const xsInteret = positionsInteret.map((p) => p[0]);
+  const ysInteret = positionsInteret.map((p) => p[1]);
+  let fenMinX = Math.min(...xsInteret), fenMaxX = Math.max(...xsInteret);
+  let fenMinY = Math.min(...ysInteret), fenMaxY = Math.max(...ysInteret);
+  const margeX = Math.max((fenMaxX - fenMinX) * 0.25, 40);
+  const margeY = Math.max((fenMaxY - fenMinY) * 0.25, 40);
+  fenMinX -= margeX; fenMaxX += margeX; fenMinY -= margeY; fenMaxY += margeY;
+  // Une carte trop haute et étroite (fréquent : les communes s'étirent
+  // souvent plus en latitude qu'en longitude) se lit mal une fois insérée
+  // dans une page ; on élargit plutôt que de la laisser filiforme.
+  const RATIO_MAX = 1.3;
+  if ((fenMaxY - fenMinY) / (fenMaxX - fenMinX) > RATIO_MAX) {
+    const largeurCible = (fenMaxY - fenMinY) / RATIO_MAX;
+    const centreX = (fenMinX + fenMaxX) / 2;
+    fenMinX = centreX - largeurCible / 2;
+    fenMaxX = centreX + largeurCible / 2;
+  } else if ((fenMaxX - fenMinX) / (fenMaxY - fenMinY) > RATIO_MAX) {
+    const hauteurCible = (fenMaxX - fenMinX) / RATIO_MAX;
+    const centreY = (fenMinY + fenMaxY) / 2;
+    fenMinY = centreY - hauteurCible / 2;
+    fenMaxY = centreY + hauteurCible / 2;
+  }
+  // On ne montre jamais au-delà du plan effectivement dessiné (0..LARGEUR,
+  // 0..HAUTEUR) : au-delà, il n'y a de toute façon rien à afficher.
+  fenMinX = Math.max(0, fenMinX); fenMinY = Math.max(0, fenMinY);
+  fenMaxX = Math.min(LARGEUR, fenMaxX); fenMaxY = Math.min(HAUTEUR, fenMaxY);
+  const fenetre = { minX: fenMinX, minY: fenMinY, maxX: fenMaxX, maxY: fenMaxY };
+
+  const etiquettesSvg = etiquettesVoies(routes, proj, points.map((ent) => proj([ent.lon, ent.lat])), fenetre);
+
+  const nonLocalises = total - points.length;
+  return `<div class="carte-lecques">
+    <svg viewBox="${Math.round(fenMinX)} ${Math.round(fenMinY)} ${Math.round(fenMaxX - fenMinX)} ${Math.round(fenMaxY - fenMinY)}" role="group" aria-label="Carte de localisation des acteurs économiques de ${esc(site.commune.nom)}">
+      <defs>
+        <circle id="pt" r="6"/>
+        <circle id="pz" r="12" fill="transparent"/>
+      </defs>
+      <polygon class="carte-lecques__contour" points="${contourPts}"/>
+      <g class="carte-lecques__routes">${routesSvg}</g>
+      <g class="carte-lecques__riviere">${riviereSvg}</g>
+      <g class="carte-lecques__marqueurs">${marqueurs}</g>
+      ${mairieSvg}
+      <g class="carte-lecques__etiquettes">${etiquettesSvg}</g>
+    </svg>
+    <p class="carte-lecques__legende">
+      <span><span class="carte-lecques__puce carte-lecques__puce--commerce" aria-hidden="true"></span>Commerce, artisan, profession libérale</span>
+      <span><span class="carte-lecques__puce carte-lecques__puce--association" aria-hidden="true"></span>Association</span>
+      <span><span class="carte-lecques__puce carte-lecques__puce--mairie" aria-hidden="true"></span>Mairie</span>
+      <span><span class="carte-lecques__trait carte-lecques__trait--riviere" aria-hidden="true"></span>La Bésorgues</span>
+    </p>
+    <p class="carte__detail">${points.length} établissement${points.length > 1 ? 's' : ''} localisé${points.length > 1 ? 's' : ''} sur ${total}${nonLocalises ? ` — les ${nonLocalises} autres n'ont qu'une adresse trop imprécise (lieu-dit) pour être positionnés, retrouvez-les dans la liste ci-dessous` : ''}.</p>
+  </div>`;
+}
+
+export function pageCarteActeurs(ctx) {
+  const { site, nav } = ctx;
+  const carte = carteActeurs(ctx);
+  const contenu = `<div class="conteneur">
+  <header class="page-entete">
+    <h1>Cartographie des acteurs économiques</h1>
+    <p class="page-entete__intro">Commerces, artisans, professions libérales et associations de ${esc(site.commune.nom)}, positionnés sur la carte de la commune. Cliquez sur un point pour ouvrir sa fiche officielle.</p>
+  </header>
+  <h2>Répartition sur la commune</h2>
+  ${carte || '<p>La carte n’est pas disponible pour le moment.</p>'}
+  <p class="retour"><a href="/vie-locale/professionnels.html">${icone('fleche')}<span>Retour aux acteurs économiques</span></a></p>
+</div>`;
+  return page({
+    site, nav, actif: 'vie-locale', titre: 'Cartographie des acteurs économiques',
+    description: `Carte de localisation des commerces, artisans, professions libérales et associations de ${site.commune.nom}.`,
+    fil: [
+      { libelle: 'Accueil', url: '/' },
+      { libelle: 'Vie locale', url: '/vie-locale/' },
+      { libelle: 'Acteurs économiques', url: '/vie-locale/professionnels.html' },
+      { libelle: 'Cartographie' }
+    ],
+    contenu
+  });
+}
+
+export function pageProfessionnels(ctx) {
+  const { site, nav, annuaire, entreprises } = ctx;
+  const professionnels = (annuaire.professionnels || []);
+  const contenu = `<div class="conteneur">
+  ${banniereMuette(ctx, 'village', `Le village de ${site.commune.nom}.`)}
+  <header class="page-entete">
+    <h1>Acteurs économiques</h1>
+    <p class="page-entete__intro">Les professionnels installés à ${esc(site.commune.nom)} sont à votre écoute.</p>
+  </header>
+  ${professionnels.length ? `<ul class="grille-cartes grille-cartes--large">
+    ${professionnels.map((p) => `<li class="carte">
+      <p class="carte__meta"><span class="etiquette">${esc(p.activite)}</span></p>
+      <h2 class="carte__titre">${esc(p.nom)}</h2>
+      ${p.enseigne ? `<p class="carte__enseigne">${esc(p.enseigne)}</p>` : ''}
+      ${p.note ? `<p class="carte__detail">${esc(p.note)}</p>` : ''}
+      ${ligneContact(p)}
+    </li>`).join('')}
+  </ul>` : ''}
+  <aside class="encadre">
+    <h2>Vous êtes professionnel à ${esc(site.commune.nom)}&nbsp;?</h2>
+    <p>Signalez-vous au secrétariat de mairie pour figurer dans cet annuaire et dans le bulletin municipal. La présence dans l'annuaire est gratuite.</p>
+    <p><a class="bouton bouton--secondaire" href="mailto:${esc(site.mairie.email)}?subject=Inscription%20%C3%A0%20l%27annuaire%20des%20professionnels">${icone('courriel')}<span>Me faire connaître</span></a></p>
+  </aside>
+
+  ${entreprises && entreprises.entreprises && entreprises.entreprises.length ? `<section class="section section--sirene">
+    <h2>Annuaire officiel Sirene des activités économiques</h2>
+    <p class="page-entete__intro">Cette liste complémentaire est générée automatiquement à partir du répertoire Sirene de l'Insee (base officielle des entreprises, auto-entrepreneurs et associations).${professionnels.length ? ' Contrairement à la liste ci-dessus, elle' : ' Elle'} n'est pas relue à la main : elle recense les établissements actifs déclarés à ${esc(site.commune.nom)}, mais certaines adresses ne sont pas rendues publiques par leurs titulaires, et une activité récente peut ne pas encore y figurer.${entreprises.misAJour ? `<br>Dernière mise à jour&nbsp;: ${dateFr(entreprises.misAJour)}.` : ''}</p>
+    <p><a class="bouton bouton--secondaire" href="/vie-locale/carte-acteurs-economiques.html">${icone('carte')}<span>Cartographie des acteurs économiques</span></a></p>
+    <ul class="liste-entreprises">
+      ${entreprises.entreprises.map((ent) => `<li class="ligne-entreprise">
+        ${icone(ent.icone, 'icone--mini')}
+        <span class="ligne-entreprise__corps">
+          <span class="ligne-entreprise__nom">${lien(`https://annuaire-entreprises.data.gouv.fr/entreprise/${esc(ent.siren)}`, esc(ent.nom))}${ent.enseigne ? ` <span class="ligne-entreprise__enseigne">— ${esc(ent.enseigne)}</span>` : ''}</span>
+          <span class="ligne-entreprise__meta">${ent.association ? 'Association' : esc(ent.nafLibelle || '')} · ${esc(ent.adresse)}${ent.dateCreation ? ` · créé le ${dateFr(ent.dateCreation)}` : ''}</span>
+        </span>
+      </li>`).join('')}
+    </ul>
+    <p class="carte__detail">Une erreur, une fermeture, une activité manquante&nbsp;? <a href="mailto:${esc(site.mairie.email)}?subject=Annuaire%20Sirene%20-%20correction">Signalez-le au secrétariat de mairie</a>.</p>
+  </section>` : ''}
+</div>`;
+  return page({
+    site, nav, actif: 'vie-locale', titre: 'Acteurs économiques',
+    description: `Annuaire des professionnels et commerçants de ${site.commune.nom}.`,
+    fil: [{ libelle: 'Accueil', url: '/' }, { libelle: 'Vie locale', url: '/vie-locale/' }, { libelle: 'Acteurs économiques' }],
+    contenu
+  });
+}
+
 /* ------------------------------------------------------------ La mairie */
 
 export function pageContact(ctx) {

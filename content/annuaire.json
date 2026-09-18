@@ -1,4 +1,5 @@
 {
+  "professionnels": [],
   "urgences": [
     { "libelle": "SAMU", "numero": "15" },
     { "libelle": "Police et gendarmerie", "numero": "17" },
