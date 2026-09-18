@@ -1,5 +1,5 @@
 {
-  "theme": "republique",
+  "theme": "garrigue",
   "titre": "Mairie de Juvinas",
   "baseline": "Commune de Juvinas — Ardèche (07)",
   "description": "Site officiel de la commune de Juvinas (07600). Démarches administratives, actualités, vie locale.",
@@ -60,7 +60,15 @@
     "tuiles": ["carte-identite", "passeport", "acte-naissance", "listes-electorales", "permis-de-construire", "concession-cimetiere"],
     "placeholderRecherche": "Que cherchez-vous ?",
     "suggestions": ["J'ai perdu ma carte d'identité", "Inscrire mon enfant à l'école", "Faire un permis de construire", "Réserver une concession au cimetière"],
-    "galerie": []
+    "galerie": [
+      { "photo": "mairie", "alt": "La mairie de Juvinas.", "libelle": "La mairie", "url": "/mairie/contact.html" },
+      { "photo": "village", "alt": "L'église et une rue du village de Juvinas.", "libelle": "Le village", "url": "/mairie/commune.html" }
+    ],
+    "identite": {
+      "titre": "Un nom connu jusque dans l'espace",
+      "texte": "Nichée dans la vallée de la Bésorgues, entre châtaigneraies et volcans éteints d'Ardèche, la commune a donné son nom à une météorite tombée le 15 juin 1821. Cette pierre venue de l'espace est aujourd'hui conservée au Muséum national d'Histoire naturelle et étudiée par les scientifiques du monde entier.",
+      "lien": { "url": "/mairie/histoire.html", "libelle": "Découvrir l'histoire du village" }
+    }
   },
   "reseaux": [],
   "liensUtiles": [

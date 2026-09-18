@@ -291,6 +291,19 @@ ${nbConsultationsOuvertes > 0 ? `<section class="section section--consultation" 
   </div>
 </section>
 
+${site.accueil.identite ? `<section class="section section--identite" aria-labelledby="identite-titre">
+  <div class="conteneur">
+    <div class="carte carte--identite">
+      <div class="carte--identite__icone" aria-hidden="true">${icone('meteorite')}</div>
+      <div class="carte--identite__texte">
+        <h2 id="identite-titre">${esc(site.accueil.identite.titre)}</h2>
+        <p>${esc(site.accueil.identite.texte)}</p>
+        <p><a class="lien-suite" href="${esc(site.accueil.identite.lien.url)}">${icone('fleche', 'icone--mini')}<span>${esc(site.accueil.identite.lien.libelle)}</span></a></p>
+      </div>
+    </div>
+  </div>
+</section>` : ''}
+
 ${site.accueil.galerie && site.accueil.galerie.length ? `<section class="section section--galerie" aria-labelledby="galerie-titre">
   <div class="conteneur">
     <div class="section__entete">
@@ -1033,7 +1046,7 @@ export function pageDesigns(ctx) {
   const { site, nav } = ctx;
   const themes = [
     { id: 'republique', nom: 'République', sous: 'Institutionnel', texte: "Reprend les codes du système de design de l'État : bleu France, rouge Marianne, angles nets, hiérarchie sobre. C'est la direction la plus immédiatement reconnaissable comme « site public », celle qui rassure le plus les usagers habitués à service-public.fr ou aux sites de préfecture." },
-    { id: 'garrigue', nom: 'Garrigue', sous: 'Identitaire', texte: "Olivier, terre cuite et pierre : les couleurs du Gard. Titres à empattements, cartes adoucies, plus de place laissée au paysage et au patrimoine. Donne une âme au village sans jamais sacrifier la lisibilité ni les contrastes." },
+    { id: 'garrigue', nom: 'Châtaigneraie', sous: 'Identitaire', texte: "Châtaigneraie, schiste et volcans éteints : les couleurs de l'Ardèche. Titres à empattements, cartes adoucies, plus de place laissée au paysage et au patrimoine — jusqu'à la météorite de Juvinas. Donne une âme au village sans jamais sacrifier la lisibilité ni les contrastes." },
     { id: 'guichet', nom: 'Guichet', sous: 'Utilitaire', texte: "Une interface d'application : recherche dominante, tuiles denses, typographie franche, mode sombre natif. C'est la direction la plus rapide pour agir, et la plus efficace sur un petit écran tenu à une main." }
   ];
   const contenu = `<div class="conteneur conteneur--etroit">

@@ -95,17 +95,25 @@ par la mairie de Juvinas.** Avant toute publication :
 - **`content/budgets.json`** est vide : la page Budget elle-même a été retirée du générateur
   (`src/build.mjs`/`src/templates/views.mjs`) plutôt que publiée avec des montants inventés —
   à réécrire une fois le budget réel transmis par la mairie.
-- **Thème visuel** : `republique` (institutionnel, neutre) par défaut. Le thème `garrigue`
-  hérité de Lecques (olivier, terre cuite — identité méditerranéenne du Gard) reste
-  disponible dans le code mais ne convient pas à l'identité de l'Ardèche ; à renommer/recolorer
-  si vous voulez un thème identitaire propre à Juvinas.
+- **Thème visuel** : `garrigue` (identifiant technique inchangé, affiché « Châtaigneraie » dans
+  le sélecteur) est désormais le thème par défaut, recoloré pour l'Ardèche — châtaigneraie,
+  schiste, volcans éteints — à la place de l'olivier et de la terre cuite du Gard hérités de
+  Lecques. Le bandeau d'accueil de ce thème n'utilise plus la photo du pont du Vidourle
+  (Gard) : faute de photo de Juvinas, il retombe sur un dégradé de couleurs, à remplacer par
+  une vraie photo dès que la mairie en fournira une (voir le commentaire dans
+  `src/styles/theme-garrigue.css`).
+- **Accueil** : une carte « Un nom connu jusque dans l'espace » (`site.accueil.identite` dans
+  `content/site.json`) met en avant la météorite de Juvinas et renvoie vers
+  `/mairie/histoire.html` — texte factuel et déjà présent dans `content/pages/histoire.md`,
+  pas une donnée inventée.
 - **Nom de domaine** : `content/site.json` → `url` utilise `https://www.juvinas.fr` comme
   simple espace réservé — à confirmer/enregistrer avant toute mise en ligne.
 
 ## Les trois thèmes
 
 Un seul code, trois identités visuelles pilotées par `data-theme` sur `<html>` :
-`republique` (institutionnel), `garrigue` (hérité de Lecques, à retravailler), `guichet`
+`republique` (institutionnel), `garrigue` (identitaire, recoloré pour l'Ardèche — affiché
+« Châtaigneraie », par défaut), `guichet`
 (utilitaire, mode sombre natif). **Aucune couleur ne doit être codée en dur** dans
 `composants.css` ou dans un gabarit : toute couleur passe par une variable de `tokens.css`,
 redéfinie par les trois thèmes.

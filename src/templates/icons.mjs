@@ -46,7 +46,8 @@ const P = {
   chevron: '<path d="m9 5.5 6.5 6.5L9 18.5"/>',
   check: '<path d="m4.5 12.5 5 5 10-11"/>',
   telecharger: '<path d="M12 3.5v11M7.5 10.5 12 15l4.5-4.5"/><path d="M4.5 19.5h15"/>',
-  accessibilite: '<circle cx="12" cy="4.5" r="1.8"/><path d="M4.5 8.5c2.4.9 4.9 1.4 7.5 1.4s5.1-.5 7.5-1.4"/><path d="M12 9.9v4.6M12 14.5l-2.5 6M12 14.5l2.5 6"/>'
+  accessibilite: '<circle cx="12" cy="4.5" r="1.8"/><path d="M4.5 8.5c2.4.9 4.9 1.4 7.5 1.4s5.1-.5 7.5-1.4"/><path d="M12 9.9v4.6M12 14.5l-2.5 6M12 14.5l2.5 6"/>',
+  meteorite: '<path d="M4 7.5 6.8 10M3 12l2.3 1"/><path d="M9.3 14.7c-2-3.2.6-7 4.3-6.4a5.1 5.1 0 0 1 5.3 5.3c.3 3.6-2.5 6.4-5.9 6.4-2.1 0-4.5-1.9-3.7-5.3z"/><path d="M11.3 13.5h.01M15 15.2h.01"/>'
 };
 
 // Les icônes sont référencées, pas recopiées : chaque page ne porte qu'une

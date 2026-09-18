@@ -1,1 +1,4 @@
-{}
+{
+  "mairie": { "largeur": 1200, "hauteur": 796 },
+  "village": { "largeur": 1200, "hauteur": 802 }
+}
