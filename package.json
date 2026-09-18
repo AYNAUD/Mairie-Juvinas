@@ -1,0 +1,20 @@
+{
+  "name": "mairie-juvinas",
+  "version": "0.1.0",
+  "description": "Site officiel de la commune de Juvinas (07600) - generateur statique, une seule dependance (unpdf, extraction du texte des PV pour la recherche)",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node src/build.mjs",
+    "dev": "node src/build.mjs && node tools/serve.mjs",
+    "check": "node src/build.mjs && node tools/check.mjs && node tools/test-recherche.mjs",
+    "test": "node tools/test-recherche.mjs"
+  },
+  "dependencies": {
+    "unpdf": "^1.8.1"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED"
+}

@@ -1,0 +1,638 @@
+/* =====================================================================
+   Composants. Mobile d'abord : toute media query est en min-width.
+   ===================================================================== */
+
+/* --- Boutons ---------------------------------------------------------- */
+.bouton {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--e2);
+  min-block-size: var(--cible); padding: var(--e2) var(--e4);
+  border-radius: var(--rayon); border: var(--trait) solid transparent;
+  font-weight: 500; line-height: 1.25; text-decoration: none; text-align: center;
+  transition: background var(--transition), color var(--transition), border-color var(--transition),
+    transform var(--transition), box-shadow var(--transition);
+}
+.bouton .icone { inline-size: 1.25em; block-size: 1.25em; }
+.bouton--principal { background: var(--accent); color: var(--accent-texte); }
+.bouton--principal:hover { background: var(--accent-survol); color: var(--accent-texte); }
+.bouton--secondaire { background: var(--fond-carte); color: var(--lien); border-color: var(--bordure-forte); }
+.bouton--secondaire:hover { background: var(--accent-doux); color: var(--accent-doux-texte); border-color: var(--accent); }
+.bouton--fantome { color: var(--texte); padding-inline: var(--e3); }
+.bouton--fantome:hover { background: var(--fond-alt); color: var(--texte); }
+.bouton--large { inline-size: 100%; }
+@media (min-width: 40em) { .bouton--large { inline-size: auto; padding-inline: var(--e5); } }
+
+/* --- Bandeau d'alerte -------------------------------------------------- */
+.alerte { background: var(--attention-fond); border-block-end: 3px solid var(--attention); color: var(--texte); }
+.alerte--urgence { background: var(--danger-fond); border-color: var(--danger); }
+.alerte--info { background: var(--info-fond); border-color: var(--info); }
+.alerte__inner { display: flex; align-items: flex-start; gap: var(--e3); padding-block: var(--e3); flex-wrap: wrap; }
+.alerte .icone { color: var(--attention); }
+.alerte--urgence .icone { color: var(--danger); }
+.alerte__texte { flex: 1 1 16rem; }
+.alerte__lien { color: var(--lien); font-weight: 500; }
+
+/* --- En-tête -------------------------------------------------------------
+   En-tête clair et sobre : c'est le trait de bordure et la position collante
+   qui le détachent du reste de la page, pas un aplat de couleur — la couleur
+   d'accent du thème reste réservée au badge du blason et aux accents du menu.
+   Fonctionne quel que soit le thème puisque tout passe par --fond-carte et
+   --texte, déjà garantis lisibles par les contrôles de contraste du site. */
+.entete { position: sticky; inset-block-start: 0; z-index: 60; background: var(--fond-carte); border-block-end: var(--trait) solid var(--bordure); }
+.entete__barre { display: flex; align-items: center; gap: var(--e3); min-block-size: 4rem; }
+
+/* Le(s) lien(s) d'annonce (actualités et/ou consultations en cours) partagent
+   la barre avec le blason et les actions : blason et actions se voient
+   attribuer la même part de largeur (flex: 1 1 0 chacun) pour que le groupe
+   d'annonces, entre les deux, tombe pile au centre de la barre quel que soit
+   le contenu de part et d'autre. Deux liens possibles (actualités +
+   consultations) : ils se répartissent dans ce groupe, avec un retour à la
+   ligne si les deux tiennent mal sur une largeur donnée. Masqué sous 48em :
+   pas la place pour ces textes à côté du blason et des trois actions sans
+   risquer un débordement horizontal. */
+.entete__annonces { display: none; }
+@media (min-width: 48em) {
+  .entete__annonces {
+    display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+    gap: var(--e1) var(--e4); flex: 0 0 auto;
+  }
+}
+.entete__actus {
+  display: flex; align-items: center; gap: var(--e2);
+  min-block-size: 44px; color: var(--lien);
+  font-size: var(--t-petit); font-weight: 500; text-decoration: none; white-space: nowrap;
+}
+.entete__actus:hover { text-decoration: underline; }
+
+.marque { display: flex; align-items: center; gap: var(--e3); text-decoration: none; color: var(--texte); flex: 1 1 0; padding-block: var(--e2); min-inline-size: 0; }
+.marque__blason { display: grid; place-items: center; inline-size: 2.5rem; block-size: 2.5rem; border-radius: var(--rayon-petit); background: var(--accent); color: var(--accent-texte); }
+.marque__blason .icone { inline-size: 1.5rem; block-size: 1.5rem; }
+.marque__texte { min-inline-size: 0; }
+/* white-space/overflow/text-overflow s'appliquent en toute largeur, pas
+   seulement sous 30em : à partir de 48em le blason partage la barre à
+   parts égales avec le lien "XX actualités…" et les actions (voir
+   .entete__actus plus haut), donc le nom de la commune peut aussi devoir
+   se réduire là — un ellipsis plutôt qu'un retour à la ligne qui
+   agrandirait toute la barre d'en-tête. */
+.marque__nom, .marque__sous { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.marque__nom { display: block; font-family: var(--police-titre); font-weight: 600; font-size: var(--t-grand); line-height: 1.15; letter-spacing: var(--interlettrage-titre); }
+.marque__sous { display: none; font-size: var(--t-mini); color: var(--texte-doux); }
+.marque:hover .marque__nom { text-decoration: underline; }
+/* Sous 30em, le nom de la commune tient sur une ligne : l'en-tête collant
+   ne doit jamais manger plus de 64 px de hauteur d'écran. */
+@media (min-width: 30em) { .marque__sous { display: block; } }
+@media (max-width: 29.99em) {
+  .marque__nom { font-size: var(--t-corps); }
+  .marque { gap: var(--e2); }
+}
+
+.entete__actions { display: flex; align-items: center; justify-content: flex-end; gap: var(--e1); flex: 1 1 0; }
+.entete__recherche span, .entete__a11y span, .entete__menu span { display: none; }
+.entete__recherche { text-decoration: none; }
+@media (min-width: 30em) { .entete__recherche span, .entete__menu span { display: inline; } }
+@media (min-width: 64em) { .entete__a11y .entete__label { display: inline; } }
+
+.entete__menu .icone--fermer { display: none; }
+.entete__menu[aria-expanded="true"] .icone--menu { display: none; }
+.entete__menu[aria-expanded="true"] .icone--fermer { display: block; }
+@media (min-width: 64em) { .entete__menu { display: none; } }
+
+/* --- Menu principal -----------------------------------------------------
+   Chaque entrée porte sa propre couleur (--couleur-rubrique, posée en style
+   inline depuis la teinte --nav-* du thème actif) : une puce de cette couleur
+   distingue les 5 rubriques au premier coup d'œil, sans peser la barre d'un
+   jeu d'icônes supplémentaire. --------------------------------------------- */
+.menu { border-block-start: var(--trait) solid var(--bordure); background: var(--fond-alt); }
+.menu__liste { display: grid; gap: var(--trait); }
+.menu__liste a {
+  display: flex; align-items: flex-start; gap: var(--e3);
+  padding: var(--e3) 0; text-decoration: none; color: var(--texte);
+  border-block-end: var(--trait) solid var(--bordure);
+  border-inline-start: 4px solid transparent;
+}
+@media (max-width: 63.99em) { .menu__liste li:last-child a { border-block-end: 0; } }
+.menu__puce { inline-size: .55rem; block-size: .55rem; border-radius: 50%; background: var(--couleur-rubrique); flex: none; margin-block-start: .5em; }
+.menu__texte { min-inline-size: 0; }
+.menu__libelle { display: block; font-weight: 500; }
+.menu__desc { display: block; font-size: var(--t-petit); color: var(--texte-doux); }
+.menu__liste a:hover { border-inline-start-color: var(--couleur-rubrique); background: var(--fond-carte); }
+.menu__liste a:hover .menu__libelle { color: var(--couleur-rubrique); }
+.menu__liste a[aria-current="page"] { border-inline-start-color: var(--couleur-rubrique); padding-inline-start: var(--e3); background: var(--fond-carte); }
+.menu__liste a[aria-current="page"] .menu__libelle { color: var(--couleur-rubrique); }
+
+/* Sur mobile, le menu est replié — mais uniquement si JavaScript est actif. */
+.js .menu { display: none; }
+.js .menu.est-ouvert { display: block; }
+
+@media (min-width: 64em) {
+  .js .menu, .menu { display: block; background: var(--fond); border-block-start: var(--trait) solid var(--bordure); }
+  .menu__liste { grid-auto-flow: column; justify-content: start; gap: var(--e1); }
+  .menu__liste a {
+    align-items: center; border-inline-start: 0;
+    border-block-end: 3px solid transparent; padding: var(--e2) var(--e3);
+  }
+  .menu__puce { margin-block-start: 0; }
+  .menu__liste a:hover { background: var(--fond-alt); }
+  .menu__liste a[aria-current="page"] {
+    background: none; border-block-end-color: var(--couleur-rubrique); padding-inline-start: var(--e3);
+  }
+  /* Sur grand écran l'en-tête reste collé en haut : on garde une seule ligne de
+     navigation. Les descriptions restent visibles dans le menu mobile, sur la
+     page d'accueil et sur chaque sommaire de rubrique. */
+  .menu__desc { display: none; }
+}
+
+/* --- Panneau d'affichage (accessibilité) -------------------------------- */
+.panneau-a11y { background: var(--fond-alt); border-block-end: var(--trait) solid var(--bordure); }
+.panneau-a11y__inner { display: grid; gap: var(--e4); padding-block: var(--e4); }
+.panneau-a11y legend { font-weight: 500; margin-block-end: var(--e2); }
+.panneau-a11y__aide { font-size: var(--t-petit); color: var(--texte-doux); }
+.segments { display: flex; flex-wrap: wrap; gap: var(--e2); }
+.segments button {
+  min-block-size: var(--cible); padding: var(--e2) var(--e3);
+  border: var(--trait) solid var(--bordure-forte); border-radius: var(--rayon);
+  background: var(--fond-carte); color: var(--texte); font-size: var(--t-petit); font-weight: 500;
+}
+.segments button[aria-pressed="true"] { background: var(--accent); color: var(--accent-texte); border-color: var(--accent); }
+@media (min-width: 48em) { .panneau-a11y__inner { grid-template-columns: auto auto; align-items: start; gap: var(--e6); } .panneau-a11y__aide { grid-column: 1 / -1; } }
+
+/* --- Fil d'Ariane ------------------------------------------------------ */
+.fil { inline-size: min(100% - 2 * var(--gouttiere), var(--largeur)); margin: var(--e4) auto 0; font-size: var(--t-petit); }
+.fil ol { display: flex; flex-wrap: wrap; gap: var(--e2); color: var(--texte-doux); }
+.fil li + li::before { content: "›"; margin-inline-end: var(--e2); color: var(--texte-tres-doux); }
+.fil [aria-current="page"] { color: var(--texte); font-weight: 500; }
+
+/* --- Recherche --------------------------------------------------------- */
+.recherche { position: relative; }
+.recherche__label { display: block; font-weight: 500; margin-block-end: var(--e2); }
+.recherche--grande .recherche__label { font-size: var(--t-grand); }
+/* Pilule pleine largeur avec un bouton rond flottant, plutôt qu'un bouton
+   texte accolé : le champ de saisie reste la cible principale. */
+.recherche__boite {
+  position: relative; display: flex; align-items: center;
+  background: var(--fond-carte); border: 2px solid var(--bordure-forte); border-radius: var(--rayon-pilule);
+  padding-inline-start: var(--e4);
+}
+.recherche__boite:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-doux); }
+.recherche__champ {
+  flex: 1 1 auto; min-inline-size: 0; min-block-size: var(--cible);
+  padding: var(--e2) calc(var(--cible) + var(--e3)) var(--e2) 0; border: 0; background: none; font-size: var(--t-corps);
+}
+.recherche__champ:focus { outline: none; }
+.recherche__champ::-webkit-search-cancel-button { cursor: pointer; }
+.recherche__bouton {
+  position: absolute; inset-inline-end: .3rem; inset-block-start: 50%; transform: translateY(-50%);
+  inline-size: var(--cible); block-size: var(--cible); padding: 0; border-radius: 50%; flex: none;
+}
+.recherche__aide { font-size: var(--t-petit); color: var(--texte-doux); margin-block-start: var(--e2); }
+
+.recherche__resultats {
+  position: absolute; inset-inline: 0; inset-block-start: calc(100% - 1.5rem); z-index: 70;
+  background: var(--fond-carte); border: var(--trait) solid var(--bordure); border-radius: var(--rayon);
+  box-shadow: var(--ombre-forte); max-block-size: min(70vh, 32rem); overflow-y: auto;
+}
+.recherche__resultats[hidden] { display: none; }
+.resultat {
+  display: block; padding: var(--e3) var(--e4); text-decoration: none; color: var(--texte);
+  border-block-end: var(--trait) solid var(--bordure);
+}
+.resultat:last-child { border-block-end: 0; }
+.resultat:hover, .resultat[aria-selected="true"] { background: var(--accent-doux); color: var(--accent-doux-texte); }
+.resultat__titre { display: block; font-weight: 500; }
+.resultat__resume { display: block; font-size: var(--t-petit); color: var(--texte-doux); }
+.resultat:hover .resultat__resume, .resultat[aria-selected="true"] .resultat__resume { color: inherit; }
+.resultat__cat { display: inline-block; font-size: var(--t-mini); color: var(--texte-doux); }
+.resultat--reponse { background: var(--info-fond); }
+.resultat--reponse .resultat__titre::before { content: "Réponse rapide — "; font-weight: 400; color: var(--texte-doux); }
+.resultat__vide { padding: var(--e4); color: var(--texte-doux); }
+
+.suggestions { display: flex; flex-wrap: wrap; gap: var(--e2); }
+.suggestions a {
+  display: inline-flex; align-items: center; min-block-size: 2.25rem; padding: var(--e1) var(--e3);
+  font-size: var(--t-mini);
+  background: var(--fond-carte); color: var(--texte-doux); border: var(--trait) solid var(--bordure); border-radius: var(--rayon-pilule);
+  font-weight: 500; text-decoration: none; line-height: 1.35;
+}
+@media (min-width: 40em) { .suggestions a { font-size: var(--t-petit); padding: var(--e2) var(--e3); } }
+.suggestions a:hover { background: var(--fond-accentue); color: var(--texte); border-color: var(--accent); }
+
+/* --- Fenêtre de recherche ---------------------------------------------- */
+.overlay { position: fixed; inset: 0; z-index: 100; display: grid; align-items: start; }
+.overlay[hidden] { display: none; }
+.overlay__voile { position: absolute; inset: 0; background: rgb(0 0 0 / .5); }
+.overlay__boite {
+  position: relative; inline-size: min(100% - 2 * var(--e4), 44rem); margin: var(--e5) auto;
+  background: var(--fond); border-radius: var(--rayon-grand); padding: var(--e5);
+  box-shadow: var(--ombre-forte); max-block-size: calc(100vh - 2 * var(--e5)); overflow-y: auto;
+}
+.overlay__entete { display: flex; align-items: center; justify-content: space-between; gap: var(--e3); margin-block-end: var(--e4); }
+.overlay__suggestions { margin-block-start: var(--e5); }
+.overlay__suggestions h3 { font-size: var(--t-petit); text-transform: uppercase; letter-spacing: .06em; color: var(--texte-doux); margin-block-end: var(--e2); }
+
+/* --- Cartes ------------------------------------------------------------ */
+.carte {
+  background: var(--fond-carte); border: var(--trait) solid var(--bordure); border-radius: var(--rayon-grand);
+  box-shadow: var(--ombre); padding: var(--e4); display: flex; flex-direction: column; gap: var(--e2);
+  transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+}
+.carte__titre { font-size: var(--t-h3); }
+.carte__titre a { color: inherit; text-decoration: none; }
+.carte__titre a::after { content: ""; position: absolute; inset: 0; }
+.carte { position: relative; }
+.carte__titre a:hover { color: var(--lien); text-decoration: underline; }
+/* Tronque avec des points de suspension plutôt que de laisser un texte trop
+   long (résumé d'actualité collé de travers, par exemple) étirer la carte et
+   écraser son image — le texte complet reste à un clic, sur la page de
+   détail. */
+.carte__resume {
+  color: var(--texte-doux);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+.carte__detail { font-size: var(--t-petit); color: var(--texte-doux); }
+.carte__meta { font-size: var(--t-petit); color: var(--texte-doux); display: flex; flex-wrap: wrap; gap: var(--e2); align-items: center; }
+.carte__enseigne { font-weight: 500; }
+.carte__nom { font-weight: 600; }
+.carte__fonction { color: var(--texte-doux); font-size: var(--t-petit); }
+.carte:has(.carte__titre a):hover { border-color: var(--accent); box-shadow: var(--ombre-forte); }
+
+/* Carte à liens multiples (ex. « Acteurs économiques ») : pas de lien
+   étiré sur tout le bloc puisqu'aucun lien n'y est prioritaire — chaque
+   entrée reste un lien normal, cliquable pour lui-même. Sur la carte
+   Actualités, l'action secondaire (s'abonner) doit au contraire rester
+   cliquable malgré le lien étiré du titre : d'où sa propre pile
+   (position + z-index) pour passer devant le ::after du titre. */
+.carte__titre .compteur { margin-inline-start: var(--e2); vertical-align: middle; }
+.carte__action { position: relative; z-index: 1; }
+.carte__liens { list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--e2); }
+.carte__lien { display: inline-flex; align-items: center; gap: var(--e2); min-block-size: var(--cible); font-weight: 600; color: var(--lien); text-decoration: none; }
+.carte__lien:hover { color: var(--lien-survol); text-decoration: underline; }
+.carte__lien .icone { flex-shrink: 0; }
+
+.grille-cartes { display: grid; gap: var(--e4); }
+@media (min-width: 40em) { .grille-cartes { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 64em) { .grille-cartes { grid-template-columns: repeat(3, 1fr); } }
+.grille-cartes--large { grid-template-columns: 1fr; }
+@media (min-width: 48em) { .grille-cartes--large { grid-template-columns: repeat(2, 1fr); } }
+.grille-cartes--compacte { grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); }
+
+.etiquette {
+  display: inline-block; padding: .125rem var(--e2); border-radius: var(--rayon-petit);
+  background: var(--fond-alt); color: var(--texte-doux); font-size: var(--t-mini); font-weight: 500;
+}
+.etiquette--epingle { background: var(--accent-doux); color: var(--accent-doux-texte); }
+
+.compteur {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-inline-size: 1.75rem; padding: .0625rem var(--e2); border-radius: var(--rayon-pilule);
+  background: var(--accent); color: var(--accent-texte); font-size: var(--t-petit); font-weight: 600;
+}
+
+.lieu {
+  display: inline-flex; align-items: center; gap: var(--e1); align-self: flex-start;
+  padding: .125rem var(--e2); border-radius: var(--rayon-pilule);
+  font-size: var(--t-mini); font-weight: 500; border: var(--trait) solid currentColor;
+}
+.lieu--mairie { color: var(--succes); }
+.lieu--enligne { color: var(--info); }
+.lieu--ailleurs { color: var(--attention); }
+.lieu--ouverte { color: var(--succes); }
+.lieu--fermee { color: var(--danger); }
+
+/* --- Tuiles « Je veux… » ------------------------------------------------ */
+.tuiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--e3); }
+@media (min-width: 40em) { .tuiles { grid-template-columns: repeat(3, 1fr); gap: var(--e4); } }
+@media (min-width: 64em) { .tuiles { grid-template-columns: repeat(4, 1fr); } }
+.tuile a {
+  display: flex; flex-direction: column; gap: var(--e2); block-size: 100%;
+  padding: var(--e4); text-decoration: none; color: var(--texte);
+  background: var(--fond-carte); border: var(--trait) solid var(--bordure); border-radius: var(--rayon-grand);
+  box-shadow: var(--ombre);
+  transition: border-color var(--transition), background var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+.tuile a:hover { border-color: var(--accent); background: var(--fond-accentue); transform: translateY(-2px); box-shadow: var(--ombre-forte); }
+.tuile__icone { display: grid; place-items: center; inline-size: 2.75rem; block-size: 2.75rem; border-radius: var(--rayon-petit); background: var(--accent-doux); color: var(--accent-doux-texte); transition: background var(--transition), color var(--transition); }
+.tuile__titre { font-weight: 500; line-height: 1.3; }
+.tuile__lieu { font-size: var(--t-mini); color: var(--texte-doux); margin-block-start: auto; }
+
+/* --- Sections ---------------------------------------------------------- */
+.principal { flex: 1 0 auto; padding-block: var(--e5) var(--e8); }
+.section { margin-block-start: var(--e7); }
+.section:first-child { margin-block-start: 0; }
+.section__entete { margin-block-end: var(--e4); display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--e2) var(--e4); }
+.section--sirene .page-entete__intro { margin-block-end: var(--e4); }
+.section__entete h2 { display: flex; align-items: center; gap: var(--e2); }
+.section__entete p { color: var(--texte-doux); flex: 1 1 100%; }
+.section__pied { margin-block-start: var(--e4); }
+.lien-suite { display: inline-flex; align-items: center; gap: var(--e1); font-weight: 500; text-decoration: none; }
+.lien-suite:hover { text-decoration: underline; }
+
+.page-entete { margin-block-end: var(--e6); display: grid; gap: var(--e3); }
+.page-entete h1 { display: flex; align-items: center; gap: var(--e2); flex-wrap: wrap; }
+.page-entete__intro { font-size: var(--t-grand); color: var(--texte-doux); max-inline-size: 44rem; }
+.page-entete .recherche { max-inline-size: 46rem; }
+
+.ancres { margin-block: var(--e5); }
+.ancres ul { display: flex; flex-wrap: wrap; gap: var(--e2); }
+.ancres a {
+  display: inline-flex; align-items: center; gap: var(--e1); min-block-size: 2.5rem;
+  padding: var(--e2) var(--e3); border: var(--trait) solid var(--bordure); border-radius: var(--rayon-pilule);
+  text-decoration: none; color: var(--texte); font-size: var(--t-petit); font-weight: 500;
+}
+.ancres a:hover { border-color: var(--accent); background: var(--accent-doux); color: var(--accent-doux-texte); }
+
+.sommaire {
+  inline-size: min(100% - 2 * var(--gouttiere), var(--largeur-etroite)); margin: 0 auto var(--e5);
+  padding: var(--e4); background: var(--fond-alt); border-radius: var(--rayon);
+}
+.sommaire h2 { font-size: var(--t-petit); text-transform: uppercase; letter-spacing: .06em; color: var(--texte-doux); margin-block-end: var(--e2); }
+.sommaire ol { display: grid; gap: var(--e1); }
+.sommaire a { font-weight: 500; }
+
+/* --- Listes de contenu -------------------------------------------------- */
+.liste-simple { display: grid; gap: var(--e1); }
+.liste-simple li { padding-block: var(--e2); border-block-end: var(--trait) solid var(--bordure); display: flex; flex-wrap: wrap; gap: var(--e2); justify-content: space-between; }
+.liste-simple__lieu { font-size: var(--t-mini); color: var(--texte-doux); }
+.liste-detail { display: grid; gap: var(--e4); }
+.liste-detail li { padding: var(--e4); border: var(--trait) solid var(--bordure); border-radius: var(--rayon); background: var(--fond-carte); }
+.liste-detail h3 { margin-block-end: var(--e2); }
+.liste-documents { display: grid; gap: var(--e1); }
+.liste-documents li { padding-block: var(--e2); border-block-end: var(--trait) solid var(--bordure); }
+.liste-documents a { display: inline-flex; align-items: center; gap: var(--e2); font-weight: 500; }
+.liste-documents .indisponible { color: var(--texte-doux); display: flex; align-items: center; gap: var(--e2); }
+.liste-documents .indisponible em { font-size: var(--t-petit); }
+.titre-groupe { display: flex; align-items: center; gap: var(--e2); margin-block: var(--e5) var(--e2); }
+
+.contact-liste { display: grid; gap: var(--e1); font-size: var(--t-petit); margin-block-start: var(--e2); }
+.contact-liste li { display: flex; gap: var(--e2); align-items: flex-start; color: var(--texte-doux); }
+.contact-liste .icone { color: var(--texte-tres-doux); margin-block-start: .15em; }
+.contact-liste a { position: relative; z-index: 1; }
+
+/* --- Carte des acteurs économiques ---------------------------------------
+   Fond de plan (contour + voirie) et projection calculés à la main dans
+   src/templates/views.mjs, à partir d'un relevé OpenStreetMap récupéré une
+   fois pour toutes (content/carte-fond.json) : aucune tuile ni aucun appel
+   réseau ici, conformément à la règle « zéro requête tierce ». Les points
+   restent de petite taille (carte dense, ~70 établissements) : le cercle
+   transparent qui les entoure agrandit un peu la zone cliquable, mais la
+   liste ci-dessous — dont chaque lien atteint bien la cible tactile de
+   44 px — reste le moyen d'accès de référence. */
+.carte-lecques { margin-block: var(--e4); }
+.carte-lecques svg {
+  display: block; inline-size: 100%; block-size: auto;
+  background: var(--fond-carte); border: 2px solid var(--bordure-forte); border-radius: var(--rayon);
+  box-shadow: var(--ombre);
+}
+.carte-lecques__contour { fill: var(--fond-accentue); stroke: var(--bordure-forte); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.carte-lecques__routes {
+  fill: none; stroke: var(--bordure-forte); stroke-width: 1; opacity: .6;
+  stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke;
+}
+.carte-lecques__riviere {
+  fill: none; stroke: var(--eau); stroke-width: 2.5;
+  stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke;
+}
+/* Noms de voies : un halo (paint-order: stroke, de la couleur du fond de
+   carte) plutôt qu'un encart plein, pour rester lisible sur le tracé des
+   routes ou le contour vert sans alourdir la carte d'un aplat de plus. Le
+   choix de savoir où poser ces étiquettes se fait déjà en amont, dans
+   src/templates/views.mjs (etiquettesVoies) : uniquement là où aucun
+   marqueur ni aucune autre étiquette n'est à proximité. */
+.carte-lecques__etiquettes text {
+  font-size: 10px; fill: var(--texte-doux); text-anchor: middle; dominant-baseline: middle;
+  paint-order: stroke; stroke: var(--fond-carte); stroke-width: 3px; stroke-linejoin: round;
+}
+.carte-lecques__marqueurs a { cursor: pointer; }
+.carte-lecques__point { fill: var(--lien); stroke: var(--fond-carte); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.carte-lecques__point--association { fill: var(--accent); }
+.carte-lecques__marqueurs a:hover .carte-lecques__point,
+.carte-lecques__marqueurs a:focus-visible .carte-lecques__point { stroke: var(--focus); stroke-width: 3; }
+.carte-lecques__marqueurs a:focus-visible { outline: none; }
+.carte-lecques__mairie-halo { fill: var(--accent-doux); }
+.carte-lecques__mairie-point { fill: var(--texte); stroke: var(--fond-carte); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.carte-lecques__legende { display: flex; flex-wrap: wrap; gap: var(--e2) var(--e4); margin-block-start: var(--e3); font-size: var(--t-petit); color: var(--texte-doux); }
+.carte-lecques__legende span { display: inline-flex; align-items: center; gap: var(--e1); }
+.carte-lecques__puce { inline-size: .7rem; block-size: .7rem; border-radius: 50%; flex-shrink: 0; }
+.carte-lecques__puce--commerce { background: var(--lien); }
+.carte-lecques__puce--association { background: var(--accent); }
+.carte-lecques__puce--mairie { background: var(--texte); }
+.carte-lecques__trait { inline-size: .85rem; block-size: 2px; background: var(--eau); flex-shrink: 0; }
+
+/* --- Liste dense (annuaire Sirene, page Professionnels) -----------------
+   Une colonne, deux lignes maxi par entrée (nom sur la première, activité/
+   adresse/date sur la seconde, chacune tronquée avec des points de
+   suspension plutôt que de déborder) — délibérément plus compacte et plus
+   sobre que les cartes de l'annuaire manuel au-dessus, pour marquer que la
+   source est différente (générée automatiquement, pas relue à la main). */
+.liste-entreprises { margin-block-start: var(--e4); border-block-start: var(--trait) solid var(--bordure); }
+.ligne-entreprise { display: flex; gap: var(--e2); align-items: flex-start; padding: var(--e2) 0; border-block-end: var(--trait) solid var(--bordure); }
+.ligne-entreprise .icone { flex-shrink: 0; margin-block-start: .2em; color: var(--texte-tres-doux); }
+/* grid-template-columns: minmax(0, 1fr) — sans lui, la colonne implicite
+   "auto" d'une grille se dimensionne sur le contenu maximal (le texte non
+   coupé) quel que soit l'overflow:hidden posé sur les enfants ; c'est ce
+   qui poussait la page en débordement horizontal malgré leur ellipsis. */
+.ligne-entreprise__corps { min-inline-size: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; }
+/* min-inline-size: 0 est indispensable ici : sans lui, cet élément (enfant
+   d'une grille elle-même enfant d'une ligne flex) refuse de rétrécir sous
+   la largeur de son contenu non coupé — l'ellipsis ne s'active jamais et
+   la ligne entière pousse la page en débordement horizontal. */
+.ligne-entreprise__nom { display: block; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.ligne-entreprise__enseigne { font-weight: 400; color: var(--texte-doux); }
+.ligne-entreprise__meta { display: block; font-size: var(--t-petit); color: var(--texte-doux); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* --- Encadré ------------------------------------------------------------ */
+.encadre {
+  margin-block-start: var(--e6); padding: var(--e5);
+  background: var(--fond-accentue); border-inline-start: 4px solid var(--accent); border-radius: var(--rayon);
+  display: grid; gap: var(--e3);
+}
+.encadre h2 { font-size: var(--t-h3); }
+
+/* --- Pied de page ------------------------------------------------------- */
+.pied {
+  margin-block-start: var(--e5); background: var(--fond-alt); border-block-start: var(--trait) solid var(--bordure);
+  font-size: var(--t-petit); line-height: 1.5;
+}
+@media (min-width: 48em) { .pied { margin-block-start: var(--e7); } }
+.pied h3 { font-size: var(--t-mini); text-transform: uppercase; letter-spacing: .06em; color: var(--texte-doux); margin: 0; }
+.pied ul { display: grid; gap: var(--e2); }
+.pied a { color: var(--texte); }
+.pied a:hover { color: var(--lien); }
+
+/* Coordonnées et horaires : bloc le plus consulté, toujours ouvert */
+.pied__contact { display: grid; gap: var(--e5); padding-block: var(--e5); border-block-end: var(--trait) solid var(--bordure); }
+@media (min-width: 40em) { .pied__contact { grid-template-columns: 1fr 1fr; gap: var(--e6); } }
+.pied__coordonnees h3, .pied__horaires-bloc h3 { margin-block-end: var(--e2); }
+.pied__coordonnees address { font-style: normal; }
+.pied__horaires { gap: 0; margin-block-end: var(--e2); }
+.pied__horaires li {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--e1) var(--e3);
+  padding-block: var(--e1); border-block-end: var(--trait) solid var(--bordure);
+}
+.pied__horaires li:last-child { border-block-end: none; }
+.pied__horaires li span:first-child { font-weight: 500; }
+
+/* Plan du site : les rubriques secondaires se replient pour rester courtes */
+.pied__plan { padding-block: var(--e1); border-block-end: var(--trait) solid var(--bordure); }
+.pied__colonne { border-block-end: var(--trait) solid var(--bordure); }
+.pied__colonne:last-child { border-block-end: none; }
+.pied__colonne summary {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--e3);
+  min-block-size: var(--cible); padding-block: var(--e2); cursor: pointer; list-style: none;
+}
+.pied__colonne summary::-webkit-details-marker { display: none; }
+.pied__colonne summary h3 { color: var(--texte); font-size: var(--t-petit); }
+.pied__colonne summary:hover h3 { color: var(--lien); }
+.pied__chevron { color: var(--texte-doux); transition: transform var(--transition); }
+.pied__colonne[open] .pied__chevron { transform: rotate(90deg); }
+.pied__colonne ul { padding-block-end: var(--e3); }
+@media (min-width: 64em) {
+  .pied__plan { display: grid; grid-template-columns: repeat(5, 1fr); border-block-end: none; }
+  .pied__colonne { border-block-end: none; border-inline-start: var(--trait) solid var(--bordure); padding-inline-start: var(--e4); }
+  .pied__colonne:first-child { border-inline-start: none; padding-inline-start: 0; }
+}
+
+.pied__liens-utiles { padding-block: var(--e5); }
+.pied__liens-utiles ul { display: flex; flex-wrap: wrap; gap: var(--e2) var(--e5); }
+
+.pied__bas { background: var(--fond); border-block-start: var(--trait) solid var(--bordure); }
+.pied__bas-inner { display: flex; flex-wrap: wrap; gap: var(--e3) var(--e5); justify-content: space-between; align-items: center; padding-block: var(--e4); }
+.pied__bas-inner .pied__legal { display: flex; flex-wrap: wrap; gap: var(--e2) var(--e4); }
+.pied__copyright { color: var(--texte-doux); }
+
+/* --- Barre d'action mobile ---------------------------------------------- */
+.barre-mobile {
+  position: fixed; inset-inline: 0; inset-block-end: 0; z-index: 80;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  background: var(--fond); border-block-start: var(--trait) solid var(--bordure);
+  padding-block-end: env(safe-area-inset-bottom);
+  box-shadow: 0 -2px 12px rgb(0 0 0 / .08);
+}
+.barre-mobile a {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  min-block-size: 3.5rem; min-inline-size: 0; padding: var(--e2) 2px;
+  font-size: var(--t-mini); font-weight: 500; color: var(--texte); text-decoration: none;
+}
+/* À 320 px, quatre libellés doivent tenir sans jamais provoquer de défilement
+   horizontal : ils se réduisent, puis se tronquent proprement. */
+.barre-mobile a > span:not(.sr-only) {
+  max-inline-size: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+@media (max-width: 22.5em) { .barre-mobile a { font-size: .75rem; letter-spacing: -.01em; } }
+.barre-mobile a:hover { color: var(--lien); background: var(--fond-alt); }
+.barre-mobile .icone { inline-size: 1.375rem; block-size: 1.375rem; }
+.barre-mobile .lien-externe .icone--mini { display: none; }
+body { padding-block-end: 3.5rem; }
+@media (min-width: 64em) { .barre-mobile { display: none; } body { padding-block-end: 0; } }
+
+/* --- Tableaux ------------------------------------------------------------ */
+/* Un tableau trop large défile dans son propre cadre : la page, elle, ne
+   défile jamais horizontalement (RGAA 10.11). Le cadre est focalisable pour
+   rester atteignable au clavier. */
+.tableau-defilant { overflow-x: auto; }
+.tableau-defilant:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+/* Variante « ascenseur » : hauteur limitée avec défilement vertical et
+   en-tête collant, pour les tableaux à beaucoup de lignes (ex. les séances
+   d'un conseil municipal sur une année) sans allonger indéfiniment la page. */
+.tableau-defilant--vertical { max-block-size: 15rem; overflow-y: auto; }
+.tableau-defilant--vertical .tableau thead th { position: sticky; inset-block-start: 0; }
+.tableau { font-size: var(--t-petit); min-inline-size: 22rem; }
+.tableau th, .tableau td { padding: var(--e3); text-align: start; border-block-end: var(--trait) solid var(--bordure); }
+.tableau thead th { background: var(--fond-alt); font-weight: 600; }
+.tableau tfoot th, .tableau tfoot td { font-weight: 600; }
+.tableau td:not(:first-child) { text-align: end; font-variant-numeric: tabular-nums; }
+/* Le tableau des conseils municipaux a un lien (icône + texte) en deuxième
+   colonne, pas un nombre : on annule l'alignement à droite hérité ci-dessus. */
+.tableau--conseils td:not(:first-child) { text-align: start; font-variant-numeric: normal; }
+
+/* --- Prose (pages Markdown) ---------------------------------------------- */
+.prose { display: grid; gap: var(--e4); max-inline-size: 42rem; }
+.prose h2 { margin-block-start: var(--e5); }
+.prose h3 { margin-block-start: var(--e3); }
+.prose ul, .prose ol { display: grid; gap: var(--e2); padding-inline-start: var(--e5); }
+.prose ul li { list-style: disc; }
+.prose ol li { list-style: decimal; }
+.prose ul li::marker, .prose ol li::marker { color: var(--accent); }
+.prose blockquote {
+  padding: var(--e4) var(--e5); background: var(--fond-alt);
+  border-inline-start: 4px solid var(--accent); border-radius: var(--rayon-petit); font-style: italic;
+}
+.prose hr { border: 0; border-block-start: var(--trait) solid var(--bordure); }
+.prose code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .9em; background: var(--fond-alt); padding: .1em .35em; border-radius: var(--rayon-petit); }
+
+/* --- Bannière en écho ------------------------------------------------------
+   Une photo cliquée dans la galerie d'accueil doit se retrouver, adoucie, sur
+   la page appelée : le fil visuel entre les deux. Couleurs atténuées via un
+   filtre CSS, puis une teinte de la couleur d'accent du thème en surimpression
+   — jamais de couleur codée en dur, uniquement les variables déjà définies.
+   Aucun texte ne repose sur cette image : le contraste du titre, en dessous,
+   ne dépend jamais d'elle. ------------------------------------------------- */
+.banniere-page { position: relative; margin-block-end: var(--e5); border-radius: var(--rayon-grand); overflow: hidden; }
+.banniere-page img {
+  display: block; inline-size: 100%; block-size: clamp(9.5rem, 24vw, 16rem); object-fit: cover;
+  filter: saturate(.55) contrast(.94) brightness(1.04);
+}
+.banniere-page::after {
+  content: ""; position: absolute; inset: 0; background: var(--accent-doux);
+  mix-blend-mode: multiply; opacity: .4; pointer-events: none;
+}
+.banniere-page figcaption { margin-block-start: var(--e2); font-size: var(--t-mini); color: var(--texte-doux); }
+
+.documents { margin-block-start: var(--e6); padding: var(--e5); background: var(--fond-alt); border-radius: var(--rayon); }
+.documents h2 { font-size: var(--t-h3); margin-block-end: var(--e3); }
+.documents .poids {
+  font-size: var(--t-mini); font-weight: 500; color: var(--texte-doux);
+  border: var(--trait) solid var(--bordure); border-radius: var(--rayon-petit); padding: 0 .35em;
+}
+
+.liens-utiles { margin-block-start: var(--e6); padding: var(--e5); background: var(--fond-alt); border-radius: var(--rayon); }
+.liens-utiles h2 { font-size: var(--t-h3); margin-block-end: var(--e3); }
+.liens-utiles__boutons { display: flex; flex-wrap: wrap; gap: var(--e3); list-style: none; padding: 0; margin: 0; }
+
+/* Logo d'un site partenaire : plaque blanche fixe, pour rester lisible quel que
+   soit le thème (y compris en mode sombre), le logo lui-même n'étant pas prévu
+   pour être posé sur un fond coloré. */
+.logo-lien { background: #fff; border-color: var(--bordure-forte); padding-inline: var(--e4); }
+.logo-lien:hover { border-color: var(--accent); }
+.logo-lien img { display: block; width: auto; height: auto; max-inline-size: 11rem; max-block-size: 2.5rem; }
+.logo-lien .icone { display: none; }
+
+/* --- Prochains passages (page Transports) --------------------------------
+   Rendu sans JavaScript comme un horaire théorique normal (voir
+   src/templates/views.mjs, widgetTransportLio) ; src/scripts/transport-lio.js
+   vient seulement remplir .transport-lio__statut, vide au départ. */
+.transport-lio { margin-block-start: var(--e5); padding: var(--e4); background: var(--fond-alt); border-radius: var(--rayon); }
+.transport-lio h2 { font-size: var(--t-h3); margin-block-end: var(--e3); }
+.transport-lio__liste { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--e2); }
+.transport-lio__depart {
+  display: grid; grid-template-columns: auto 1fr; gap: var(--e1) var(--e3); align-items: baseline;
+  padding: var(--e3); background: var(--fond-carte); border: var(--trait) solid var(--bordure); border-radius: var(--rayon-petit);
+}
+.transport-lio__heure { font-weight: 700; font-size: var(--t-grand); grid-row: 1 / 3; align-self: center; }
+.transport-lio__direction { font-weight: 500; }
+.transport-lio__jours { grid-column: 2; font-size: var(--t-mini); color: var(--texte-doux); }
+.transport-lio__statut { grid-column: 2; font-size: var(--t-petit); font-weight: 600; }
+.transport-lio__statut:empty { display: none; }
+.transport-lio__statut--aheure { color: var(--succes); }
+.transport-lio__statut--retard { color: var(--attention); }
+.transport-lio__statut--supprime { color: var(--danger); }
+.transport-lio__statut--absent { color: var(--texte-tres-doux); font-weight: 400; }
+.transport-lio__arrets { grid-column: 1 / -1; margin-block-start: var(--e2); }
+.transport-lio__arrets summary {
+  display: flex; align-items: center; gap: var(--e1); cursor: pointer;
+  font-size: var(--t-mini); color: var(--texte-doux); list-style: none; min-height: 44px;
+}
+.transport-lio__arrets summary::-webkit-details-marker { display: none; }
+.transport-lio__arrets summary:hover { color: var(--lien); }
+.transport-lio__chevron { color: var(--texte-doux); transition: transform var(--transition); flex-shrink: 0; }
+.transport-lio__arrets[open] .transport-lio__chevron { transform: rotate(90deg); }
+.transport-lio__arrets ol { margin: var(--e2) 0 0; padding-inline-start: 1.25em; font-size: var(--t-mini); color: var(--texte-doux); display: grid; gap: var(--e1); }
+.transport-lio__note { margin-block-start: var(--e3); font-size: var(--t-mini); color: var(--texte-doux); }
+@media (min-width: 30em) {
+  .transport-lio__depart { grid-template-columns: 5rem 1fr auto; }
+  .transport-lio__heure { grid-row: 1; }
+  .transport-lio__jours { grid-column: 2; grid-row: 2; }
+  .transport-lio__statut { grid-column: 3; grid-row: 1 / 3; align-self: center; text-align: end; }
+}

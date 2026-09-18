@@ -1,0 +1,151 @@
+/* =========================================================================
+   Thème « Garrigue » — identitaire et chaleureux.
+   Olivier, terre cuite et pierre : les couleurs du Gard. Titres à
+   empattements, formes adoucies, plus de place au paysage et au patrimoine.
+   ========================================================================= */
+[data-theme="garrigue"] {
+  --fond: #fdfaf5;
+  --fond-alt: #f3ece1;
+  --fond-carte: #ffffff;
+  --fond-accentue: #eaf0e2;
+  --fond-inverse: #2b2621;
+  --texte-inverse: #fdfaf5;
+
+  --texte: #2b2621;
+  --texte-doux: #554c42;
+  --texte-tres-doux: #6a5f53;
+
+  --bordure: #e0d5c4;
+  --bordure-forte: #9c8c76;
+
+  --accent: #45592f;
+  --accent-survol: #34451f;
+  --accent-texte: #ffffff;
+  --accent-doux: #e7ecdf;
+  --accent-doux-texte: #34451f;
+
+  --lien: #7a3520;
+  --lien-survol: #5c2415;
+  --focus: #b5533c;
+
+  --danger: #9c2c17;
+  --danger-fond: #fbe9e4;
+  --succes: #36622f;
+  --succes-fond: #e7f0e2;
+  --info: #2c5468;
+  --info-fond: #e5eef2;
+  --attention: #8a5300;
+  --attention-fond: #fdf1de;
+  --eau: #1478b4;
+
+  /* Une couleur par rubrique du menu principal, pour les différencier au
+     premier coup d'œil — indépendamment de la lecture du texte. */
+  --nav-demarches: #45592f;
+  --nav-vie-locale: #b5533c;
+  --nav-enfance-jeunesse: #c9932e;
+  --nav-cadre-de-vie: #3f7a68;
+  --nav-mairie: #7a4a6b;
+
+  --police-titre: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  --graisse-titre: 500;
+  --interlettrage-titre: 0;
+  --rayon: 12px;
+  --rayon-petit: 8px;
+  --rayon-grand: 20px;
+  --ombre: 0 1px 2px rgb(75 60 40 / .05), 0 10px 28px -8px rgb(75 60 40 / .14);
+  --ombre-forte: 0 4px 10px rgb(75 60 40 / .10), 0 24px 48px -12px rgb(75 60 40 / .20);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="garrigue"]:not([data-clair]) {
+    --fond: #1c1a17;
+    --fond-alt: #24211d;
+    --fond-carte: #24211d;
+    --fond-accentue: #23291d;
+    --fond-inverse: #f3ece1;
+    --texte-inverse: #24211d;
+    --texte: #f0e9df;
+    --texte-doux: #cfc4b5;
+    --texte-tres-doux: #b8ac9c;
+    --bordure: #3b352d;
+    --bordure-forte: #857a6a;
+    --accent: #a8c48a;
+    --accent-survol: #c2d9a9;
+    --accent-texte: #1f2a14;
+    --accent-doux: #2a3122;
+    --accent-doux-texte: #bcd3a1;
+    --lien: #e9a487;
+    --lien-survol: #f3c0aa;
+    --focus: #e9a487;
+    --danger: #f0a08c; --danger-fond: #33201b;
+    --succes: #a8c48a; --succes-fond: #222a1c;
+    --info: #9dc2d4;  --info-fond: #1e2a30;
+    --attention: #e8bd7c; --attention-fond: #2f2617;
+    --eau: #6fc2ea;
+
+    --nav-demarches: #a8c48a;
+    --nav-vie-locale: #e9a487;
+    --nav-enfance-jeunesse: #e0bd6e;
+    --nav-cadre-de-vie: #7fc4ae;
+    --nav-mairie: #cd9ac0;
+  }
+}
+
+[data-theme="garrigue"][data-contraste="1"] {
+  --fond: #ffffff; --fond-alt: #ffffff; --fond-carte: #ffffff; --fond-accentue: #ffffff;
+  --texte: #000000; --texte-doux: #000000; --texte-tres-doux: #1a1a1a;
+  --bordure: #000000; --bordure-forte: #000000;
+  --accent: #223214; --accent-doux: #ffffff; --accent-doux-texte: #223214;
+  --lien: #5c2415; --lien-survol: #000000; --trait: 2px;
+  --nav-demarches: var(--accent); --nav-vie-locale: var(--accent);
+  --nav-enfance-jeunesse: var(--accent); --nav-cadre-de-vie: var(--accent); --nav-mairie: var(--accent);
+}
+
+/* -------------------------------------------------------------------------
+   Le bandeau d'accueil du thème Garrigue porte une photo du village.
+   L'image n'est téléchargée que si ce thème est actif : les deux autres
+   thèmes ne paient jamais son poids.
+   Le voile est volontairement très opaque sous la colonne de texte : le
+   contraste du titre et du champ de recherche ne dépend jamais de la photo.
+   ------------------------------------------------------------------------- */
+[data-theme="garrigue"] .heros {
+  background-image:
+    linear-gradient(to bottom, rgb(253 250 245 / .96), rgb(253 250 245 / .92)),
+    url("/img/pont-vidourle-700.jpg");
+  background-size: cover;
+  background-position: center 60%;
+}
+
+@media (min-width: 48em) {
+  [data-theme="garrigue"] .heros {
+    background-image:
+      linear-gradient(to right, rgb(253 250 245 / .98) 0%, rgb(253 250 245 / .96) 52%, rgb(253 250 245 / .45) 100%),
+      url("/img/pont-vidourle-1200.jpg");
+    background-position: center 55%;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="garrigue"]:not([data-clair]) .heros {
+    background-image:
+      linear-gradient(to bottom, rgb(28 26 23 / .96), rgb(28 26 23 / .93)),
+      url("/img/pont-vidourle-700.jpg");
+  }
+  @media (min-width: 48em) {
+    [data-theme="garrigue"]:not([data-clair]) .heros {
+      background-image:
+        linear-gradient(to right, rgb(28 26 23 / .98) 0%, rgb(28 26 23 / .95) 52%, rgb(28 26 23 / .5) 100%),
+        url("/img/pont-vidourle-1200.jpg");
+    }
+  }
+}
+
+/* En contraste renforcé, la photo disparaît : rien ne doit gêner la lecture. */
+[data-theme="garrigue"][data-contraste="1"] .heros { background-image: none; }
+
+[data-theme="garrigue"] .bouton--principal:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgb(75 60 40 / .22); }
+[data-theme="garrigue"] .carte:has(.carte__titre a):hover { transform: translateY(-3px); }
+[data-theme="garrigue"] .marque__blason { box-shadow: 0 2px 6px rgb(75 60 40 / .25); }
+[data-theme="garrigue"] .recherche__boite,
+[data-theme="garrigue"] .heros__statut { box-shadow: var(--ombre); }
+[data-theme="garrigue"] .tuile a:hover .tuile__icone { background: var(--accent); color: var(--accent-texte); }

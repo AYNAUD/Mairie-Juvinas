@@ -1,0 +1,118 @@
+/* ------------------------------------------------------------------------
+   Variables de conception. AUCUNE couleur n'est écrite ailleurs que dans
+   ce fichier et dans les trois fichiers theme-*.css.
+   ------------------------------------------------------------------------ */
+:root {
+  /* Espacement — échelle de 4 px */
+  --e1: .25rem; --e2: .5rem; --e3: .75rem; --e4: 1rem; --e5: 1.5rem;
+  --e6: 2rem; --e7: 3rem; --e8: 4rem; --e9: 6rem;
+
+  /* Typographie — fluide, sans jamais descendre sous 16 px pour le corps */
+  --police-corps: "Trebuchet MS", "Helvetica Neue", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --police-titre: var(--police-corps);
+  --graisse-titre: 600;
+  --interlettrage-titre: -.01em;
+
+  --t-corps: 1rem;
+  --t-petit: .875rem;
+  --t-mini: .8125rem;
+  --t-grand: 1.0625rem;
+  --t-h1: clamp(1.5rem, 1.1rem + 1.8vw, 2.25rem);
+  --t-h2: clamp(1.25rem, .975rem + 1vw, 1.625rem);
+  --t-h3: clamp(1rem, .9rem + .43vw, 1.1875rem);
+  --hauteur-ligne: 1.6;
+  --hauteur-ligne-titre: 1.2;
+
+  /* Formes */
+  --rayon: 8px;
+  --rayon-petit: 4px;
+  --rayon-grand: 16px;
+  --rayon-pilule: 999px;
+  --trait: 1px;
+  --ombre: 0 1px 2px rgb(0 0 0 / .06), 0 4px 12px rgb(0 0 0 / .05);
+  --ombre-forte: 0 2px 4px rgb(0 0 0 / .08), 0 12px 32px rgb(0 0 0 / .10);
+
+  /* Mise en page */
+  --largeur: 76rem;
+  --largeur-etroite: 48rem;
+  --gouttiere: var(--e4);
+  --cible: 44px;           /* taille minimale d'une cible tactile — RGAA */
+
+  --transition: 160ms ease;
+}
+
+@media (min-width: 48em) { :root { --gouttiere: var(--e6); } }
+
+/* Réglages du panneau d'affichage --------------------------------------- */
+[data-taille="grand"]      { font-size: 112.5%; }
+[data-taille="tres-grand"] { font-size: 131.25%; }
+
+[data-dyslexie="1"] {
+  --police-corps: Verdana, Tahoma, "DejaVu Sans", sans-serif;
+  --police-titre: Verdana, Tahoma, "DejaVu Sans", sans-serif;
+  --hauteur-ligne: 1.9;
+  letter-spacing: .04em;
+  word-spacing: .16em;
+}
+
+/* Base ------------------------------------------------------------------- */
+html { scroll-behavior: smooth; }
+[data-anime="0"] html { scroll-behavior: auto; }
+
+body {
+  margin: 0;
+  font-family: var(--police-corps);
+  font-size: var(--t-corps);
+  line-height: var(--hauteur-ligne);
+  color: var(--texte);
+  background: var(--fond);
+  min-block-size: 100vh;
+  display: flex; flex-direction: column;
+  padding-block-end: env(safe-area-inset-bottom);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--police-titre);
+  font-weight: var(--graisse-titre);
+  line-height: var(--hauteur-ligne-titre);
+  letter-spacing: var(--interlettrage-titre);
+  text-wrap: balance;
+}
+h1 { font-size: var(--t-h1); }
+h2 { font-size: var(--t-h2); }
+h3 { font-size: var(--t-h3); }
+p { text-wrap: pretty; }
+
+a { color: var(--lien); text-underline-offset: .18em; }
+a:hover { color: var(--lien-survol); }
+
+/* Focus : toujours visible, toujours contrasté. */
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: var(--rayon-petit);
+}
+.js :focus:not(:focus-visible) { outline: none; }
+
+::selection { background: var(--accent-doux); color: var(--texte); }
+
+/* Utilitaires ------------------------------------------------------------ */
+.sr-only {
+  position: absolute !important; inline-size: 1px; block-size: 1px;
+  padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+.conteneur { inline-size: min(100% - 2 * var(--gouttiere), var(--largeur)); margin-inline: auto; }
+.conteneur--etroit { inline-size: min(100% - 2 * var(--gouttiere), var(--largeur-etroite)); }
+
+.evitement {
+  position: absolute; inset-inline-start: var(--e4); inset-block-start: -100%;
+  z-index: 200; padding: var(--e3) var(--e4);
+  background: var(--accent); color: var(--accent-texte);
+  border-radius: 0 0 var(--rayon) var(--rayon); font-weight: 500;
+}
+.evitement:focus { inset-block-start: 0; color: var(--accent-texte); }
+
+.icone { inline-size: 1.5em; block-size: 1.5em; flex: none; fill: none; stroke: currentColor; }
+.icone--mini { inline-size: 1.125em; block-size: 1.125em; }
+
+.lien-externe .icone--mini { display: inline-block; vertical-align: -.16em; margin-inline-start: .25em; opacity: .75; }

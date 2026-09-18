@@ -1,0 +1,103 @@
+{
+  "_lisezmoi": "Formulations en langage courant que les habitants tapent réellement dans la recherche. La clé est l'identifiant d'une démarche ou d'une page ; la valeur, la liste des façons de le dire. Ajoutez librement : plus la liste est fournie, plus la recherche paraît intelligente.",
+  "demarches": {
+    "rendez-vous-elu": [
+      "rencontrer le maire", "signaler un lampadaire en panne", "signaler un problème",
+      "rendez-vous avec un élu", "nid de poule"
+    ],
+    "carte-identite": [
+      "j'ai perdu ma carte d'identité", "perte carte identite", "carte d'identité perdue",
+      "refaire ma carte d'identité", "renouveler carte identite", "carte d'identité périmée",
+      "faire une carte d'identité", "cni perdue", "papiers d'identité", "pièce d'identité",
+      "carte identité enfant", "vol carte d'identité"
+    ],
+    "passeport": [
+      "perte de passeport", "j'ai perdu mon passeport", "passeport perdu", "refaire mon passeport",
+      "passeport périmé", "renouveler passeport", "faire un passeport", "passeport enfant",
+      "passeport pour voyager", "partir à l'étranger", "titre de voyage", "passport"
+    ],
+    "carte-grise": [
+      "changer l'adresse de ma carte grise", "carte grise", "j'ai vendu ma voiture",
+      "j'ai acheté une voiture", "certificat d'immatriculation", "changement de titulaire",
+      "plaque d'immatriculation", "declaration de cession"
+    ],
+    "permis-conduire": [
+      "permis de conduire", "j'ai perdu mon permis", "permis perdu", "renouveler mon permis",
+      "points du permis", "inscription auto-école"
+    ],
+    "acte-naissance": [
+      "acte de naissance", "extrait de naissance", "copie intégrale", "acte de mariage",
+      "acte de décès", "livret de famille"
+    ],
+    "listes-electorales": [
+      "inscription sur les listes électorales", "je viens de déménager je veux voter",
+      "m'inscrire pour voter", "carte électorale", "nouvel habitant vote"
+    ],
+    "procuration": [
+      "procuration", "voter par procuration", "je serai absent le jour du vote", "maprocuration"
+    ],
+    "recensement-citoyen": [
+      "mon fils a 16 ans", "recensement citoyen", "attestation de recensement", "jdc",
+      "journée défense et citoyenneté"
+    ],
+    "mariage": ["je veux me marier", "se marier", "dossier de mariage", "bans"],
+    "pacs": ["se pacser", "pacs", "enregistrer un pacs"],
+    "naissance": ["déclarer une naissance", "mon bébé est né"],
+    "deces": ["quelqu'un est décédé", "déclarer un décès", "obsèques"],
+    "concession-cimetiere": ["place au cimetière", "concession cimetière", "tombe", "caveau"],
+    "permis-de-construire": [
+      "je veux construire un abri de jardin", "poser une clôture", "faire une piscine",
+      "permis de construire", "déclaration préalable de travaux", "agrandir ma maison"
+    ],
+    "certificat-urbanisme": [
+      "je veux acheter un terrain", "certificat d'urbanisme", "terrain constructible"
+    ],
+    "cadastre": ["numéro de ma parcelle", "plan cadastral", "limite de propriété"],
+    "ecole-cantine": ["inscrire mon enfant à l'école", "inscription scolaire", "cantine"],
+    "encombrants": ["faire enlever un vieux canapé", "encombrants", "vieux frigo", "déchetterie"],
+    "salle-communale": ["louer la salle des fêtes", "salle communale", "organiser un anniversaire"]
+  },
+  "pages": {
+    "urbanisme": ["plu", "plan local d'urbanisme", "plan de zonage", "zonage", "règlement d'urbanisme", "zone constructible", "carte communale"],
+    "dechets": ["consignes de tri", "jour de collecte", "stop pub", "bac jaune", "bac vert", "compostage"],
+    "eau": ["facture d'eau", "eau potable", "assainissement", "tout à l'égout", "station d'épuration"],
+    "risques": ["dicrim", "plan communal de sauvegarde", "inondation", "canicule", "incendie de forêt"],
+    "environnement": ["obligation légale de débroussaillement", "olf", "brûlage des végétaux"],
+    "transports": ["horaires de bus", "minibus", "transport scolaire", "covoiturage"],
+    "services": ["commerces", "professions de santé", "services de proximité"],
+    "commune": ["découvrir juvinas", "présentation de la commune", "météorite de juvinas"],
+    "histoire": ["histoire du village", "météorite de juvinas", "patrimoine"],
+    "bulletins": ["bulletin municipal", "journal de la commune"],
+    "parcours-citoyen": ["recensement 16 ans", "jdc", "service national universel"]
+  },
+  "reponsesRapides": [
+    {
+      "id": "horaires",
+      "questions": ["horaires de la mairie", "quand est ouverte la mairie", "la mairie est-elle ouverte", "heures d'ouverture", "ouverture mairie", "horaires"],
+      "titre": "Horaires du secrétariat de mairie",
+      "reponse": "Lundi 13h30–17h30 · Mercredi 13h30–17h30. Fermé le reste de la semaine. À confirmer auprès de la mairie.",
+      "url": "/mairie/contact.html"
+    },
+    {
+      "id": "telephone",
+      "questions": ["numéro de téléphone de la mairie", "téléphone mairie", "appeler la mairie", "contact mairie", "joindre la mairie"],
+      "titre": "Téléphone de la mairie",
+      "reponse": "04 75 88 21 56 — mairie@juvinas.fr — Le Village, 35 route de la Mairie, 07600 Juvinas.",
+      "url": "/mairie/contact.html"
+    },
+    {
+      "id": "maire",
+      "questions": ["qui est le maire", "nom du maire", "le maire de juvinas", "les élus", "conseil municipal"],
+      "titre": "Le maire de Juvinas",
+      "reponse": "Jean-Claude COURT est maire de Juvinas, entouré de deux adjoints et de huit conseillers municipaux.",
+      "url": "/mairie/elus.html"
+    },
+    {
+      "id": "conseil",
+      "questions": ["comptes rendus du conseil", "procès verbal conseil municipal", "délibérations", "prochain conseil municipal"],
+      "titre": "Les séances du conseil municipal",
+      "reponse": "Les séances sont publiques et ouvertes à tous les habitants.",
+      "url": "/mairie/conseils-municipaux.html"
+    }
+  ]
+}

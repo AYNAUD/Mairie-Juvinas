@@ -1,0 +1,353 @@
+/* =====================================================================
+   Styles propres à certaines pages.
+   ===================================================================== */
+
+/* --- Accueil : héros ---------------------------------------------------- */
+.heros { padding-block: var(--e5) var(--e6); background: var(--fond-accentue); border-block-end: var(--trait) solid var(--bordure); margin-block-start: calc(-1 * var(--e5)); }
+@media (min-width: 48em) { .heros { padding-block: var(--e6) var(--e7); } }
+.heros__titre { max-inline-size: 20ch; font-size: clamp(1.5625rem, 1.08rem + 2.16vw, 2.375rem); }
+.heros__intro { color: var(--texte-doux); margin-block: var(--e2) var(--e4); max-inline-size: 44rem; }
+@media (min-width: 48em) { .heros__intro { font-size: var(--t-grand); margin-block-end: var(--e5); } }
+.heros .recherche { max-inline-size: 46rem; }
+.heros__suggestions { margin-block-start: var(--e4); max-inline-size: 46rem; }
+.heros__suggestions-titre { font-size: var(--t-petit); text-transform: uppercase; letter-spacing: .06em; color: var(--texte-doux); font-weight: 600; margin-block-end: var(--e2); }
+
+/* Statut du secrétariat remonté dans le héros : même mécanique que
+   .pratique__statut (horaires.js cible tout élément [data-statut-mairie]),
+   habillée en pastille pour rester lisible sur une seule ligne. */
+.pratique__statut.heros__statut {
+  display: inline-flex; flex-wrap: wrap; background: var(--fond-carte);
+  border: var(--trait) solid var(--bordure); border-radius: var(--rayon-pilule);
+  padding: var(--e2) var(--e4); font-size: var(--t-petit); margin-block: 0 var(--e4);
+}
+.heros__statut a { font-weight: 500; text-decoration: underline; text-underline-offset: .2em; margin-inline-start: var(--e1); }
+
+.page-accueil .section--tuiles { margin-block-start: var(--e7); }
+
+/* --- Accueil : bloc pratique -------------------------------------------- */
+.section--pratique { background: var(--fond-alt); padding-block: var(--e7); margin-block-start: var(--e7); }
+.pratique__statut { display: flex; align-items: center; gap: var(--e2); margin-block: var(--e3); font-weight: 500; }
+.pastille { inline-size: .75rem; block-size: .75rem; border-radius: 50%; background: var(--texte-tres-doux); flex: none; }
+[data-ouverte="1"] .pastille { background: var(--succes); }
+[data-ouverte="0"] .pastille { background: var(--danger); }
+.pratique__horaires { display: grid; gap: var(--e1); max-inline-size: 26rem; }
+.pratique__horaires li { display: flex; justify-content: space-between; gap: var(--e3); padding-block: var(--e2); border-block-end: var(--trait) solid var(--bordure); }
+.pratique__horaires li.ferme { color: var(--texte-tres-doux); }
+.pratique__horaires li[data-aujourdhui] { font-weight: 600; color: var(--texte); }
+.pratique__horaires li[data-aujourdhui] span:first-child::after { content: " · aujourd'hui"; font-weight: 400; font-size: var(--t-mini); color: var(--texte-doux); }
+
+/* Une seule carte pour les horaires, les coordonnées et l'aide du secrétariat
+   — trois colonnes séparées par un trait, une seule sous 56em. */
+.carte--pratique { padding: 0; }
+.pratique-grille { display: grid; }
+@media (min-width: 56em) { .pratique-grille { grid-template-columns: repeat(3, 1fr); } }
+.pratique-colonne { padding: var(--e5); border-block-end: var(--trait) solid var(--bordure); }
+.pratique-colonne:last-child { border-block-end: 0; }
+@media (min-width: 56em) {
+  .pratique-colonne { border-block-end: 0; border-inline-end: var(--trait) solid var(--bordure); }
+  .pratique-colonne:last-child { border-inline-end: 0; }
+}
+.pratique-colonne h3 { display: flex; align-items: center; gap: var(--e2); font-size: var(--t-corps); margin-block-end: var(--e3); }
+.pratique-colonne h3 .icone { color: var(--accent); }
+.pratique__contacts { display: grid; gap: var(--e3); margin-block: var(--e3); }
+.pratique__contacts li { display: flex; gap: var(--e3); align-items: flex-start; }
+.pratique__contacts .icone { color: var(--accent); flex: none; }
+.pratique__boutons { display: flex; flex-wrap: wrap; gap: var(--e3); margin-block-start: var(--e4); }
+
+.liste-actus { display: grid; gap: var(--e4); }
+
+/* --- Image d'actualité -------------------------------------------------
+   Même principe que .carte-galerie : aspect-ratio fixe + object-fit: cover,
+   pour un rendu uniforme quelle que soit la photo envoyée par la mairie.
+   L'article, lui, propose un lien vers l'image d'origine non recadrée. */
+.carte__image { display: block; aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--rayon); margin-block-end: var(--e3); }
+.carte__image img { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; }
+.carte__texte { display: flex; flex-direction: column; gap: var(--e2); min-inline-size: 0; }
+
+/* --- Page « Actualités » : une à la une + grille -------------------------
+   Les actualités épinglées ressortent en grand format (image et texte côte
+   à côte à partir de 40em), les autres se rangent dans une grille de cartes
+   qui se densifie avec la largeur d'écran, plutôt qu'une simple liste. */
+.liste-actus--une { gap: var(--e5); margin-block-end: var(--e5); }
+.carte--actu-une { border-color: var(--accent); }
+.carte--actu-une .carte__titre { font-size: var(--t-h2); }
+@media (min-width: 40em) {
+  .carte--actu-une:has(.carte__image) { display: grid; grid-template-columns: 1.1fr 1fr; gap: var(--e5); align-items: center; }
+  .carte--actu-une .carte__image { aspect-ratio: 4 / 3; margin-block-end: 0; }
+  .carte--actu-une .carte__resume { -webkit-line-clamp: 5; line-clamp: 5; }
+}
+.grille-actus { display: grid; gap: var(--e4); }
+@media (min-width: 40em) { .grille-actus { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 64em) { .grille-actus { grid-template-columns: repeat(3, 1fr); } }
+/* .article__corps enveloppe l'image et le texte : le clearfix (::after)
+   empêche l'image flottante (voir plus bas, à partir de 40em) de déborder
+   sur les blocs suivants ("Pour aller plus loin", lien de retour) quand le
+   texte est plus court que l'image. */
+.article__corps::after { content: ""; display: table; clear: both; }
+.article__image { margin: 0 0 var(--e5) 0; }
+.article__image img { display: block; inline-size: 100%; block-size: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--rayon); }
+.article__image figcaption { margin-block-start: var(--e2); font-size: var(--t-mini); }
+.article__image figcaption a { color: var(--texte-doux); }
+/* Le chapeau vit ici (dans .article__corps, pas dans l'en-tête) précisément
+   pour qu'il s'enroule lui aussi autour de l'image comme le corps — sinon un
+   chapeau long (résumé saisi trop généreusement) resterait affiché en pleine
+   largeur au-dessus de l'image, sans profiter de l'habillage ci-dessous. */
+.article__corps .page-entete__intro { margin-block-end: var(--e4); }
+/* Au-delà de 40em, l'image se cale en haut à gauche et le texte l'enveloppe
+   plutôt que de s'empiler dessous — utile pour un texte long. En dessous,
+   l'image reste en pleine largeur au-dessus du texte (mobile d'abord) : un
+   texte flotté trop tôt réduirait la colonne de lecture à presque rien. */
+@media (min-width: 40em) {
+  .article__corps:has(.article__image) .article__image {
+    float: inline-start;
+    inline-size: min(45%, 18rem);
+    margin: 0 var(--e5) var(--e4) 0;
+  }
+  .article__corps:has(.article__image) .article__image img { aspect-ratio: 4 / 3; }
+  .article__corps:has(.article__image) .prose { display: block; }
+  .article__corps:has(.article__image) .prose p + p { margin-block-start: var(--e4); }
+}
+
+.section--appli { margin-block-start: var(--e7); }
+.appli { display: grid; gap: var(--e4); padding: var(--e5); background: var(--fond-accentue); border-radius: var(--rayon-grand); }
+.appli p { color: var(--texte-doux); margin-block-start: var(--e2); }
+.appli__boutons { display: flex; flex-wrap: wrap; gap: var(--e3); }
+@media (min-width: 56em) { .appli { grid-template-columns: 1.6fr auto; align-items: center; gap: var(--e6); } }
+
+/* --- Fiche de démarche --------------------------------------------------- */
+.fiche { display: grid; gap: var(--e6); }
+.fiche__entete { display: grid; gap: var(--e3); }
+.fiche__categorie { display: flex; align-items: center; gap: var(--e2); font-size: var(--t-petit); font-weight: 500; color: var(--texte-doux); }
+.fiche__resume { font-size: var(--t-grand); color: var(--texte-doux); }
+.fiche__ou {
+  display: grid; gap: var(--e2); padding: var(--e4);
+  background: var(--fond-alt); border-radius: var(--rayon); border: var(--trait) solid var(--bordure);
+}
+.fiche__ou .lieu { justify-self: start; }
+.fiche__ou p { font-size: var(--t-petit); color: var(--texte-doux); }
+.fiche__actions { display: flex; flex-wrap: wrap; gap: var(--e3); margin-block-start: var(--e2); }
+.fiche__bloc { display: grid; gap: var(--e3); }
+.fiche__bloc h2 { font-size: var(--t-h3); padding-block-end: var(--e2); border-block-end: 2px solid var(--accent); }
+.fiche__contact { background: var(--fond-alt); padding: var(--e5); border-radius: var(--rayon); }
+.fiche__contact h2 { border-block-end: 0; padding-block-end: 0; }
+
+.etapes { counter-reset: etape; display: grid; gap: var(--e4); }
+.etapes li { counter-increment: etape; display: grid; grid-template-columns: 2rem 1fr; gap: var(--e3); align-items: start; }
+.etapes li::before {
+  content: counter(etape); display: grid; place-items: center;
+  inline-size: 2rem; block-size: 2rem; border-radius: 50%;
+  background: var(--accent); color: var(--accent-texte); font-weight: 600; font-size: var(--t-petit);
+}
+.pieces { display: grid; gap: var(--e2); }
+.pieces li { display: grid; grid-template-columns: 1.5rem 1fr; gap: var(--e2); align-items: start; }
+.pieces .icone { color: var(--succes); margin-block-start: .2em; }
+
+.paire { display: grid; gap: var(--e4); }
+@media (min-width: 40em) { .paire { grid-template-columns: repeat(2, 1fr); } }
+.paire dt { display: flex; align-items: center; gap: var(--e2); font-weight: 600; margin-block-end: var(--e1); }
+.paire dd { margin: 0; color: var(--texte-doux); }
+
+.retour { margin-block-start: var(--e6); }
+.retour a { display: inline-flex; align-items: center; gap: var(--e2); font-weight: 500; }
+.retour .icone { transform: scaleX(-1); }
+.liens-suite { margin-block-start: var(--e5); padding: var(--e4); background: var(--fond-alt); border-radius: var(--rayon); }
+.liens-suite h2 { font-size: var(--t-h3); margin-block-end: var(--e2); }
+.liens-suite ul { display: grid; gap: var(--e2); }
+
+/* --- Contact ------------------------------------------------------------- */
+.contact-grille { display: grid; gap: var(--e5); }
+@media (min-width: 48em) { .contact-grille { grid-template-columns: repeat(2, 1fr); } }
+.carte--contact { gap: var(--e3); padding: var(--e5); }
+.carte--contact h2 { font-size: var(--t-h3); }
+.carte--urgence { border-color: var(--danger); }
+.urgences { display: grid; gap: var(--e2); }
+.urgences a { display: flex; align-items: baseline; gap: var(--e3); text-decoration: none; padding-block: var(--e1); }
+.urgences strong { font-size: var(--t-h3); color: var(--danger); font-variant-numeric: tabular-nums; }
+.urgences span { color: var(--texte); }
+.urgences a:hover span { text-decoration: underline; }
+
+/* --- Budget --------------------------------------------------------------- */
+.barres { display: grid; gap: var(--e3); margin-block-start: var(--e5); }
+.barres[hidden] { display: none; }
+.barres li { display: grid; gap: var(--e1); }
+.barres__label { font-size: var(--t-petit); font-weight: 500; }
+.barres__piste { display: block; block-size: .75rem; background: var(--fond-alt); border-radius: var(--rayon-pilule); overflow: hidden; }
+.barres__valeur { display: block; block-size: 100%; background: var(--accent); border-radius: var(--rayon-pilule); }
+
+/* --- Formulaires simples (abonnement / désabonnement) ---------------------- */
+.formulaire-simple { border: var(--trait) solid var(--bordure); border-radius: var(--rayon); background: var(--fond-carte); padding: var(--e5); margin-block-end: var(--e5); }
+.formulaire-simple h2 { font-size: var(--t-h3); margin-block-end: var(--e3); }
+.formulaire-simple__form { display: grid; gap: var(--e4); max-inline-size: 28rem; }
+.formulaire-simple .champ { display: grid; gap: var(--e2); }
+.formulaire-simple .champ label { font-weight: 500; }
+.formulaire-simple .champ input {
+  padding: var(--e3); font: inherit; color: var(--texte); background: var(--fond);
+  border: var(--trait) solid var(--bordure-forte); border-radius: var(--rayon-petit); min-block-size: var(--cible);
+}
+.formulaire-simple .champ input:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.formulaire-simple__note { margin-block-start: var(--e4); font-size: var(--t-petit); color: var(--texte-doux); }
+/* Piège à robots : présent dans le DOM (contrairement à un champ "hidden",
+   souvent ignoré par les scripts de collecte automatisée) mais renvoyé hors
+   écran — invisible et hors du parcours au clavier (tabindex="-1"). */
+.champ-piege { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* --- Page de recherche ----------------------------------------------------- */
+.resultats-page { margin-block-start: var(--e6); }
+.resultats-page[hidden] { display: none; }
+.resultats-page .resultat { border: var(--trait) solid var(--bordure); border-radius: var(--rayon); margin-block-end: var(--e3); }
+.page-recherche .recherche__resultats { display: none; }
+
+/* --- Conseils municipaux : recherche dans les comptes-rendus ---------------
+   Amélioration progressive ajoutée par recherche-pv.js : sans JavaScript,
+   #recherche-pv reste vide et n'affiche rien (voir src/templates/views.mjs,
+   pageConseils) — le tableau des séances demeure la seule voie d'accès,
+   entièrement fonctionnelle sans script. */
+.recherche-pv__boite { margin-block-end: var(--e5); max-inline-size: 34rem; }
+.recherche-pv__boite label { display: block; font-weight: 500; margin-block-end: var(--e2); }
+.recherche-pv__champ {
+  inline-size: 100%; min-block-size: var(--cible); box-sizing: border-box;
+  padding: var(--e2) var(--e3); border: 2px solid var(--bordure-forte); border-radius: var(--rayon-pilule);
+  background: var(--fond-carte); color: var(--texte); font-size: var(--t-corps);
+}
+.recherche-pv__champ:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.recherche-pv__champ::-webkit-search-cancel-button { cursor: pointer; }
+.recherche-pv__statut { font-size: var(--t-petit); color: var(--texte-doux); margin-block: var(--e2) 0; }
+.recherche-pv__resultats { list-style: none; margin: var(--e3) 0 0; padding: 0; display: grid; gap: var(--e3); }
+.recherche-pv__resultat {
+  padding: var(--e3) var(--e4); background: var(--fond-carte);
+  border: var(--trait) solid var(--bordure); border-radius: var(--rayon);
+}
+.recherche-pv__resultat a { font-weight: 500; }
+.recherche-pv__extrait { margin: var(--e2) 0 0; color: var(--texte-doux); font-size: var(--t-petit); }
+
+/* --- Page des thèmes -------------------------------------------------------- */
+.choix-themes { display: grid; gap: var(--e5); }
+@media (min-width: 56em) { .choix-themes { grid-template-columns: repeat(3, 1fr); } }
+.carte--theme { padding: 0; overflow: hidden; }
+.carte--theme > *:not(.apercu) { margin-inline: var(--e4); }
+.carte--theme > *:last-child { margin-block-end: var(--e4); }
+.carte--theme .carte__meta { margin-block-start: var(--e4); }
+
+.apercu { display: grid; gap: var(--e2); padding: var(--e4); block-size: 11rem; border-block-end: var(--trait) solid var(--bordure); }
+.apercu__barre { block-size: .75rem; border-radius: var(--rayon-pilule); inline-size: 45%; }
+.apercu__titre { block-size: 1.25rem; border-radius: var(--rayon-petit); inline-size: 80%; }
+.apercu__champ { block-size: 2rem; border-radius: var(--rayon-petit); border: 2px solid; }
+.apercu__tuiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--e2); }
+.apercu__tuiles i { display: block; block-size: 2.25rem; border-radius: var(--rayon-petit); }
+
+.apercu--republique { background: #ffffff; }
+.apercu--republique .apercu__barre { background: #e1000f; }
+.apercu--republique .apercu__titre { background: #161616; }
+.apercu--republique .apercu__champ { border-color: #000091; background: #ffffff; }
+.apercu--republique .apercu__tuiles i { background: #e3e3fd; border: 1px solid #000091; }
+
+.apercu--garrigue { background: #fdfaf5; }
+.apercu--garrigue .apercu__barre { background: #b5533c; }
+.apercu--garrigue .apercu__titre { background: #2b2621; border-radius: 4px; }
+.apercu--garrigue .apercu__champ { border-color: #45592f; background: #ffffff; border-radius: 10px; }
+.apercu--garrigue .apercu__tuiles i { background: #e7ecdf; border: 1px solid #9c8c76; border-radius: 10px; }
+
+.apercu--guichet { background: #0f151d; }
+.apercu--guichet .apercu__barre { background: #38d6b0; }
+.apercu--guichet .apercu__titre { background: #f2f6fa; }
+.apercu--guichet .apercu__champ { border-color: #38d6b0; background: #18202c; }
+.apercu--guichet .apercu__tuiles i { background: #18202c; border: 1px solid #2a3546; }
+
+/* --- Page des designs : nuance du thème actif ------------------------------ */
+[data-theme="republique"] .carte--theme:has([data-theme-choix="republique"]),
+[data-theme="garrigue"] .carte--theme:has([data-theme-choix="garrigue"]),
+[data-theme="guichet"] .carte--theme:has([data-theme-choix="guichet"]) {
+  border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* Les aperçus suivent la préférence d'affichage du visiteur : ce qu'il voit
+   dans la vignette est exactement ce qu'il obtiendra en appliquant le thème. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-contraste="1"]) .apercu--republique { background: #1e1e1e; }
+  :root:not([data-contraste="1"]) .apercu--republique .apercu__titre { background: #ececec; }
+  :root:not([data-contraste="1"]) .apercu--republique .apercu__champ { border-color: #8585f6; background: #262626; }
+  :root:not([data-contraste="1"]) .apercu--republique .apercu__tuiles i { background: #272747; border-color: #8585f6; }
+
+  :root:not([data-contraste="1"]) .apercu--garrigue { background: #1c1a17; }
+  :root:not([data-contraste="1"]) .apercu--garrigue .apercu__barre { background: #e9a487; }
+  :root:not([data-contraste="1"]) .apercu--garrigue .apercu__titre { background: #f0e9df; }
+  :root:not([data-contraste="1"]) .apercu--garrigue .apercu__champ { border-color: #a8c48a; background: #24211d; }
+  :root:not([data-contraste="1"]) .apercu--garrigue .apercu__tuiles i { background: #2a3122; border-color: #857a6a; }
+}
+
+/* --- Galerie « Lecques en images » (accueil) ---------------------------- */
+/* 9 photos : une grille 3x3 à partir de la tablette garde des vignettes
+   assez grandes pour se lire comme des photos, pas comme de la vignette. */
+.galerie { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--e3); }
+@media (min-width: 40em) { .galerie { grid-template-columns: repeat(3, 1fr); gap: var(--e4); } }
+
+/* Variante « accueil » : un bandeau qui défile dans son propre cadre plutôt
+   qu'une grille — la page, elle, ne défile jamais horizontalement. */
+.galerie--defilante {
+  display: flex; flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x mandatory;
+  margin-inline: calc(-1 * var(--gouttiere)); padding-inline: var(--gouttiere); padding-block-end: var(--e2);
+}
+.galerie--defilante li { flex: 0 0 auto; inline-size: 12.5rem; scroll-snap-align: start; }
+@media (min-width: 40em) { .galerie--defilante li { inline-size: 15rem; } }
+
+.carte-galerie a {
+  position: relative; display: block; aspect-ratio: 4 / 5; overflow: hidden;
+  border-radius: var(--rayon); text-decoration: none;
+}
+.carte-galerie img {
+  position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: cover;
+  transition: transform 240ms ease;
+}
+.carte-galerie a:hover img { transform: scale(1.05); }
+.carte-galerie__libelle {
+  position: absolute; inset-inline: 0; inset-block-end: 0; padding: var(--e3) var(--e2) var(--e2);
+  background: linear-gradient(to top, rgb(0 0 0 / .72), rgb(0 0 0 / 0));
+  color: #fff; font-size: var(--t-mini); font-weight: 600; line-height: 1.25;
+}
+.carte-galerie a:focus-visible { outline-offset: 3px; }
+
+/* Le thème Garrigue accentue l'effet « village » : coins plus doux, légère profondeur. */
+[data-theme="garrigue"] .carte-galerie a { border-radius: var(--rayon-grand); box-shadow: var(--ombre); }
+
+/* --- Consultations citoyennes ---------------------------------------------- */
+.carte--consultation-une {
+  display: grid; gap: var(--e3); padding: var(--e5);
+  border: var(--trait) solid var(--bordure); border-radius: var(--rayon-grand);
+  background: var(--fond-carte); box-shadow: var(--ombre);
+}
+.carte--consultation-une h2 { font-size: var(--t-h2); }
+
+.consultation-compteur { font-size: var(--t-h3); font-weight: 600; margin-block-start: var(--e3); }
+
+.vote-options { display: grid; gap: var(--e4); margin-block: var(--e5); }
+.vote-options fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: var(--e2); }
+.vote-options legend { font-weight: 600; font-size: var(--t-h3); margin-block-end: var(--e2); padding: 0; }
+.vote-options__option {
+  display: flex; align-items: center; gap: var(--e3); min-block-size: var(--cible);
+  padding: var(--e3); border: var(--trait) solid var(--bordure-forte); border-radius: var(--rayon-petit);
+  cursor: pointer; transition: border-color var(--transition), background var(--transition);
+}
+.vote-options__option:hover { border-color: var(--accent); background: var(--fond-accentue); }
+.vote-options__option input { inline-size: 1.25rem; block-size: 1.25rem; flex-shrink: 0; accent-color: var(--accent); }
+.vote-options__option:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+.vote-options__commentaire { display: grid; gap: var(--e1); font-weight: 500; }
+.vote-options__commentaire .aide { font-weight: 400; font-size: var(--t-petit); color: var(--texte-doux); }
+.vote-options__commentaire textarea {
+  padding: var(--e3); font: inherit; color: var(--texte); background: var(--fond);
+  border: var(--trait) solid var(--bordure-forte); border-radius: var(--rayon-petit); resize: vertical;
+}
+.vote-options__commentaire textarea:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+.consultation-confirmation {
+  display: flex; align-items: center; gap: var(--e2); margin-block: var(--e4);
+  padding: var(--e3) var(--e4); border-radius: var(--rayon-petit);
+  background: var(--succes-fond); color: var(--succes); font-weight: 500;
+}
+/* Même spécificité que la règle [hidden] du navigateur (une classe = un
+   attribut) : sans ce couple, "display: flex" ci-dessus l'emporterait sur
+   [hidden] et le bandeau resterait visible en permanence, JS ou pas — voir
+   le même correctif déjà appliqué à .barres[hidden] plus haut. */
+.consultation-confirmation[hidden] { display: none; }
+.consultation-confirmation--deja { background: var(--info-fond); color: var(--info); }
+[data-theme="garrigue"] .carte-galerie__libelle { font-family: var(--police-titre); font-weight: 500; letter-spacing: .01em; }

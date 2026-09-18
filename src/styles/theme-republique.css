@@ -1,0 +1,147 @@
+/* =========================================================================
+   Thème « République » — institutionnel.
+   Codes du système de design de l'État : bleu France, rouge Marianne,
+   angles nets, hiérarchie sobre. Le plus reconnaissable comme site public.
+   ========================================================================= */
+[data-theme="republique"] {
+  --fond: #ffffff;
+  --fond-alt: #f6f6f6;
+  --fond-carte: #ffffff;
+  --fond-accentue: #f5f5fe;
+  --fond-inverse: #161616;
+  --texte-inverse: #ffffff;
+
+  --texte: #161616;
+  --texte-doux: #3a3a3a;
+  --texte-tres-doux: #4f4f4f;
+
+  --bordure: #dddddd;
+  --bordure-forte: #7b7b7b;
+
+  --accent: #000091;
+  --accent-survol: #1212ff;
+  --accent-texte: #ffffff;
+  --accent-doux: #e3e3fd;
+  --accent-doux-texte: #000091;
+
+  --lien: #000091;
+  --lien-survol: #1212ff;
+  --focus: #0a76f6;
+
+  --danger: #ce0500;
+  --danger-fond: #ffe9e9;
+  --succes: #18753c;
+  --succes-fond: #dffee6;
+  --info: #0063cb;
+  --info-fond: #e8edff;
+  --eau: #0063cb;
+  --attention: #b34000;
+  --attention-fond: #fff4f3;
+
+  /* Une couleur par rubrique du menu principal, pour les différencier au
+     premier coup d'œil — indépendamment de la lecture du texte. */
+  --nav-demarches: #000091;
+  --nav-vie-locale: #b34000;
+  --nav-enfance-jeunesse: #18753c;
+  --nav-cadre-de-vie: #009099;
+  --nav-mairie: #6e445a;
+
+  --police-titre: var(--police-corps);
+  --graisse-titre: 600;
+  --interlettrage-titre: -.01em;
+  --rayon: 4px;
+  --rayon-petit: 2px;
+  --rayon-grand: 6px;
+  --ombre: 0 1px 0 var(--bordure);
+  --ombre-forte: 0 2px 6px rgb(0 0 0 / .16);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="republique"]:not([data-clair]) {
+    --fond: #1e1e1e;
+    --fond-alt: #262626;
+    --fond-carte: #262626;
+    --fond-accentue: #21213f;
+    --fond-inverse: #f6f6f6;
+    --texte-inverse: #161616;
+    --texte: #ececec;
+    --texte-doux: #cecece;
+    --texte-tres-doux: #b9b9b9;
+    --bordure: #3a3a3a;
+    --bordure-forte: #8e8e8e;
+    --accent: #8585f6;
+    --accent-survol: #aeaef9;
+    --accent-texte: #12124a;
+    --accent-doux: #272747;
+    --accent-doux-texte: #b1b1f9;
+    --lien: #a1a1f8;
+    --lien-survol: #c3c3fb;
+    --focus: #62a5f5;
+    --danger: #ff9a94; --danger-fond: #3a1c1a;
+    --succes: #6fdc8c; --succes-fond: #17301f;
+    --info: #85b9f8;  --info-fond: #1a2436;
+    --attention: #ffb094; --attention-fond: #35211a;
+    --eau: #85b9f8;
+    --ombre: 0 1px 0 var(--bordure);
+
+    --nav-demarches: #8585f6;
+    --nav-vie-locale: #ffb094;
+    --nav-enfance-jeunesse: #6fdc8c;
+    --nav-cadre-de-vie: #6fd9de;
+    --nav-mairie: #d9a8c2;
+  }
+}
+
+[data-theme="republique"][data-contraste="1"] {
+  --fond: #ffffff; --fond-alt: #ffffff; --fond-carte: #ffffff; --fond-accentue: #ffffff;
+  --texte: #000000; --texte-doux: #000000; --texte-tres-doux: #1a1a1a;
+  --bordure: #000000; --bordure-forte: #000000;
+  --accent: #00006b; --accent-doux: #ffffff; --accent-doux-texte: #00006b;
+  --lien: #00006b; --lien-survol: #000000; --trait: 2px;
+  /* En contraste renforcé, la couleur de rubrique cède la place à l'accent
+     unique du thème : la lisibilité prime alors sur la distinction par teinte. */
+  --nav-demarches: var(--accent); --nav-vie-locale: var(--accent);
+  --nav-enfance-jeunesse: var(--accent); --nav-cadre-de-vie: var(--accent); --nav-mairie: var(--accent);
+}
+
+
+/* -------------------------------------------------------------------------
+   Photo d'arrière-plan du bandeau d'accueil : la mairie elle-même — le choix
+   le plus institutionnel possible pour ce thème. Le voile reste très opaque
+   sous la colonne de texte : le contraste du titre et de la recherche ne
+   dépend jamais de la photo.
+   ------------------------------------------------------------------------- */
+[data-theme="republique"] .heros {
+  background-image:
+    linear-gradient(to bottom, rgb(255 255 255 / .96), rgb(255 255 255 / .93)),
+    url("/img/mairie-700.jpg");
+  background-size: cover;
+  background-position: center 70%;
+}
+
+@media (min-width: 48em) {
+  [data-theme="republique"] .heros {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / .98) 0%, rgb(255 255 255 / .95) 52%, rgb(255 255 255 / .5) 100%),
+      url("/img/mairie-1200.jpg");
+    background-position: center 65%;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="republique"]:not([data-clair]) .heros {
+    background-image:
+      linear-gradient(to bottom, rgb(30 30 30 / .96), rgb(30 30 30 / .93)),
+      url("/img/mairie-700.jpg");
+  }
+  @media (min-width: 48em) {
+    [data-theme="republique"]:not([data-clair]) .heros {
+      background-image:
+        linear-gradient(to right, rgb(30 30 30 / .98) 0%, rgb(30 30 30 / .95) 52%, rgb(30 30 30 / .5) 100%),
+        url("/img/mairie-1200.jpg");
+    }
+  }
+}
+
+/* En contraste renforcé, la photo disparaît : rien ne doit gêner la lecture. */
+[data-theme="republique"][data-contraste="1"] .heros { background-image: none; }

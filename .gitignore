@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+.cache/
+worker/.wrangler/
+worker/.dev.vars
+worker/.certificat-local/
+.wrangler/

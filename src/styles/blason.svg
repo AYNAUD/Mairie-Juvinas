@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Mairie de Lecques">
+  <rect width="128" height="128" rx="26" fill="#45592f"/>
+  <polygon points="64,22 110,62 18,62" fill="#fff"/>
+  <rect x="30" y="62" width="68" height="42" fill="#fff"/>
+  <rect x="55" y="80" width="18" height="24" fill="#45592f"/>
+</svg>

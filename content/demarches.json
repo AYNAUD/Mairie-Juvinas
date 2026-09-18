@@ -1,0 +1,673 @@
+[
+  {
+    "id": "rendez-vous-elu",
+    "titre": "Rencontrer un élu ou signaler un problème",
+    "titreCourt": "Contacter un élu",
+    "resume": "Rendez-vous avec le maire ou un adjoint, signalement de voirie, d'éclairage ou de nuisance.",
+    "categorie": "citoyennete",
+    "lieu": "mairie",
+    "lieuDetail": "Sur rendez-vous à la mairie de Juvinas.",
+    "icone": "mairie",
+    "quoi": "Le maire et ses adjoints reçoivent sur rendez-vous. C'est également par la mairie que passent les signalements du quotidien : un lampadaire en panne, un nid-de-poule, un dépôt sauvage, une nuisance récurrente.",
+    "etapes": [
+      "Écrire à la mairie ou appeler le secrétariat en précisant l'objet de votre demande.",
+      "Pour un signalement, indiquer le lieu précis et, si possible, joindre une photographie.",
+      "Un rendez-vous vous est proposé, ou votre signalement est transmis au service concerné.",
+      "Vous pouvez également assister aux séances du conseil municipal : elles sont publiques et ouvertes à tous."
+    ],
+    "pieces": [
+      "L'objet de votre demande et vos coordonnées",
+      "Pour un signalement : la localisation précise et une photo"
+    ],
+    "delai": "Selon les disponibilités des élus.",
+    "cout": "Gratuit.",
+    "action": {
+      "libelle": "Écrire à la mairie",
+      "url": "mailto:mairie@juvinas.fr?subject=Demande%20de%20rendez-vous",
+      "type": "mail"
+    },
+    "actionsSecondaires": [
+      { "libelle": "Appeler le secrétariat", "url": "tel:+33475882156", "type": "tel" },
+      { "libelle": "Les élus", "url": "/mairie/elus.html", "type": "interne" },
+      { "libelle": "Les comptes-rendus du conseil", "url": "/mairie/conseils-municipaux.html", "type": "interne" }
+    ],
+    "motsCles": ["rendez-vous", "maire", "élu", "adjoint", "signaler", "problème", "voirie", "éclairage", "nid de poule", "nuisance", "doléance", "conseil municipal"],
+    "voirAussi": ["listes-electorales"]
+  },
+  {
+    "id": "carte-identite",
+    "titre": "Refaire ou obtenir une carte d'identité",
+    "titreCourt": "Carte d'identité",
+    "resume": "Première demande, renouvellement, perte ou vol de votre carte nationale d'identité.",
+    "categorie": "papiers",
+    "lieu": "ailleurs",
+    "lieuDetail": "Dans une mairie équipée d'un dispositif de recueil — la mairie de Juvinas ne l'est pas. À VÉRIFIER : la mairie équipée la plus proche (probablement Aubenas, Vals-les-Bains ou Privas — à confirmer sur le simulateur ANTS ci-dessous).",
+    "icone": "identite",
+    "quoi": "La carte nationale d'identité (CNI) est gratuite, sauf en cas de perte ou de vol. Elle est valable 15 ans pour un majeur et 10 ans pour un mineur.",
+    "etapes": [
+      "Faire votre pré-demande en ligne sur le site de l'ANTS (vous obtenez un numéro de pré-demande à conserver).",
+      "Prendre rendez-vous dans une mairie équipée d'un dispositif de recueil : vérifiez les créneaux disponibles sur le service de rendez-vous de l'ANTS.",
+      "Vous présenter au rendez-vous avec vos pièces justificatives : vos empreintes sont relevées sur place.",
+      "Retirer votre titre dans la même mairie, en personne, dès réception du SMS vous prévenant qu'il est prêt."
+    ],
+    "pieces": [
+      "Le numéro de votre pré-demande en ligne (ou le formulaire Cerfa rempli)",
+      "Une photo d'identité de moins de 6 mois, conforme aux normes",
+      "Un justificatif de domicile de moins d'un an",
+      "L'ancienne carte d'identité, si vous la possédez encore",
+      "En cas de perte ou de vol : la déclaration de perte ou de vol et un timbre fiscal de 25 €"
+    ],
+    "delai": "Comptez 3 à 8 semaines selon la période.",
+    "cout": "Gratuit. 25 € en timbre fiscal en cas de perte ou de vol.",
+    "action": {
+      "libelle": "Faire ma pré-demande sur l'ANTS",
+      "url": "https://ants.gouv.fr/",
+      "type": "externe"
+    },
+    "actionsSecondaires": [
+      { "libelle": "Trouver un rendez-vous près de chez moi", "url": "https://rendezvouspasseport.ants.gouv.fr/", "type": "externe" },
+      { "libelle": "Tout savoir sur la carte d'identité", "url": "https://www.service-public.fr/particuliers/vosdroits/N358", "type": "externe" }
+    ],
+    "motsCles": ["cni", "carte nationale identité", "papiers", "identité", "pièce d'identité", "renouvellement", "perte", "vol", "ants"],
+    "voirAussi": ["passeport", "acte-naissance"]
+  },
+  {
+    "id": "passeport",
+    "titre": "Demander un passeport",
+    "titreCourt": "Passeport",
+    "resume": "Première demande, renouvellement, perte ou vol de votre passeport biométrique.",
+    "categorie": "papiers",
+    "lieu": "ailleurs",
+    "lieuDetail": "Dans une mairie équipée d'un dispositif de recueil — la mairie de Juvinas ne l'est pas.",
+    "icone": "passeport",
+    "quoi": "Le passeport biométrique est valable 10 ans pour un majeur et 5 ans pour un mineur. La démarche se fait sur rendez-vous, dans une mairie équipée.",
+    "etapes": [
+      "Faire votre pré-demande en ligne sur le site de l'ANTS et acheter votre timbre fiscal.",
+      "Prendre rendez-vous dans une mairie équipée d'un dispositif de recueil.",
+      "Vous présenter au rendez-vous : vos empreintes sont relevées sur place.",
+      "Retirer votre passeport en personne dans la même mairie."
+    ],
+    "pieces": [
+      "Le numéro de votre pré-demande en ligne",
+      "Le timbre fiscal correspondant à votre situation",
+      "Une photo d'identité de moins de 6 mois",
+      "Un justificatif de domicile de moins d'un an",
+      "Votre carte d'identité en cours de validité, ou un acte de naissance de moins de 3 mois"
+    ],
+    "delai": "3 à 8 semaines selon la période de l'année.",
+    "cout": "86 € pour un majeur · 42 € pour un mineur de 15 à 17 ans · 17 € pour un mineur de moins de 15 ans.",
+    "action": {
+      "libelle": "Faire ma pré-demande sur l'ANTS",
+      "url": "https://passeport.ants.gouv.fr/",
+      "type": "externe"
+    },
+    "actionsSecondaires": [
+      { "libelle": "Trouver un rendez-vous près de chez moi", "url": "https://rendezvouspasseport.ants.gouv.fr/", "type": "externe" },
+      { "libelle": "Tout savoir sur le passeport", "url": "https://www.service-public.fr/particuliers/vosdroits/N360", "type": "externe" }
+    ],
+    "motsCles": ["passeport", "passport", "voyage", "étranger", "biométrique", "ants", "titre de voyage"],
+    "voirAussi": ["carte-identite", "acte-naissance"]
+  },
+  {
+    "id": "carte-grise",
+    "titre": "Carte grise (certificat d'immatriculation)",
+    "titreCourt": "Carte grise",
+    "resume": "Changement d'adresse, changement de titulaire, véhicule acheté ou vendu.",
+    "categorie": "papiers",
+    "lieu": "enligne",
+    "lieuDetail": "Entièrement en ligne sur le site de l'ANTS. Aucun guichet en préfecture ni en mairie.",
+    "icone": "voiture",
+    "quoi": "Depuis 2017, toutes les démarches liées au certificat d'immatriculation sont dématérialisées. Ni la mairie de Juvinas, ni la préfecture de l'Ardèche ne les traitent au guichet.",
+    "etapes": [
+      "Créer ou utiliser votre compte sur le site de l'ANTS (connexion via FranceConnect possible).",
+      "Sélectionner votre démarche : changement d'adresse, changement de titulaire, déclaration de cession…",
+      "Téléverser vos pièces justificatives et régler en ligne le cas échéant.",
+      "Vous recevez un certificat provisoire immédiatement, puis le titre définitif par courrier sécurisé."
+    ],
+    "pieces": [
+      "Votre pièce d'identité et un justificatif de domicile de moins de 6 mois",
+      "L'ancienne carte grise du véhicule",
+      "Le certificat de cession, en cas d'achat ou de vente",
+      "Le contrôle technique en cours de validité pour un véhicule de plus de 4 ans"
+    ],
+    "delai": "Certificat provisoire immédiat, titre définitif sous quelques jours.",
+    "cout": "Changement d'adresse : gratuit pour les trois premiers, puis 2,76 €. Les autres démarches dépendent de la puissance fiscale du véhicule et du taux régional.",
+    "action": {
+      "libelle": "Faire ma démarche sur l'ANTS",
+      "url": "https://immatriculation.ants.gouv.fr/",
+      "type": "externe"
+    },
+    "actionsSecondaires": [],
+    "motsCles": ["carte grise", "certificat immatriculation", "véhicule", "voiture", "immatriculation", "cession", "ants"],
+    "voirAussi": ["permis-conduire"]
+  },
+  {
+    "id": "permis-conduire",
+    "titre": "Permis de conduire",
+    "titreCourt": "Permis de conduire",
+    "resume": "Inscription à l'examen, fabrication, perte, vol ou renouvellement de votre permis.",
+    "categorie": "papiers",
+    "lieu": "enligne",
+    "lieuDetail": "Entièrement en ligne sur le site de l'ANTS.",
+    "icone": "permis",
+    "quoi": "Comme la carte grise, toutes les démarches de permis de conduire sont dématérialisées. La mairie n'intervient pas dans ce dossier.",
+    "etapes": [
+      "Vous connecter à votre espace sur le site de l'ANTS, ou via FranceConnect.",
+      "Choisir votre démarche : inscription, demande de fabrication, perte, vol, changement d'état civil.",
+      "Téléverser les pièces demandées et suivre l'avancement de votre dossier en ligne."
+    ],
+    "pieces": [
+      "Une pièce d'identité en cours de validité",
+      "Un justificatif de domicile de moins de 6 mois",
+      "Une photo-signature numérique (réalisée dans une cabine agréée)",
+      "En cas de perte ou de vol : la déclaration correspondante"
+    ],
+    "delai": "Variable selon la démarche, généralement de 2 à 6 semaines.",
+    "cout": "Gratuit, sauf en cas de perte ou de vol : timbre fiscal de 25 €.",
+    "action": {
+      "libelle": "Faire ma démarche sur l'ANTS",
+      "url": "https://ants.gouv.fr/",
+      "type": "externe"
+    },
+    "actionsSecondaires": [],
+    "motsCles": ["permis de conduire", "permis", "conduire", "code", "auto-école", "perte permis", "points"],
+    "voirAussi": ["carte-grise", "recensement-citoyen"]
+  },
+  {
+    "id": "acte-naissance",
+    "titre": "Demander un acte de naissance, de mariage ou de décès",
+    "titreCourt": "Actes d'état civil",
+    "resume": "Copie intégrale ou extrait d'un acte d'état civil, pour un dossier administratif.",
+    "categorie": "papiers",
+    "lieu": "mairie",
+    "lieuDetail": "À la mairie de la commune où l'acte a été dressé — à Juvinas si l'événement y a eu lieu.",
+    "icone": "document",
+    "quoi": "Un acte d'état civil vous est réclamé pour un mariage, un PACS, un dossier de nationalité ou une succession. Il est toujours gratuit. Il se demande à la mairie du lieu de l'événement, et non à celle de votre domicile.",
+    "etapes": [
+      "Identifier la commune où l'acte a été dressé : le lieu de naissance, de mariage ou de décès.",
+      "Si c'est Juvinas : contacter le secrétariat de mairie par téléphone, par courriel ou sur place aux heures d'ouverture.",
+      "Si c'est une autre commune : faire la demande auprès de cette mairie, en ligne dans la plupart des cas.",
+      "Pour une naissance à l'étranger, la demande se fait auprès du service central d'état civil de Nantes."
+    ],
+    "pieces": [
+      "Vos nom, prénoms et date de l'événement",
+      "Les noms et prénoms de vos parents pour une copie intégrale",
+      "Une pièce d'identité si vous vous déplacez",
+      "Votre adresse postale pour l'envoi"
+    ],
+    "delai": "Quelques jours ouvrés, le temps de l'envoi postal.",
+    "cout": "Gratuit. Aucun site facturant ce service n'est officiel.",
+    "action": {
+      "libelle": "Écrire à la mairie",
+      "url": "mailto:mairie@juvinas.fr?subject=Demande%20d%27acte%20d%27%C3%A9tat%20civil",
+      "type": "mail"
+    },
+    "actionsSecondaires": [
+      { "libelle": "Appeler le secrétariat", "url": "tel:+33475882156", "type": "tel" },
+      { "libelle": "Demander un acte d'une autre commune", "url": "https://www.service-public.fr/particuliers/vosdroits/F1427", "type": "externe" }
+    ],
+    "motsCles": ["acte de naissance", "extrait de naissance", "état civil", "acte de mariage", "acte de décès", "copie intégrale", "livret de famille"],
+    "voirAussi": ["mariage", "pacs", "carte-identite"]
+  },
+  {
+    "id": "listes-electorales",
+    "titre": "S'inscrire sur les listes électorales",
+    "titreCourt": "Listes électorales",
+    "resume": "Nouvel habitant, jeune majeur ou déménagement : inscrivez-vous pour voter à Juvinas.",
+    "categorie": "citoyennete",
+    "lieu": "mairie",
+    "lieuDetail": "À la mairie de Juvinas, ou en ligne sur service-public.fr.",
+    "icone": "vote",
+    "quoi": "Pour voter à Juvinas, vous devez être inscrit sur la liste électorale de la commune. L'inscription est obligatoire à chaque changement de commune.",
+    "etapes": [
+      "Vérifier votre situation électorale en ligne : ce service vous indique si vous êtes inscrit et dans quel bureau de vote.",
+      "Si vous ne l'êtes pas, déposer votre demande en ligne ou au secrétariat de mairie.",
+      "Vous inscrire au plus tard le sixième vendredi précédant le scrutin.",
+      "Vous recevez votre carte électorale par courrier avant le scrutin."
+    ],
+    "pieces": [
+      "Une pièce d'identité en cours de validité (ou périmée depuis moins de 5 ans)",
+      "Un justificatif de domicile à Juvinas de moins de 3 mois",
+      "Le formulaire Cerfa de demande d'inscription, fourni en mairie"
+    ],
+    "delai": "Inscription possible toute l'année, jusqu'au sixième vendredi avant un scrutin.",
+    "cout": "Gratuit.",
+    "action": {
+      "libelle": "Vérifier ma situation électorale",
+      "url": "https://www.service-public.fr/particuliers/vosdroits/F1367",
+      "type": "externe"
+    },
+    "actionsSecondaires": [
+      { "libelle": "M'inscrire en mairie", "url": "mailto:mairie@juvinas.fr?subject=Inscription%20sur%20les%20listes%20%C3%A9lectorales", "type": "mail" },
+      { "libelle": "Toutes les informations sur les élections", "url": "https://www.service-public.fr/particuliers/vosdroits/N47", "type": "externe" }
+    ],
+    "motsCles": ["listes électorales", "inscription électorale", "voter", "vote", "élections", "carte électorale", "bureau de vote", "nouvel habitant"],
+    "voirAussi": ["procuration", "recensement-citoyen"]
+  },
+  {
+    "id": "procuration",
+    "titre": "Voter par procuration",
+    "titreCourt": "Procuration de vote",
+    "resume": "Absent le jour du scrutin ? Confiez votre vote à un autre électeur.",
+    "categorie": "citoyennete",
+    "lieu": "ailleurs",
+    "lieuDetail": "Demande en ligne, puis passage obligatoire en gendarmerie, commissariat ou tribunal. À VÉRIFIER : la gendarmerie compétente pour Juvinas (probablement à Aubenas ou dans le secteur — à confirmer).",
+    "icone": "procuration",
+    "quoi": "Si vous ne pouvez pas vous rendre à votre bureau de vote, vous pouvez donner procuration à un autre électeur. Votre mandataire n'a plus besoin d'être inscrit dans la même commune que vous, mais il devra voter dans votre bureau de vote.",
+    "etapes": [
+      "Faire votre demande en ligne sur MaProcuration, muni de votre numéro national d'électeur et de celui de votre mandataire.",
+      "Vous rendre ensuite en gendarmerie, au commissariat ou au tribunal pour faire vérifier votre identité.",
+      "Votre mandataire reçoit la confirmation et se présente à votre bureau de vote le jour du scrutin."
+    ],
+    "pieces": [
+      "Votre numéro national d'électeur (il figure sur votre carte électorale)",
+      "Le numéro national d'électeur de votre mandataire, ainsi que sa date de naissance",
+      "Votre pièce d'identité, présentée lors de la vérification"
+    ],
+    "delai": "Faites-la le plus tôt possible.",
+    "cout": "Gratuit.",
+    "action": {
+      "libelle": "Faire ma procuration en ligne",
+      "url": "https://www.maprocuration.gouv.fr/",
+      "type": "externe"
+    },
+    "actionsSecondaires": [
+      { "libelle": "Comprendre le vote par procuration", "url": "https://www.service-public.fr/particuliers/vosdroits/F1604", "type": "externe" }
+    ],
+    "motsCles": ["procuration", "voter procuration", "absent élection", "mandataire", "maprocuration"],
+    "voirAussi": ["listes-electorales"]
+  },
+  {
+    "id": "recensement-citoyen",
+    "titre": "Recensement citoyen à 16 ans",
+    "titreCourt": "Recensement à 16 ans",
+    "resume": "Obligatoire dans les 3 mois suivant vos 16 ans. Indispensable pour passer le bac ou le permis.",
+    "categorie": "citoyennete",
+    "lieu": "mairie",
+    "lieuDetail": "Au secrétariat de la mairie de Juvinas.",
+    "icone": "jeune",
+    "quoi": "Tout jeune Français doit se faire recenser dans les trois mois qui suivent son seizième anniversaire. L'attestation de recensement est exigée pour s'inscrire à tout examen ou concours soumis au contrôle de l'autorité publique.",
+    "etapes": [
+      "Vous présenter au secrétariat de la mairie de Juvinas aux heures d'ouverture, accompagné d'un parent si vous le souhaitez.",
+      "Remettre votre pièce d'identité et le livret de famille.",
+      "Repartir avec votre attestation de recensement : conservez-la précieusement.",
+      "Environ un an plus tard, vous êtes convoqué à la Journée défense et citoyenneté (JDC)."
+    ],
+    "pieces": [
+      "Votre pièce d'identité (carte d'identité ou passeport)",
+      "Le livret de famille de vos parents"
+    ],
+    "delai": "Immédiat : l'attestation vous est remise sur place.",
+    "cout": "Gratuit.",
+    "action": {
+      "libelle": "Appeler la mairie pour m'organiser",
+      "url": "tel:+33475882156",
+      "type": "tel"
+    },
+    "actionsSecondaires": [
+      { "libelle": "Comprendre le recensement citoyen", "url": "https://www.service-public.fr/particuliers/vosdroits/F870", "type": "externe" }
+    ],
+    "motsCles": ["recensement", "recensement citoyen", "16 ans", "jdc", "journée défense", "attestation de recensement", "bac"],
+    "voirAussi": ["listes-electorales", "permis-conduire"]
+  },
+  {
+    "id": "mariage",
+    "titre": "Se marier à Juvinas",
+    "titreCourt": "Mariage",
+    "resume": "Constituer votre dossier et fixer la date de votre mariage civil.",
+    "categorie": "famille",
+    "lieu": "mairie",
+    "lieuDetail": "À la mairie de Juvinas si l'un des futurs époux y est domicilié ou y réside.",
+    "icone": "mariage",
+    "quoi": "Le mariage civil est célébré par le maire ou l'un de ses adjoints, en mairie et publiquement. Le dossier se retire et se dépose au secrétariat, plusieurs semaines avant la date souhaitée.",
+    "etapes": [
+      "Contacter le secrétariat de mairie pour retirer le dossier et convenir d'une date.",
+      "Réunir les pièces des deux futurs époux et de leurs témoins (deux à quatre témoins majeurs).",
+      "Déposer le dossier complet en mairie. Un entretien avec l'officier d'état civil peut être demandé.",
+      "La publication des bans est affichée pendant 10 jours minimum avant la célébration.",
+      "Le jour J, la cérémonie a lieu en mairie ; le livret de famille vous est remis à l'issue."
+    ],
+    "pieces": [
+      "Une copie intégrale d'acte de naissance de moins de 3 mois pour chaque époux",
+      "Une pièce d'identité pour chacun",
+      "Un justificatif de domicile ou de résidence",
+      "L'information sur l'identité des témoins avec copie de leur pièce d'identité"
+    ],
+    "delai": "Prévoyez au minimum deux mois entre le dépôt du dossier et la célébration.",
+    "cout": "Gratuit.",
+    "action": {
+      "libelle": "Contacter la mairie pour mon dossier",
+      "url": "mailto:mairie@juvinas.fr?subject=Dossier%20de%20mariage",
+      "type": "mail"
+    },
+    "actionsSecondaires": [
+      { "libelle": "Appeler le secrétariat", "url": "tel:+33475882156", "type": "tel" },
+      { "libelle": "Tout savoir sur le mariage", "url": "https://www.service-public.fr/particuliers/vosdroits/N142", "type": "externe" }
+    ],
+    "motsCles": ["mariage", "se marier", "noces", "bans", "témoins", "livret de famille", "cérémonie"],
+    "voirAussi": ["pacs", "acte-naissance"]
+  },
+  {
+    "id": "pacs",
+    "titre": "Enregistrer un PACS",
+    "titreCourt": "PACS",
+    "resume": "Le pacte civil de solidarité s'enregistre gratuitement à la mairie de votre domicile.",
+    "categorie": "famille",
+    "lieu": "mairie",
+    "lieuDetail": "À la mairie de Juvinas, si vous y fixez votre résidence commune.",
+    "icone": "pacs",
+    "quoi": "Depuis novembre 2017, l'enregistrement du pacte civil de solidarité relève de l'officier d'état civil de la mairie. La démarche est gratuite.",
+    "etapes": [
+      "Rédiger votre convention de PACS (modèle Cerfa disponible, ou convention libre).",
+      "Compléter la déclaration conjointe de PACS et l'attestation sur l'honneur de résidence commune.",
+      "Prendre rendez-vous au secrétariat de mairie pour déposer le dossier complet.",
+      "Vous présenter ensemble au rendez-vous d'enregistrement."
+    ],
+    "pieces": [
+      "La convention de PACS signée des deux partenaires",
+      "La déclaration conjointe de PACS (Cerfa) et les attestations sur l'honneur",
+      "Une copie intégrale d'acte de naissance de moins de 3 mois pour chacun",
+      "Une pièce d'identité en cours de validité pour chacun"
+    ],
+    "delai": "Quelques semaines, le temps de réunir les actes de naissance et d'obtenir un rendez-vous.",
+    "cout": "Gratuit en mairie.",
+    "action": {
+      "libelle": "Prendre rendez-vous en mairie",
+      "url": "mailto:mairie@juvinas.fr?subject=Enregistrement%20d%27un%20PACS",
+      "type": "mail"
+    },
+    "actionsSecondaires": [
+      { "libelle": "Appeler le secrétariat", "url": "tel:+33475882156", "type": "tel" },
+      { "libelle": "Tout savoir sur le PACS", "url": "https://www.service-public.fr/particuliers/vosdroits/N15660", "type": "externe" }
+    ],
+    "motsCles": ["pacs", "pacte civil de solidarité", "se pacser", "concubinage", "union", "partenaire"],
+    "voirAussi": ["mariage", "acte-naissance"]
+  },
+  {
+    "id": "naissance",
+    "titre": "Déclarer une naissance",
+    "titreCourt": "Naissance",
+    "resume": "Déclaration obligatoire dans les 5 jours, à la mairie du lieu de naissance.",
+    "categorie": "famille",
+    "lieu": "ailleurs",
+    "lieuDetail": "À la mairie de la commune où l'enfant est né. À VÉRIFIER : la maternité de rattachement habituelle des habitants de Juvinas (probablement Aubenas ou Privas — à confirmer).",
+    "icone": "bebe",
+    "quoi": "La naissance se déclare à la mairie du lieu de naissance, dans les cinq jours qui suivent l'accouchement — généralement celle de la maternité.",
+    "etapes": [
+      "Vérifier auprès de la maternité si elle transmet elle-même la déclaration : c'est le cas le plus fréquent.",
+      "Sinon, vous rendre à la mairie du lieu de naissance dans les 5 jours, muni du certificat d'accouchement.",
+      "Faire établir ou mettre à jour votre livret de famille à cette occasion.",
+      "Prévenir ensuite la CAF, votre caisse d'assurance maladie et votre mutuelle."
+    ],
+    "pieces": [
+      "Le certificat d'accouchement établi par la maternité",
+      "La déclaration de choix de nom, le cas échéant",
+      "L'acte de reconnaissance anticipée, s'il a été établi",
+      "Le livret de famille s'il existe déjà"
+    ],
+    "delai": "5 jours après l'accouchement (le jour de la naissance n'est pas compté).",
+    "cout": "Gratuit.",
+    "action": {
+      "libelle": "Naissance et filiation : vos droits",
+      "url": "https://www.service-public.fr/particuliers/vosdroits/N553",
+      "type": "externe"
+    },
+    "actionsSecondaires": [
+      { "libelle": "Demander un acte de naissance", "url": "/demarches/acte-naissance.html", "type": "interne" }
+    ],
+    "motsCles": ["naissance", "déclarer naissance", "bébé", "filiation", "reconnaissance", "livret de famille", "maternité"],
+    "voirAussi": ["acte-naissance"]
+  },
+  {
+    "id": "deces",
+    "titre": "Déclarer un décès",
+    "titreCourt": "Décès et obsèques",
+    "resume": "Déclaration dans les 24 heures, à la mairie du lieu de décès.",
+    "categorie": "famille",
+    "lieu": "mairie",
+    "lieuDetail": "À la mairie du lieu de décès. La mairie de Juvinas si le décès a eu lieu dans la commune.",
+    "icone": "deces",
+    "quoi": "Le décès doit être déclaré à la mairie de la commune où il est survenu, dans les vingt-quatre heures. En pratique, l'entreprise de pompes funèbres se charge le plus souvent de cette formalité pour la famille.",
+    "etapes": [
+      "Faire constater le décès par un médecin, qui établit le certificat de décès.",
+      "Déclarer le décès au secrétariat de mairie, ou laisser les pompes funèbres s'en charger.",
+      "L'acte de décès est dressé : demandez plusieurs copies.",
+      "Organiser les obsèques et, si besoin, la concession au cimetière communal."
+    ],
+    "pieces": [
+      "Le certificat de décès établi par le médecin",
+      "Le livret de famille ou l'acte de naissance du défunt",
+      "Une pièce d'identité du déclarant"
+    ],
+    "delai": "24 heures après le constat du décès.",
+    "cout": "Gratuit.",
+    "action": {
+      "libelle": "Appeler la mairie",
+      "url": "tel:+33475882156",
+      "type": "tel"
+    },
+    "actionsSecondaires": [
+      { "libelle": "Décès, obsèques et sépulture", "url": "https://www.service-public.fr/particuliers/vosdroits/N165", "type": "externe" },
+      { "libelle": "Réserver une concession au cimetière", "url": "/demarches/concession-cimetiere.html", "type": "interne" }
+    ],
+    "motsCles": ["décès", "mort", "obsèques", "funérailles", "sépulture", "pompes funèbres", "acte de décès", "inhumation", "crémation", "succession"],
+    "voirAussi": ["concession-cimetiere", "acte-naissance"]
+  },
+  {
+    "id": "concession-cimetiere",
+    "titre": "Réserver une concession au cimetière",
+    "titreCourt": "Concession au cimetière",
+    "resume": "Concession au cimetière communal de Juvinas — durée et tarif à vérifier auprès de la mairie.",
+    "categorie": "famille",
+    "lieu": "mairie",
+    "lieuDetail": "Auprès du secrétariat de la mairie de Juvinas.",
+    "icone": "cimetiere",
+    "quoi": "La commune propose des concessions au cimetière communal. La réservation se fait directement auprès du secrétariat de mairie, qui indique les emplacements disponibles. À COMPLÉTER : durée et tarif des concessions (non trouvés en source publique, propres à chaque commune et fixés par délibération).",
+    "etapes": [
+      "Prendre contact avec le secrétariat de mairie, par téléphone ou aux heures d'ouverture.",
+      "Convenir d'un emplacement parmi ceux disponibles.",
+      "Signer l'acte de concession et procéder au règlement.",
+      "Conserver l'acte : il sera demandé lors de toute inhumation ou d'un renouvellement."
+    ],
+    "pieces": [
+      "Une pièce d'identité du concessionnaire",
+      "Un justificatif de domicile",
+      "Les coordonnées des ayants droit désignés"
+    ],
+    "delai": "Selon les disponibilités et les heures d'ouverture du secrétariat.",
+    "cout": "À VÉRIFIER auprès de la mairie — fixé par délibération du conseil municipal.",
+    "action": {
+      "libelle": "Contacter le secrétariat",
+      "url": "tel:+33475882156",
+      "type": "tel"
+    },
+    "actionsSecondaires": [
+      { "libelle": "Écrire à la mairie", "url": "mailto:mairie@juvinas.fr?subject=Concession%20au%20cimeti%C3%A8re", "type": "mail" }
+    ],
+    "motsCles": ["cimetière", "concession", "tombe", "caveau", "sépulture", "inhumation"],
+    "voirAussi": ["deces"]
+  },
+  {
+    "id": "permis-de-construire",
+    "titre": "Déclarer des travaux ou demander un permis de construire",
+    "titreCourt": "Travaux et permis de construire",
+    "resume": "Abri de jardin, clôture, piscine, extension, ravalement : quelle autorisation demander ?",
+    "categorie": "logement",
+    "lieu": "mairie",
+    "lieuDetail": "Dépôt à la mairie de Juvinas, ou par voie dématérialisée. À VÉRIFIER : le document d'urbanisme applicable à Juvinas (PLU, carte communale ou règlement national d'urbanisme — RNU) et le service instructeur (probablement la Communauté de communes du Bassin d'Aubenas).",
+    "icone": "travaux",
+    "quoi": "Presque tous les travaux modifiant l'aspect extérieur d'un bâtiment ou créant de la surface nécessitent une autorisation d'urbanisme. Les règles applicables dépendent du document d'urbanisme en vigueur à Juvinas — à vérifier avant de dessiner votre projet.",
+    "etapes": [
+      "Vérifier auprès de la mairie le document d'urbanisme applicable à votre terrain et les règles qui s'y appliquent.",
+      "Déterminer l'autorisation nécessaire : déclaration préalable pour un abri de jardin, une clôture, une piscine de moins de 100 m² ou une extension de moins de 20 m² ; permis de construire au-delà.",
+      "Constituer le dossier Cerfa avec les plans, l'insertion paysagère et les photographies demandées.",
+      "Déposer le dossier au secrétariat de mairie en plusieurs exemplaires, ou par voie dématérialisée.",
+      "Attendre la décision. Afficher l'autorisation sur le terrain, de façon visible depuis la voie publique, pendant toute la durée du chantier."
+    ],
+    "pieces": [
+      "Le formulaire Cerfa correspondant à votre projet",
+      "Un plan de situation du terrain",
+      "Un plan de masse et un plan de coupe",
+      "Un plan des façades et des toitures",
+      "Une photographie de près et une de loin situant le terrain"
+    ],
+    "delai": "Un mois d'instruction pour une déclaration préalable, deux mois pour un permis de construire de maison individuelle, trois mois pour les autres permis.",
+    "cout": "Gratuit au dépôt. Des taxes d'aménagement peuvent être dues après réalisation des travaux.",
+    "action": {
+      "libelle": "Poser une question à la mairie",
+      "url": "mailto:mairie@juvinas.fr?subject=Question%20urbanisme",
+      "type": "mail"
+    },
+    "actionsSecondaires": [
+      { "libelle": "Déclaration préalable : le détail", "url": "https://www.service-public.fr/particuliers/vosdroits/F17578", "type": "externe" },
+      { "libelle": "Permis de construire : le détail", "url": "https://www.service-public.fr/particuliers/vosdroits/F1986", "type": "externe" }
+    ],
+    "motsCles": ["permis de construire", "travaux", "déclaration préalable", "abri de jardin", "clôture", "piscine", "extension", "urbanisme", "construire"],
+    "voirAussi": ["certificat-urbanisme", "cadastre"]
+  },
+  {
+    "id": "certificat-urbanisme",
+    "titre": "Demander un certificat d'urbanisme",
+    "titreCourt": "Certificat d'urbanisme",
+    "resume": "Connaître les règles applicables à un terrain avant d'acheter ou de vendre.",
+    "categorie": "logement",
+    "lieu": "mairie",
+    "lieuDetail": "Dépôt à la mairie de Juvinas.",
+    "icone": "terrain",
+    "quoi": "Le certificat d'urbanisme est un document d'information. Le certificat d'information (CUa) indique les règles applicables à un terrain ; le certificat opérationnel (CUb) précise en outre si le terrain peut recevoir le projet que vous décrivez. Il est systématiquement demandé lors d'une vente.",
+    "etapes": [
+      "Choisir le type de certificat : CUa pour une simple information, CUb si vous avez un projet précis.",
+      "Remplir le formulaire Cerfa et joindre le plan de situation et le plan du terrain.",
+      "Déposer le dossier au secrétariat de mairie ou l'envoyer en recommandé.",
+      "Recevoir la réponse : les informations qu'elle contient sont garanties pendant 18 mois."
+    ],
+    "pieces": [
+      "Le formulaire Cerfa de demande de certificat d'urbanisme",
+      "Un plan de situation du terrain",
+      "Pour un CUb : une note descriptive du projet et un plan du terrain"
+    ],
+    "delai": "Un mois pour un certificat d'information, deux mois pour un certificat opérationnel.",
+    "cout": "Gratuit.",
+    "action": {
+      "libelle": "Déposer ma demande en mairie",
+      "url": "mailto:mairie@juvinas.fr?subject=Demande%20de%20certificat%20d%27urbanisme",
+      "type": "mail"
+    },
+    "actionsSecondaires": [],
+    "motsCles": ["certificat d'urbanisme", "cu", "cua", "cub", "terrain constructible", "acheter un terrain", "vendre terrain", "notaire"],
+    "voirAussi": ["permis-de-construire", "cadastre"]
+  },
+  {
+    "id": "cadastre",
+    "titre": "Consulter le cadastre et les limites de ma parcelle",
+    "titreCourt": "Cadastre",
+    "resume": "Trouver le numéro, la surface et le plan d'une parcelle de la commune.",
+    "categorie": "logement",
+    "lieu": "enligne",
+    "lieuDetail": "En ligne sur cadastre.data.gouv.fr, le service cartographique officiel de l'État. Le plan est également consultable en mairie.",
+    "icone": "carte",
+    "quoi": "Le plan cadastral identifie chaque parcelle par une section et un numéro. Il n'a pas de valeur juridique pour délimiter précisément une limite de propriété : seul un bornage réalisé par un géomètre-expert le peut.",
+    "etapes": [
+      "Ouvrir le cadastre : le lien ci-dessous affiche directement les parcelles de Juvinas.",
+      "Cliquer sur une parcelle pour afficher son numéro, sa section et sa surface.",
+      "Télécharger ou imprimer l'extrait de plan si besoin.",
+      "Pour un renseignement complémentaire, s'adresser au secrétariat de mairie aux heures d'ouverture."
+    ],
+    "pieces": [
+      "L'adresse du bien, ou la section et le numéro de la parcelle"
+    ],
+    "delai": "Immédiat en ligne.",
+    "cout": "Gratuit.",
+    "action": {
+      "libelle": "Consulter le cadastre de Juvinas",
+      "url": "https://cadastre.data.gouv.fr/map?style=ortho#14/44.704376/4.307284",
+      "type": "externe"
+    },
+    "actionsSecondaires": [
+      { "libelle": "Le Géoportail de l'IGN", "url": "https://www.geoportail.gouv.fr/", "type": "externe" }
+    ],
+    "motsCles": ["cadastre", "parcelle", "plan cadastral", "limite de propriété", "bornage", "terrain", "numéro de parcelle", "géomètre"],
+    "voirAussi": ["certificat-urbanisme", "permis-de-construire"]
+  },
+  {
+    "id": "ecole-cantine",
+    "titre": "Inscrire mon enfant à l'école et à la cantine",
+    "titreCourt": "École et cantine",
+    "resume": "À COMPLÉTER PAR LA MAIRIE — Juvinas (187 habitants) n'a probablement pas d'école propre : scolarisation vraisemblablement via un regroupement pédagogique intercommunal (RPI), à confirmer.",
+    "categorie": "enfance",
+    "lieu": "ailleurs",
+    "lieuDetail": "À CONFIRMER : établissement de rattachement, organisation du RPI éventuel, gestionnaire de la cantine et du transport scolaire.",
+    "icone": "ecole",
+    "quoi": "Fiche à compléter par la mairie de Juvinas : école de rattachement, modalités d'inscription, restauration scolaire, transport. Aucune information fiable trouvée en source publique — ne pas publier tel quel.",
+    "etapes": [
+      "Contacter le secrétariat de la mairie de Juvinas pour connaître l'école de rattachement et la marche à suivre."
+    ],
+    "pieces": [
+      "Le livret de famille ou un acte de naissance de l'enfant",
+      "Un justificatif de domicile à Juvinas",
+      "Le carnet de santé attestant des vaccinations obligatoires"
+    ],
+    "delai": "À COMPLÉTER.",
+    "cout": "À COMPLÉTER.",
+    "action": {
+      "libelle": "Contacter la mairie",
+      "url": "tel:+33475882156",
+      "type": "tel"
+    },
+    "actionsSecondaires": [],
+    "motsCles": ["cantine", "restauration scolaire", "inscrire mon enfant", "inscription scolaire", "école", "rentrée", "rpi"],
+    "voirAussi": []
+  },
+  {
+    "id": "encombrants",
+    "titre": "Faire enlever un encombrant ou déposer un déchet",
+    "titreCourt": "Encombrants et déchets",
+    "resume": "À COMPLÉTER PAR LA MAIRIE — modalités de collecte des encombrants et déchetterie de rattachement non confirmées.",
+    "categorie": "cadre-de-vie",
+    "lieu": "ailleurs",
+    "lieuDetail": "À CONFIRMER : la collecte des déchets et encombrants relève probablement de la Communauté de communes du Bassin d'Aubenas, à vérifier.",
+    "icone": "poubelle",
+    "quoi": "Fiche à compléter par la mairie de Juvinas : jours de collecte, déchetterie la plus proche, modalités d'enlèvement des encombrants.",
+    "etapes": [
+      "Contacter le secrétariat de la mairie de Juvinas ou la Communauté de communes du Bassin d'Aubenas pour connaître les modalités exactes."
+    ],
+    "pieces": [],
+    "delai": "À COMPLÉTER.",
+    "cout": "À COMPLÉTER.",
+    "action": {
+      "libelle": "Contacter la mairie",
+      "url": "tel:+33475882156",
+      "type": "tel"
+    },
+    "actionsSecondaires": [
+      { "libelle": "Communauté de communes du Bassin d'Aubenas", "url": "https://www.bassin-aubenas.fr", "type": "externe" }
+    ],
+    "motsCles": ["encombrants", "déchets", "déchetterie", "ordures", "tri"],
+    "voirAussi": []
+  },
+  {
+    "id": "salle-communale",
+    "titre": "Louer la salle communale",
+    "titreCourt": "Salle communale",
+    "resume": "À COMPLÉTER PAR LA MAIRIE — existence, capacité et tarif d'une salle communale à Juvinas non confirmés.",
+    "categorie": "cadre-de-vie",
+    "lieu": "mairie",
+    "lieuDetail": "Auprès du secrétariat de la mairie de Juvinas.",
+    "icone": "salle",
+    "quoi": "Fiche à compléter par la mairie de Juvinas : existence d'une salle communale, capacité, équipement, tarif et modalités de réservation.",
+    "etapes": [
+      "Contacter le secrétariat de la mairie de Juvinas pour connaître les disponibilités."
+    ],
+    "pieces": [],
+    "delai": "À COMPLÉTER.",
+    "cout": "À COMPLÉTER.",
+    "action": {
+      "libelle": "Contacter la mairie",
+      "url": "tel:+33475882156",
+      "type": "tel"
+    },
+    "actionsSecondaires": [],
+    "motsCles": ["salle communale", "location salle", "événement", "vin d'honneur", "réunion"],
+    "voirAussi": ["mariage"]
+  }
+]

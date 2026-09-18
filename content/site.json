@@ -1,0 +1,77 @@
+{
+  "theme": "republique",
+  "titre": "Mairie de Juvinas",
+  "baseline": "Commune de Juvinas — Ardèche (07)",
+  "description": "Site officiel de la commune de Juvinas (07600). Démarches administratives, actualités, vie locale.",
+  "url": "https://www.juvinas.fr",
+  "commune": {
+    "nom": "Juvinas",
+    "codePostal": "07600",
+    "codeInsee": "07111",
+    "departement": "Ardèche",
+    "region": "Auvergne-Rhône-Alpes",
+    "arrondissement": "Largentière",
+    "canton": "Aubenas-1",
+    "habitants": 187,
+    "habitantsSource": "population municipale INSEE 2023",
+    "superficie": "8,43 km²",
+    "altitude": "de 400 à 1 062 m",
+    "coordonnees": "44°42′41″ N — 4°18′23″ E",
+    "latitude": 44.704376,
+    "longitude": 4.307284,
+    "intercommunalite": {
+      "nom": "Communauté de communes du Bassin d'Aubenas",
+      "sigle": "CCBA",
+      "url": "https://www.bassin-aubenas.fr"
+    }
+  },
+  "mairie": {
+    "nom": "Mairie de Juvinas",
+    "adresse": "Le Village — 35 route de la Mairie",
+    "codePostal": "07600",
+    "ville": "Juvinas",
+    "telephone": "04 75 88 21 56",
+    "telephoneLien": "+33475882156",
+    "email": "mairie@juvinas.fr",
+    "maire": "Jean-Claude COURT",
+    "itineraire": "https://www.google.com/maps/search/?api=1&query=44.704376,4.307284",
+    "horairesIntro": "Le secrétariat de mairie vous accueille :",
+    "horaires": [
+      { "jour": "Lundi", "index": 1, "ouvert": true, "debut": "13:30", "fin": "17:30", "libelle": "13h30 – 17h30" },
+      { "jour": "Mardi", "index": 2, "ouvert": false, "libelle": "Fermé" },
+      { "jour": "Mercredi", "index": 3, "ouvert": true, "debut": "13:30", "fin": "17:30", "libelle": "13h30 – 17h30" },
+      { "jour": "Jeudi", "index": 4, "ouvert": false, "libelle": "Fermé" },
+      { "jour": "Vendredi", "index": 5, "ouvert": false, "libelle": "Fermé" },
+      { "jour": "Samedi", "index": 6, "ouvert": false, "libelle": "Fermé" },
+      { "jour": "Dimanche", "index": 0, "ouvert": false, "libelle": "Fermé" }
+    ],
+    "horairesNote": "En dehors de ces créneaux, vous pouvez demander un rendez-vous par téléphone ou par courriel. À CONFIRMER auprès de la mairie : horaires trouvés via service-public.fr et linternaute.fr, non une source officielle communale."
+  },
+  "alerte": {
+    "actif": false,
+    "niveau": "vigilance",
+    "titre": "Vigilance en cours",
+    "texte": "Ce bandeau s'affiche uniquement lorsque la commune diffuse une alerte.",
+    "lien": { "url": "/cadre-de-vie/risques.html", "libelle": "Consignes de sécurité" }
+  },
+  "accueil": {
+    "titreTuiles": "Je veux…",
+    "sousTitreTuiles": "Les démarches les plus demandées à Juvinas, en un clic.",
+    "tuiles": ["carte-identite", "passeport", "acte-naissance", "listes-electorales", "permis-de-construire", "concession-cimetiere"],
+    "placeholderRecherche": "Que cherchez-vous ?",
+    "suggestions": ["J'ai perdu ma carte d'identité", "Inscrire mon enfant à l'école", "Faire un permis de construire", "Réserver une concession au cimetière"],
+    "galerie": []
+  },
+  "reseaux": [],
+  "liensUtiles": [
+    { "libelle": "Communauté de communes du Bassin d'Aubenas", "url": "https://www.bassin-aubenas.fr", "logo": null },
+    { "libelle": "Service-Public.fr", "url": "https://www.service-public.fr/", "logo": null },
+    { "libelle": "Préfecture de l'Ardèche", "url": "https://www.ardeche.gouv.fr/", "logo": null },
+    { "libelle": "Département de l'Ardèche", "url": "https://www.ardeche.fr/", "logo": null },
+    { "libelle": "Région Auvergne-Rhône-Alpes", "url": "https://www.auvergnerhonealpes.fr/", "logo": null }
+  ],
+  "administration": {
+    "urlBase": "https://admin.juvinas.invalid",
+    "_note": "Placeholder — aucun Worker Cloudflare n'est déployé pour Juvinas. Les formulaires d'abonnement et de vote en direct sont visibles mais inertes tant que ce composant serveur n'existe pas (voir worker/README.md du dépôt Lecques pour le principe)."
+  }
+}

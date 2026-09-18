@@ -1,0 +1,15 @@
+/* Impression : une fiche de démarche doit rester utilisable sur papier. */
+@media print {
+  .entete, .barre-mobile, .overlay, .panneau-a11y, .recherche, .suggestions,
+  .fil, .pied__contact, .pied__plan, .pied__liens-utiles, .ancres, .sommaire, .evitement,
+  .section--appli, .heros__suggestions { display: none !important; }
+  body { background: #fff; color: #000; padding: 0; font-size: 11pt; }
+  .conteneur, .conteneur--etroit { inline-size: auto; margin: 0; }
+  a { color: #000; text-decoration: underline; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 9pt; word-break: break-all; }
+  .carte, .encadre, .fiche__ou, .fiche__contact { border: 1px solid #999; box-shadow: none; background: #fff; }
+  .etapes li::before { border: 1px solid #000; background: #fff; color: #000; }
+  h1, h2, h3 { break-after: avoid; }
+  .fiche__bloc, .carte, li { break-inside: avoid; }
+  .pied__bas-inner::before { content: "Mairie de Lecques — 233 rue du 26 Août 1944, 30250 Lecques — 04 66 80 11 83 — mairie30@lecques.fr"; display: block; }
+}

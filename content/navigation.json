@@ -1,0 +1,78 @@
+[
+  {
+    "id": "demarches",
+    "libelle": "Mes démarches",
+    "url": "/demarches/",
+    "description": "Papiers, famille, citoyenneté, logement, cadre de vie : faire ma démarche.",
+    "type": "action",
+    "enfants": [
+      { "libelle": "Toutes les démarches", "url": "/demarches/" },
+      { "libelle": "Papiers et identité", "url": "/demarches/#papiers" },
+      { "libelle": "Famille et état civil", "url": "/demarches/#famille" },
+      { "libelle": "Citoyenneté et élections", "url": "/demarches/#citoyennete" },
+      { "libelle": "Enfance et scolarité", "url": "/demarches/#enfance" },
+      { "libelle": "Logement et urbanisme", "url": "/demarches/#logement" },
+      { "libelle": "Déchets et cadre de vie", "url": "/demarches/#cadre-de-vie" }
+    ],
+    "icone": "document"
+  },
+  {
+    "id": "vie-locale",
+    "libelle": "Vie locale",
+    "url": "/vie-locale/",
+    "description": "Actualités et consultations citoyennes de la commune.",
+    "type": "editorial",
+    "enfants": [
+      { "libelle": "Actualités", "url": "/vie-locale/actualites.html" },
+      { "libelle": "Consultations citoyennes", "url": "/vie-locale/consultations.html" },
+      { "libelle": "S'abonner aux actualités", "url": "/vie-locale/abonnement.html" }
+    ],
+    "icone": "association"
+  },
+  {
+    "id": "enfance-jeunesse",
+    "libelle": "Enfance & jeunesse",
+    "url": "/enfance-jeunesse/",
+    "description": "École et parcours citoyen des jeunes Juvinois.",
+    "type": "editorial",
+    "enfants": [
+      { "libelle": "École et cantine", "url": "/enfance-jeunesse/ecole.html" },
+      { "libelle": "Parcours citoyen", "url": "/enfance-jeunesse/parcours-citoyen.html" }
+    ],
+    "icone": "ecole"
+  },
+  {
+    "id": "cadre-de-vie",
+    "libelle": "Cadre de vie",
+    "url": "/cadre-de-vie/",
+    "description": "Déchets, eau, urbanisme, environnement, risques et transports.",
+    "type": "editorial",
+    "enfants": [
+      { "libelle": "Déchets et tri", "url": "/cadre-de-vie/dechets.html" },
+      { "libelle": "Eau et assainissement", "url": "/cadre-de-vie/eau.html" },
+      { "libelle": "Urbanisme", "url": "/cadre-de-vie/urbanisme.html" },
+      { "libelle": "Environnement", "url": "/cadre-de-vie/environnement.html" },
+      { "libelle": "Risques et sécurité", "url": "/cadre-de-vie/risques.html" },
+      { "libelle": "Transports et déplacements", "url": "/cadre-de-vie/transports.html" },
+      { "libelle": "Services de proximité", "url": "/cadre-de-vie/services.html" }
+    ],
+    "icone": "nature"
+  },
+  {
+    "id": "mairie",
+    "libelle": "La mairie",
+    "url": "/mairie/",
+    "description": "Élus, conseil municipal, bulletins et contact.",
+    "type": "editorial",
+    "enfants": [
+      { "libelle": "Conseils municipaux", "url": "/mairie/conseils-municipaux.html" },
+      { "libelle": "Commissions", "url": "/mairie/commissions.html" },
+      { "libelle": "Les élus", "url": "/mairie/elus.html" },
+      { "libelle": "Contact et horaires", "url": "/mairie/contact.html" },
+      { "libelle": "Bulletins municipaux", "url": "/mairie/bulletins.html" },
+      { "libelle": "Découvrir Juvinas", "url": "/mairie/commune.html" },
+      { "libelle": "Histoire du village", "url": "/mairie/histoire.html" }
+    ],
+    "icone": "mairie"
+  }
+]

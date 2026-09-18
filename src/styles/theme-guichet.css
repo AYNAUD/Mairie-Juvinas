@@ -1,0 +1,100 @@
+/* =========================================================================
+   Thème « Guichet » — utilitaire, façon application.
+   Mode sombre natif, recherche dominante, tuiles denses, typographie franche.
+   La direction la plus rapide pour agir, la plus efficace à une main.
+   ========================================================================= */
+[data-theme="guichet"] {
+  --fond: #0f151d;
+  --fond-alt: #161d29;
+  --fond-carte: #18202c;
+  --fond-accentue: #122b28;
+  --fond-inverse: #f2f6fa;
+  --texte-inverse: #0f151d;
+
+  --texte: #f2f6fa;
+  --texte-doux: #b3c0d0;
+  --texte-tres-doux: #93a2b5;
+
+  --bordure: #2a3546;
+  --bordure-forte: #6b7d95;
+
+  --accent: #38d6b0;
+  --accent-survol: #6ae6c8;
+  --accent-texte: #052b22;
+  --accent-doux: #10312a;
+  --accent-doux-texte: #6ae6c8;
+
+  --lien: #8ee0ff;
+  --lien-survol: #b8ecff;
+  --focus: #8ee0ff;
+
+  --danger: #ff9d92;
+  --danger-fond: #35201d;
+  --succes: #78e3a6;
+  --succes-fond: #12301f;
+  --info: #8ec9ff;
+  --info-fond: #16263a;
+  --eau: #8ec9ff;
+  --attention: #ffc46b;
+  --attention-fond: #33280f;
+
+  /* Une couleur par rubrique du menu principal, pour les différencier au
+     premier coup d'œil — indépendamment de la lecture du texte. */
+  --nav-demarches: #38d6b0;
+  --nav-vie-locale: #ffc46b;
+  --nav-enfance-jeunesse: #c9a4ff;
+  --nav-cadre-de-vie: #8ec9ff;
+  --nav-mairie: #e8d9b0;
+
+  --police-titre: var(--police-corps);
+  --graisse-titre: 700;
+  --interlettrage-titre: -.025em;
+  --rayon: 10px;
+  --rayon-petit: 6px;
+  --rayon-grand: 18px;
+  --ombre: 0 1px 2px rgb(0 0 0 / .4);
+  --ombre-forte: 0 8px 32px rgb(0 0 0 / .5);
+}
+
+[data-theme="guichet"][data-contraste="1"] {
+  --fond: #000000; --fond-alt: #000000; --fond-carte: #000000; --fond-accentue: #000000;
+  --texte: #ffffff; --texte-doux: #ffffff; --texte-tres-doux: #e6e6e6;
+  --bordure: #ffffff; --bordure-forte: #ffffff;
+  --accent: #5ff0c8; --accent-texte: #000000; --accent-doux: #000000; --accent-doux-texte: #5ff0c8;
+  --lien: #a9e9ff; --lien-survol: #ffffff; --trait: 2px;
+  --nav-demarches: var(--accent); --nav-vie-locale: var(--accent);
+  --nav-enfance-jeunesse: var(--accent); --nav-cadre-de-vie: var(--accent); --nav-mairie: var(--accent);
+}
+
+
+/* -------------------------------------------------------------------------
+   Photo d'arrière-plan du bandeau d'accueil : le Vidourle en eaux calmes,
+   assombri et teinté vers le sarcelle de l'accent — un traitement sombre et
+   graphique, cohérent avec l'esprit « application » du thème. Guichet n'a
+   qu'une seule variante (toujours sombre) : pas de déclinaison claire à gérer.
+   ------------------------------------------------------------------------- */
+[data-theme="guichet"] .heros {
+  background-image:
+    linear-gradient(to bottom, rgb(8 14 19 / .95), rgb(8 14 19 / .9)),
+    url("/img/vidourle-700.jpg");
+  background-size: cover;
+  background-position: center 55%;
+}
+
+@media (min-width: 48em) {
+  [data-theme="guichet"] .heros {
+    background-image:
+      linear-gradient(to right, rgb(8 14 19 / .97) 0%, rgb(9 27 25 / .92) 52%, rgb(9 40 35 / .6) 100%),
+      url("/img/vidourle-1200.jpg");
+    background-position: center 45%;
+  }
+}
+
+/* En contraste renforcé, la photo disparaît : rien ne doit gêner la lecture. */
+[data-theme="guichet"][data-contraste="1"] .heros { background-image: none; }
+
+/* Le mélange « multiply » de la bannière en écho (composants.css) écrase les
+   photos vers le noir sur un thème déjà sombre. On y substitue une teinte
+   « color » à faible opacité, qui colore sans jamais assombrir davantage. */
+[data-theme="guichet"] .banniere-page img { filter: saturate(.6) contrast(1.08) brightness(1.2); }
+[data-theme="guichet"] .banniere-page::after { background: var(--accent); mix-blend-mode: color; opacity: .22; }

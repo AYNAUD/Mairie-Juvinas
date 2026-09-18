@@ -1,0 +1,11 @@
+{
+  "urgences": [
+    { "libelle": "SAMU", "numero": "15" },
+    { "libelle": "Police et gendarmerie", "numero": "17" },
+    { "libelle": "Pompiers", "numero": "18" },
+    { "libelle": "Numéro d'urgence européen", "numero": "112" },
+    { "libelle": "Urgence par SMS — personnes sourdes et malentendantes", "numero": "114" },
+    { "libelle": "Enfance en danger", "numero": "119" },
+    { "libelle": "Violences femmes info", "numero": "3919" }
+  ]
+}

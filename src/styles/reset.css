@@ -1,0 +1,24 @@
+/* Reset minimal, orienté accessibilité. */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body, h1, h2, h3, h4, p, ul, ol, figure, blockquote, dl, dd, fieldset { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+fieldset { padding: 0; border: 0; }
+legend { padding: 0; }
+img, svg, video { display: block; max-inline-size: 100%; height: auto; }
+input, button, select, textarea { font: inherit; color: inherit; }
+button { background: none; border: 0; cursor: pointer; }
+table { border-collapse: collapse; inline-size: 100%; }
+address { font-style: normal; }
+:target { scroll-margin-block-start: 6rem; }
+
+/* Respect de la préférence système, et de la préférence exprimée dans le panneau d'affichage. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important; animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important; scroll-behavior: auto !important;
+  }
+}
+[data-anime="0"] *, [data-anime="0"] *::before, [data-anime="0"] *::after {
+  animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important;
+}
