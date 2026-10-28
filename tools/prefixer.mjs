@@ -25,6 +25,8 @@ const SEG = [...new Set(segments)].map((s) => s.replace(/[.*+?^${}()|[\]\\]/g, '
 // Chemin absolu du site entre guillemets ou parenthèses : "/demarches/…", url("/img/…").
 const chemin = new RegExp(`(["'(\`])/(?=(?:${SEG})(?:[/.#?"'\`)]|$))`, 'g');
 // Accueil : href="/" et action="/".
+// srcset : plusieurs adresses séparées par des virgules, une seule précédée d'un guillemet.
+const srcset = new RegExp(`(\\ssrcset="|,\\s*)/(?=(?:${SEG})[/.])`, 'g');
 const accueil = /((?:href|action|data-webcal|data-adresse)=")\/(?=")/g;
 
 let fichiers = 0;
@@ -39,6 +41,7 @@ function parcourir(dossier) {
     s = s.replace(chemin, `$1${base}/`);
     if (ext === '.html') {
       s = s.replace(accueil, `$1${base}/`);
+      s = s.replace(/\ssrcset="[^"]*"/g, (attr) => attr.replace(srcset, `$1${base}/`));
       if (noindex && s.includes('</head>') && !s.includes('name="robots"')) {
         s = s.replace('</head>', '<meta name="robots" content="noindex, nofollow"></head>');
       }
