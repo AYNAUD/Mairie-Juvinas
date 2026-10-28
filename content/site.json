@@ -169,8 +169,8 @@
     }
   ],
   "administration": {
-    "urlBase": "https://admin.juvinas.invalid",
-    "_note": "Adresse du Worker « données en direct » (worker/README.md). Tant qu'elle se termine par .invalid, le Worker n'est pas déployé : les widgets en direct restent des liens vers les services officiels, sans aucune requête."
+    "urlBase": "https://mairie-juvinas-donnees.aynaud.workers.dev",
+    "_note": "Adresse du Worker « données en direct » (worker/README.md), déployé le 28 octobre 2026. Il sert les widgets en direct ; l'abonnement aux actualités et le vote en ligne ne sont pas portés de Lecques et restent inertes. Si cette adresse se termine par .invalid, le Worker n'est pas déployé et le site n'émet aucune requête."
   },
   "riviere": {
     "_lisezmoi": "Cours d'eau de la commune, affiché sur la page Risques et sécurité. Aucune station Vigicrues ne mesure la Bézorgues : la hauteur en direct (Worker, route /vidourle) porte sur les deux stations en service les plus proches, listées ici et dans worker/donnees-publiques.mjs (à garder identiques). Bézorgues et Bésorgues désignent la même rivière : le site emploie « Bézorgues » (Sandre, Wikipédia, OpenStreetMap) ; « Bésorgues » reste dans les noms propres, comme la commune voisine Labastide-sur-Bésorgues.",
