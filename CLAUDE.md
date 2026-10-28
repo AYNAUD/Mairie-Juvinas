@@ -174,8 +174,9 @@ Rien de ce site n'a été relu par la mairie de Juvinas. Niveau de confiance des
   pas le logo de la commune : à remplacer par le logo officiel si la mairie en possède un.
 - **Accueil** : la carte « Un nom connu jusque dans l'espace » (`site.accueil.identite`) met en
   avant la météorite de Juvinas ; la galerie « Juvinas en images » porte les deux photos fournies.
-- **Photos** : seules `mairie` et `village` existent (`public/img/`). Un fichier brut
-  `public/img/Village_juvinas.jpg` est laissé hors dépôt.
+- **Photos** : seules `mairie` et `village` existent (`public/img/`). Le fichier brut
+  `public/img/Village_juvinas.jpg` (1914 × 1280, original de la photo du village) est versionné mais non
+  référencé : les versions du site sont `village-700.jpg` et `village-1200.jpg`.
 - **Nom de domaine** : `content/site.json → url` utilise `https://www.juvinas.fr` comme espace
   réservé (ce domaine redirige aujourd'hui vers une plateforme départementale, `e-ardeche.fr`,
   dont le certificat ne correspond pas) — à confirmer avant toute mise en ligne.
