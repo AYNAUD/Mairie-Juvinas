@@ -13,6 +13,7 @@ règle « zéro requête tierce ») et met les réponses en cache.
 | `/eau/restrictions` | restrictions sécheresse en vigueur (page Eau) | VigiEau | 3 h |
 | `/eau/qualite` | contrôle sanitaire de l'eau du robinet (page Eau) | Hub'Eau, ARS | 12 h |
 | `/risques/adresse?q=…` | « Les risques à mon adresse » (page Risques) | IGN, Géoportail de l'urbanisme, Géorisques | jamais |
+| `POST /abonnement`, `POST /desabonnement` | formulaires de la page « S'abonner aux actualités » : répondent la page « Service en cours de préparation, merci pour votre attente ! » | aucune : l'adresse saisie n'est ni lue, ni gardée | jamais |
 
 La route `/vidourle` garde son nom : c'est celui que le moteur partagé avec Lecques
 (`src/scripts/vidourle.js`) interroge. Elle sert ici les rivières de Juvinas.
@@ -29,7 +30,9 @@ présente jamais ces hauteurs comme celles de la Bézorgues.
 L'administration par email (publication d'actualités et de documents), les abonnements aux
 actualités, le vote en ligne et les alertes par courriel. Ils demandent un jeton GitHub, un
 compte Brevo, un sous-domaine de réception d'emails et des bases KV : voir `CLAUDE.md`.
-Le formulaire d'abonnement et le vote restent donc inertes.
+Le formulaire d'abonnement répond « Service en cours de préparation, merci pour votre attente ! »
+(`service-en-preparation.mjs`) et n'enregistre rien ; le vote en ligne reste inerte.
+Pour brancher le vrai service plus tard, remplacer ce gestionnaire par celui de Lecques.
 
 ## Déployer (une fois)
 

@@ -14,6 +14,8 @@
      GET /eau/restrictions   restrictions d'eau en vigueur (VigiEau)
      GET /eau/qualite        contrôle sanitaire de l'eau du robinet (ARS)
      GET /risques/adresse    « Ma maison face aux risques »
+     POST /abonnement, /desabonnement
+                             page « Service en cours de préparation » (rien n'est enregistré)
 
    Pas portées de Lecques : l'administration par email, les abonnements et
    le vote en ligne (voir CLAUDE.md, « Ce qui n'est pas porté »).
@@ -26,6 +28,7 @@ import {
   gererDemandeSituation,
 } from './donnees-publiques.mjs';
 import { gererDemandeRisquesAdresse } from './risques-adresse.mjs';
+import { pageServiceEnPreparation } from './service-en-preparation.mjs';
 
 const ENTETES_CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -46,6 +49,9 @@ export default {
   async fetch(request, env, ctx) {
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: ENTETES_CORS });
     const { pathname } = new URL(request.url);
+    if (request.method === 'POST' && (pathname === '/abonnement' || pathname === '/desabonnement')) {
+      return pageServiceEnPreparation(request);
+    }
     const gerer = ROUTES[pathname];
     if (!gerer || request.method !== 'GET') {
       return new Response('Introuvable', { status: 404, headers: { 'Content-Type': 'text/plain; charset=utf-8' } });

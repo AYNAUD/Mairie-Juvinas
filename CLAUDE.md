@@ -136,8 +136,9 @@ Horaires de car en temps réel : `site.transport`, absent.
 - **L'administration du Worker de Lecques** (formulaire de publication par email, comptes
   valideurs, abonnements et courriels, vote en ligne, alertes automatiques) : composant serveur
   avec secrets et comptes GitHub/Brevo et un sous-domaine d'email à créer. Tant qu'il n'existe pas, `content/actualites.json`,
-  `content/documents.json` et le formulaire d'abonnement se modifient à la main, et le formulaire
-  d'abonnement reste visuellement présent mais inerte.
+  `content/documents.json` et le formulaire d'abonnement se modifient à la main ; le formulaire
+  d'abonnement reste visible mais le Worker répond « Service en cours de préparation, merci pour
+  votre attente ! » sans rien enregistrer.
 - Le déploiement OVH/Cloudflare, le guide Word de l'habitant et le plan de zonage du PLU
   (**Juvinas n'a pas de PLU** : commune au règlement national d'urbanisme, vérifié sur l'API Carto du
   Géoportail de l'urbanisme).

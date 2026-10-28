@@ -41,6 +41,21 @@ ok('la vigilance ne retient que l\'Ardèche (FR712)', () => {
 ok('aucune restriction d\'eau : niveau nul', () => assert.equal(resumerRestrictions([]).niveau, null));
 ok('deux stations suivies, codes uniques', () => assert.equal(new Set(STATIONS_RIVIERES.map((s) => s.code)).size, 2));
 
+
+{
+  const r = await worker.fetch(new Request('https://x.test/abonnement', { method: 'POST', headers: { Referer: 'https://aynaud.github.io/Mairie-Juvinas/vie-locale/abonnement.html' }, body: new URLSearchParams({ email: 'a@b.fr' }) }), {}, {});
+  const t = await r.text();
+  assert.equal(r.status, 200);
+  assert.match(r.headers.get('Content-Type'), /text\/html/);
+  assert.ok(t.includes('Service en cours de préparation, merci pour votre attente !'));
+  assert.ok(!t.includes('a@b.fr'), "l'adresse saisie ne doit pas être renvoyée");
+  assert.ok(t.includes('href="https://aynaud.github.io/Mairie-Juvinas/vie-locale/abonnement.html"'));
+  const d = await worker.fetch(new Request('https://x.test/desabonnement', { method: 'POST', headers: { Referer: 'https://exemple.evil/x' } }), {}, {});
+  assert.ok((await d.text()).includes('href="https://aynaud.github.io"'), 'retour limité aux sites de la mairie');
+  assert.equal((await worker.fetch(new Request('https://x.test/abonnement'), {}, {})).status, 404);
+  n += 3; console.log('  ✓ POST /abonnement et /desabonnement : message, retour limité aux sites de la mairie, GET refusé');
+}
+
 if (process.argv.includes('--direct')) {
   console.log('\nAPI réelles (via le routeur)\n');
   const magasin = new Map();
