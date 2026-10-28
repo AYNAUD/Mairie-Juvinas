@@ -138,10 +138,9 @@ Horaires de car en temps réel : `site.transport`, absent.
   avec secrets et comptes GitHub/Brevo et un sous-domaine d'email à créer. Tant qu'il n'existe pas, `content/actualites.json`,
   `content/documents.json` et le formulaire d'abonnement se modifient à la main, et le formulaire
   d'abonnement reste visuellement présent mais inerte.
-- Le déploiement OVH/Cloudflare, le guide Word de l'habitant, la carte « Autour de la commune »
-  (moteur prêt, mais `content/tourisme-sites.json` n'est pas saisi : il demande des sites avec leur
-  fiche officielle vérifiée) et le plan de zonage du PLU (**Juvinas n'a pas de PLU** : commune au
-  règlement national d'urbanisme, vérifié sur l'API Carto du Géoportail de l'urbanisme).
+- Le déploiement OVH/Cloudflare, le guide Word de l'habitant et le plan de zonage du PLU
+  (**Juvinas n'a pas de PLU** : commune au règlement national d'urbanisme, vérifié sur l'API Carto du
+  Géoportail de l'urbanisme).
 
 ## État de ce fork (à lire avant de publier quoi que ce soit)
 
@@ -155,12 +154,17 @@ Rien de ce site n'a été relu par la mairie de Juvinas. Niveau de confiance des
   collecte des déchets et transport à la demande (Communauté de communes du Bassin d'Aubenas, pages
   du 28 octobre 2026), absence d'école sur la commune (Annuaire de l'éducation), comptes 2025
   (OFGL), activités économiques (Sirene).
+- **Carte Tourisme** (`content/tourisme-sites.json`, 10 sites à moins de 30 minutes) : descriptions
+  tirées des fiches officielles de l'office de tourisme Aubenas-Vals-Antraïgues, de la communauté de
+  communes Ardèche des Sources et Volcans et du Parc des Monts d'Ardèche (consultées le 28 octobre
+  2026) ; temps de trajet calculés par l'IGN (ressource `bdtopo-pgr`). Les fiches changent : horaires et
+  tarifs sont à vérifier sur le lien, que la page renvoie systématiquement.
 - **Source encyclopédique** (Wikipédia) : histoire, météorite de 1821, patrimoine, salle Vesta
   (inaugurée le 29 mars 2019), géographie, climat.
 - **Volontairement laissé vide plutôt qu'inventé** : école de rattachement des enfants, tarif et
   durée des concessions du cimetière, tarif et règlement de la salle Vesta, budget détaillé,
   commissions municipales, activités des associations, liste de commerçants présentés en détail
-  (`annuaire.professionnels`), sites touristiques cartographiés.
+  (`annuaire.professionnels`), sites touristiques au-delà de ces dix.
 - **Graphie de la rivière** : « Bézorgues » et « Bésorgues » désignent la même rivière. Le site écrit
   « Bézorgues » (Sandre, OpenStreetMap, Wikipédia) ; « Bésorgues » reste dans les noms propres
   (commune voisine Labastide-sur-Bésorgues) et la recherche accepte les deux.
@@ -199,7 +203,8 @@ npm run defibrillateurs / npm run finances
 npm run worker:test    Test du Worker de données en direct (--direct : API réelles)
 npm run worker:deploy  Déploie le Worker (compte Cloudflare, voir worker/README.md)
 npm run zonage         Plan de zonage du PLU — sans objet tant que Juvinas n'a pas de PLU
-npm run carte:tourisme Fond de la carte Tourisme, après saisie de content/tourisme-sites.json
+npm run carte:tourisme Fond et temps de trajet de la carte Tourisme, après toute modif de
+                       content/tourisme-sites.json (OVERPASS_URL=… pour une autre instance Overpass)
 npm run pv:importer -- <dossier> [--essai]
                        Importe un dossier de PV de conseils (PDF datés dans leur nom)
 ```

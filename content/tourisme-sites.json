@@ -1,0 +1,107 @@
+{
+  "_lisezmoi": "Sites, monuments et randonnées à moins de 30 minutes en voiture de la mairie de Juvinas, montrés sur la carte de la page Tourisme (/vie-locale/tourisme.html) et listés juste dessous, dans cet ordre. type : « site » (monument, village, site naturel) ou « rando » (sentier balisé). position : [longitude, latitude] du repère sur la carte ; acces : point d'arrivée en voiture quand il diffère (départ d'un sentier, parking), sinon la position sert. parcours : longueur, durée et difficulté d'une randonnée. url : la fiche officielle (office de tourisme, communauté de communes, Parc naturel régional), ouverte dans un nouvel onglet ; source : son nom, tel qu'affiché. Les descriptions ne reprennent que ce que la fiche officielle affirme (consultées le 28 octobre 2026) ; les coordonnées sont celles des fiches de l'office de tourisme quand elles y figurent. Après tout ajout ou déplacement, relancer « npm run carte:tourisme » : il recalcule le fond de carte et le temps de trajet depuis la mairie (content/carte-tourisme.json, jamais édité à la main). Un site à plus de 30 minutes n'a pas sa place ici. Écartés pour cette raison, d'après le calcul d'itinéraire : Vogüé (46 min), Largentière (52 min), Balazuc (49 min), Montréal (62 min).",
+  "sites": [
+    {
+      "id": "antraigues",
+      "nom": "Antraigues-sur-Volane",
+      "type": "site",
+      "commune": "Vallées d'Antraigues – Asperjoc",
+      "position": [4.357897, 44.718124],
+      "description": "Village de caractère perché à 470 m d'altitude sur un promontoire volcanique qui domine les vallées de la Volane et du Mas. Ses ruelles pavées (calades) mènent à de nombreuses sculptures dans la pierre de lave, et le chanteur Jean Ferrat a choisi d'y vivre. Un circuit d'environ une heure, « Découverte des basaltes », passe par le rocher du Fromage et la cascade de l'Espissard.",
+      "url": "https://www.aubenas-vals.com/patrimoine-culturel-ardeche/antraigues-village-de-caractere/",
+      "source": "Office de tourisme du Pays d'Aubenas-Vals-Antraïgues"
+    },
+    {
+      "id": "coupe-aizac",
+      "nom": "La coupe d'Aizac",
+      "type": "site",
+      "commune": "Aizac",
+      "position": [4.333333, 44.716667],
+      "description": "Volcan de type strombolien, classé site majeur du Pays des Jeunes Volcans d'Ardèche : une coupe presque parfaite d'environ 500 m de diamètre, dont la coulée de basalte a suivi la Volane jusqu'aux portes de Vals-les-Bains. Un sentier d'interprétation en fait le tour. Accès libre et gratuit, parking à proximité.",
+      "url": "https://www.aubenas-vals.com/patrimoine-naturel-ardeche/la-coupe-daizac/",
+      "source": "Office de tourisme du Pays d'Aubenas-Vals-Antraïgues"
+    },
+    {
+      "id": "chateau-craux",
+      "nom": "Le château de Craux",
+      "type": "site",
+      "commune": "Genestelle",
+      "position": [4.387657, 44.706171],
+      "description": "Bâti sur le cratère d'un volcan, il domine les vallées de la Volane et du Sandron, avec une vue sur les Hautes-Cévennes ardéchoises. Ses tours rondes servaient de relais de chasse aux seigneurs d'Antraigues ; la partie du XIIe siècle est classée monument historique. Il ne se visite pas mais se voit de l'extérieur, avec une aire de pique-nique sur place.",
+      "url": "https://www.aubenas-vals.com/patrimoine-culturel-ardeche/chateau-de-craux/",
+      "source": "Office de tourisme du Pays d'Aubenas-Vals-Antraïgues"
+    },
+    {
+      "id": "vals-les-bains",
+      "nom": "Vals-les-Bains et la source intermittente",
+      "type": "site",
+      "commune": "Vals-les-Bains",
+      "position": [4.368385, 44.65602],
+      "description": "Station thermale depuis plus de 150 ans, avec son parc du Casino aux arbres centenaires, ses séquoias et ses hôtels Belle Époque. Dans le parc de l'Intermittente, une source jaillit à heures fixes, plusieurs fois par jour, pendant 5 à 10 minutes (accès gratuit).",
+      "url": "https://www.aubenas-vals.com/redecouvrir/les-incontournables/vals-les-bains-et-son-magnifique-spa/",
+      "source": "Office de tourisme du Pays d'Aubenas-Vals-Antraïgues"
+    },
+    {
+      "id": "chateau-aubenas",
+      "nom": "Le château d'Aubenas",
+      "type": "site",
+      "commune": "Aubenas",
+      "position": [4.390424, 44.620724],
+      "description": "Monument historique devenu en 2024, après sept ans de rénovation, un centre d'art contemporain et du patrimoine : expositions, visites guidées sur réservation (1 h 15 à 1 h 30), ateliers et concerts. Entrée payante (plein tarif 9 € en 2026) ; 95 % du château est accessible aux personnes à mobilité réduite.",
+      "url": "https://www.aubenas-vals.com/patrimoine-culturel-ardeche/le-chateau-daubenas/",
+      "source": "Office de tourisme du Pays d'Aubenas-Vals-Antraïgues"
+    },
+    {
+      "id": "chateau-ventadour",
+      "nom": "Le château de Ventadour",
+      "type": "site",
+      "commune": "Meyras",
+      "position": [4.28647, 44.669813],
+      "description": "Château fort féodal du XIIe siècle, l'un des plus grands châteaux médiévaux d'Ardèche, sur un éperon rocheux qui domine de 80 m la confluence de l'Ardèche et de la Fontaulière. Sa restauration est menée depuis 1969 par des bénévoles ; la visite guidée dure environ une heure. Ouverture limitée selon les périodes : consultez la fiche avant de venir.",
+      "url": "https://www.aubenas-vals.com/patrimoine-culturel-ardeche/chateau-de-ventadour/",
+      "source": "Office de tourisme du Pays d'Aubenas-Vals-Antraïgues"
+    },
+    {
+      "id": "chaussee-geants",
+      "nom": "La chaussée des Géants",
+      "type": "site",
+      "commune": "Thueyts",
+      "position": [4.2211426, 44.6724068],
+      "description": "Coulée de basalte de 80 m de haut et de plus de 50 m d'épaisseur, issue du volcan strombolien de la Gravenne de Thueyts. Site ouvert toute l'année, accès libre et gratuit, parking à proximité.",
+      "url": "https://www.asv-cdc.fr/chaussee-des-geants-0-63589",
+      "source": "Communauté de communes Ardèche des Sources et Volcans"
+    },
+    {
+      "id": "saint-joseph-des-bancs",
+      "nom": "Saint-Joseph-des-Bancs",
+      "type": "site",
+      "commune": "Saint-Joseph-des-Bancs",
+      "position": [4.412298, 44.73643],
+      "description": "Village du col des Bancs, avec le moulin de maître Nougier, moulin à huile et à grains vieux de 200 ans qui fonctionne encore quand le débit de la rivière le permet, et les vestiges d'une ancienne voie romaine que l'on peut emprunter jusqu'au Champ de Mars. Visite libre et gratuite toute l'année.",
+      "url": "https://www.aubenas-vals.com/patrimoine-culturel-ardeche/village-de-st-joseph-des-bancs/",
+      "source": "Office de tourisme du Pays d'Aubenas-Vals-Antraïgues"
+    },
+    {
+      "id": "mercuer",
+      "nom": "Mercuer",
+      "type": "site",
+      "commune": "Mercuer",
+      "position": [4.358411, 44.630776],
+      "description": "Territoire de nombreux hameaux, parcouru de sentiers balisés dans la pinède. L'église Saint-Loup, fondée vers 650 à l'époque mérovingienne, a sa façade occidentale et son clocher-mur classés ; une voie romaine traverse le village d'est en ouest. Visite libre toute l'année.",
+      "url": "https://www.aubenas-vals.com/patrimoine-culturel-ardeche/village-de-mercuer/",
+      "source": "Office de tourisme du Pays d'Aubenas-Vals-Antraïgues"
+    },
+    {
+      "id": "coupe-jaujac",
+      "nom": "La coupe de Jaujac et sa coulée",
+      "type": "rando",
+      "commune": "Jaujac",
+      "position": [4.262819, 44.6297315],
+      "acces": [4.2555127, 44.6363825],
+      "parcours": "Boucle en huit de 7,41 km, 3 h, facile",
+      "description": "Du vieux village et de ses orgues basaltiques au-dessus du Lignon, le sentier passe par le domaine de Rochemure, où la Maison du Parc abrite le sentier d'interprétation de la coulée vive, puis monte au volcan de Jaujac et à son cratère, avec une vue sur les Cévennes ardéchoises. Seule la montée au volcan demande d'être bien chaussé. Départ : place du village.",
+      "url": "https://www.destination-parc-monts-ardeche.fr/randonnees/coupe-de-jaujac-et-sa-coulee/",
+      "source": "Parc naturel régional des Monts d'Ardèche"
+    }
+  ]
+}

@@ -34,9 +34,7 @@ Les itinéraires ci-dessous sont décrits par des sites de randonnée : vérifie
 
 ## Autour de Juvinas
 
-- **La coupe d'Aizac** : un volcan strombolien de moins de 100 000 ans au cratère ouvert, à quelques kilomètres ; une boucle d'environ 4 km part du col d'Aizac, jalonnée de panneaux d'interprétation.
-- **Antraigues-sur-Volane** (Vallées d'Antraigues-Asperjoc) : village perché sur un orgue basaltique, où a vécu le chanteur Jean Ferrat ; on y visite la maison qui lui est consacrée.
-- **Vals-les-Bains** : station thermale à la porte du Parc naturel régional des Monts d'Ardèche.
+Dix sites et randonnées à moins de 30 minutes en voiture de la mairie : villages de caractère, volcans éteints, châteaux et coulées de basalte. Touchez un repère de la carte pour sa description et le lien vers sa fiche officielle ; le temps de trajet est calculé depuis la mairie.
 
 ## S'informer
 

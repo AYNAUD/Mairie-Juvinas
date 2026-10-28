@@ -18,7 +18,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const RACINE = join(dirname(fileURLToPath(import.meta.url)), '..');
-const OVERPASS = 'https://overpass-api.de/api/interpreter';
+const OVERPASS = process.env.OVERPASS_URL || 'https://overpass-api.de/api/interpreter';
 const ITINERAIRE = 'https://data.geopf.fr/navigation/itineraire';
 const TRAJET_MAX = 30; // minutes : au-delà, le site n'a pas sa place sur cette carte
 
@@ -203,7 +203,7 @@ for (const s of sites.filter((x) => x.osm && x.osm.length)) {
 
 // Temps de trajet en voiture depuis la mairie, au plus rapide.
 async function trajet(arrivee, tentative = 1) {
-  const url = `${ITINERAIRE}?resource=bdtopo-osrm&profile=car&optimization=fastest&start=${MAIRIE.join(',')}&end=${arrivee.join(',')}&getSteps=false&timeUnit=minute&distanceUnit=kilometer`;
+  const url = `${ITINERAIRE}?resource=bdtopo-pgr&profile=car&optimization=fastest&start=${MAIRIE.join(',')}&end=${arrivee.join(',')}&getSteps=false&timeUnit=minute&distanceUnit=kilometer`;
   const r = await fetch(url, { headers: { 'User-Agent': 'mairie-juvinas-fetch-carte-tourisme/1.0' } });
   if (r.status === 429 && tentative < 5) {
     await attendre(tentative * 5000);
