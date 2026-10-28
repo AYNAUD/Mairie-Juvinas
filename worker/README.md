@@ -13,6 +13,7 @@ règle « zéro requête tierce ») et met les réponses en cache.
 | `/eau/restrictions` | restrictions sécheresse en vigueur (page Eau) | VigiEau | 3 h |
 | `/eau/qualite` | contrôle sanitaire de l'eau du robinet (page Eau) | Hub'Eau, ARS | 12 h |
 | `/risques/adresse?q=…` | « Les risques à mon adresse » (page Risques) | IGN, Géoportail de l'urbanisme, Géorisques | jamais |
+| `GET /consultation/<id>/resultats` | compteur des réponses d'une consultation ouverte : toujours zéro, aucun vote n'étant enregistré | aucune | jamais |
 | `POST /abonnement`, `POST /desabonnement`, `POST /consultation/<id>/voter` | formulaires de la page « S'abonner aux actualités » et vote des consultations : répondent la page « Service en cours de préparation, merci pour votre attente ! » | aucune : l'adresse saisie n'est ni lue, ni gardée | jamais |
 
 La route `/vidourle` garde son nom : c'est celui que le moteur partagé avec Lecques

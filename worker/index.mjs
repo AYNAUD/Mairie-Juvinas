@@ -14,6 +14,7 @@
      GET /eau/restrictions   restrictions d'eau en vigueur (VigiEau)
      GET /eau/qualite        contrôle sanitaire de l'eau du robinet (ARS)
      GET /risques/adresse    « Ma maison face aux risques »
+     GET /consultation/<id>/resultats   compteur à zéro (aucun vote n'est enregistré)
      POST /abonnement, /desabonnement, /consultation/<id>/voter
                              page « Service en cours de préparation » (rien n'est enregistré)
 
@@ -54,6 +55,13 @@ export default {
     }
     if (request.method === 'POST' && /^\/consultation\/[^/]+\/voter$/.test(pathname)) {
       return pageServiceEnPreparation(request, DETAIL_VOTE);
+    }
+    // Résultats en direct d'une consultation : aucun vote n'étant enregistré,
+    // le compteur dit zéro (src/scripts/consultation.js l'affiche tel quel).
+    if (request.method === 'GET' && /^\/consultation\/[^/]+\/resultats$/.test(pathname)) {
+      return new Response(JSON.stringify({ total: 0, options: [] }), {
+        headers: { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'no-store' },
+      });
     }
     const gerer = ROUTES[pathname];
     if (!gerer || request.method !== 'GET') {
