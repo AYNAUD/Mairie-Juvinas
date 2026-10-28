@@ -1703,7 +1703,7 @@ function carteActeurs(ctx) {
       <span><span class="carte-lecques__puce carte-lecques__puce--commerce" aria-hidden="true"></span>Commerce, artisan, profession libérale</span>
       <span><span class="carte-lecques__puce carte-lecques__puce--association" aria-hidden="true"></span>Association</span>
       <span><span class="carte-lecques__puce carte-lecques__puce--mairie" aria-hidden="true"></span>Mairie</span>
-      <span><span class="carte-lecques__trait carte-lecques__trait--riviere" aria-hidden="true"></span>La Bésorgues</span>
+      <span><span class="carte-lecques__trait carte-lecques__trait--riviere" aria-hidden="true"></span>${esc((ctx.site.riviere && ctx.site.riviere.nom) || 'Cours d\'eau')}</span>
     </p>
     <p class="carte__detail">${points.length} établissement${points.length > 1 ? 's' : ''} localisé${points.length > 1 ? 's' : ''} sur ${total}${nonLocalises ? ` — les ${nonLocalises} autres n'ont qu'une adresse trop imprécise (lieu-dit) pour être positionnés, retrouvez-les dans la liste ci-dessous` : ''}.</p>
   </div>`;

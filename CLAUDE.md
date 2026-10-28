@@ -159,9 +159,9 @@ Rien de ce site n'a été relu par la mairie de Juvinas. Niveau de confiance des
   durée des concessions du cimetière, tarif et règlement de la salle Vesta, budget détaillé,
   commissions municipales, activités des associations, liste de commerçants présentés en détail
   (`annuaire.professionnels`), sites touristiques cartographiés.
-- **Une graphie à trancher** : la rivière s'écrit « Bézorgues » (Sandre, OpenStreetMap, Wikipédia) ;
-  « Bésorgues » circule aussi (et fait partie du nom de la commune voisine Labastide-sur-Bésorgues).
-  Le site emploie « Bézorgues » pour la rivière.
+- **Graphie de la rivière** : « Bézorgues » et « Bésorgues » désignent la même rivière. Le site écrit
+  « Bézorgues » (Sandre, OpenStreetMap, Wikipédia) ; « Bésorgues » reste dans les noms propres
+  (commune voisine Labastide-sur-Bésorgues) et la recherche accepte les deux.
 - **Thème visuel** : `garrigue` (identifiant technique inchangé, affiché « Châtaigneraie »),
   par défaut, recoloré pour l'Ardèche. Son bandeau d'accueil porte la photo du village.
 - **Emblème** : le logo de l'en-tête (météorite au-dessus des crêtes) est un emblème de travail,

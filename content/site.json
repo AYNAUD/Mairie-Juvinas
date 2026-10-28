@@ -133,7 +133,7 @@
     ],
     "identite": {
       "titre": "Un nom connu jusque dans l'espace",
-      "texte": "Nichée dans la vallée de la Bésorgues, entre châtaigneraies et volcans éteints d'Ardèche, la commune a donné son nom à une météorite tombée le 15 juin 1821. Cette pierre venue de l'espace est aujourd'hui conservée au Muséum national d'Histoire naturelle et étudiée par les scientifiques du monde entier.",
+      "texte": "Nichée dans la vallée de la Bézorgues, entre châtaigneraies et volcans éteints d'Ardèche, la commune a donné son nom à une météorite tombée le 15 juin 1821. Cette pierre venue de l'espace est aujourd'hui conservée au Muséum national d'Histoire naturelle et étudiée par les scientifiques du monde entier.",
       "lien": {
         "url": "/mairie/histoire.html",
         "libelle": "Découvrir l'histoire du village"
@@ -173,7 +173,7 @@
     "_note": "Placeholder — aucun Worker Cloudflare n'est déployé pour Juvinas. Les formulaires d'abonnement et de vote en direct sont visibles mais inertes tant que ce composant serveur n'existe pas (voir worker/README.md du dépôt Lecques pour le principe)."
   },
   "riviere": {
-    "_lisezmoi": "Cours d'eau de la commune, affiché sur la page Risques et sécurité (hauteur en direct via le Worker, route /vidourle — dormante tant qu'aucun Worker n'est déployé pour Juvinas). Orthographe officielle (Sandre, Wikipédia, OpenStreetMap) : Bézorgues ; « Bésorgues » circule aussi et fait partie du nom de la commune voisine Labastide-sur-Bésorgues.",
+    "_lisezmoi": "Cours d'eau de la commune, affiché sur la page Risques et sécurité (hauteur en direct via le Worker, route /vidourle — dormante tant qu'aucun Worker n'est déployé pour Juvinas). Bézorgues et Bésorgues désignent la même rivière : le site emploie « Bézorgues » (Sandre, Wikipédia, OpenStreetMap) ; « Bésorgues » reste dans les noms propres, comme la commune voisine Labastide-sur-Bésorgues.",
     "nom": "La Bézorgues",
     "nomsOsm": [
       "La Bézorgues",
