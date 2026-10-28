@@ -1,6 +1,6 @@
 /* Impression : une fiche de démarche doit rester utilisable sur papier. */
 @media print {
-  .entete, .barre-mobile, .overlay, .panneau-a11y, .recherche, .suggestions,
+  .entete, .annonces-telephone, .barre-mobile, .overlay, .panneau-a11y, .recherche, .suggestions,
   .fil, .pied__contact, .pied__plan, .pied__liens-utiles, .ancres, .sommaire, .evitement,
   .section--appli, .heros__suggestions { display: none !important; }
   body { background: #fff; color: #000; padding: 0; font-size: 11pt; }
@@ -12,4 +12,19 @@
   h1, h2, h3 { break-after: avoid; }
   .fiche__bloc, .carte, li { break-inside: avoid; }
   .pied__bas-inner::before { content: "Mairie de Lecques — 233 rue du 26 Août 1944, 30250 Lecques — 04 66 80 11 83 — mairie30@lecques.fr"; display: block; }
+}
+
+/* Fiche pratique (/mairie/fiche-pratique.html) : tenir sur une page A4, en
+   deux colonnes, sans l'habillage du site. */
+@media print {
+  .page-fiche-pratique .pied, .page-fiche-pratique .page-entete__intro,
+  .page-fiche-pratique [data-imprimer], .page-fiche-pratique .banniere-page { display: none !important; }
+  .page-fiche-pratique h1 { font-size: 18pt; margin: 0 0 8pt; }
+  .fiche-pratique { display: grid; grid-template-columns: 1fr 1fr; gap: 8pt; font-size: 10pt; }
+  .fiche-pratique__bloc { border: 1px solid #999; border-radius: 0; padding: 6pt 8pt; box-shadow: none; background: #fff; break-inside: avoid; }
+  .fiche-pratique__bloc--urgence { border: 2px solid #000; }
+  .fiche-pratique__bloc h2 { font-size: 12pt; }
+  .fiche-pratique .urgences strong { color: #000; font-size: 13pt; }
+  .fiche-pratique a { text-decoration: none; }
+  .fiche-pratique a[href^="http"]::after { content: none; }
 }

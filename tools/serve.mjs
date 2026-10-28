@@ -14,7 +14,7 @@ const TYPES = {
   '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
   '.webp': 'image/webp', '.avif': 'image/avif', '.pdf': 'application/pdf',
   '.xml': 'application/xml; charset=utf-8', '.txt': 'text/plain; charset=utf-8',
-  '.ico': 'image/x-icon', '.woff2': 'font/woff2'
+  '.ico': 'image/x-icon', '.woff2': 'font/woff2', '.ics': 'text/calendar; charset=utf-8'
 };
 
 createServer(async (req, res) => {

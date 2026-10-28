@@ -1,4 +1,4 @@
-import { icone } from './icons.mjs';
+import { icone, logoCommune } from './icons.mjs';
 import { echapper as e } from '../markdown.mjs';
 
 export const esc = e;
@@ -38,31 +38,70 @@ function bandeauAlerte(site) {
 </div>`;
 }
 
+// Chaque rubrique garde son lien vers sa page d'index, qui liste déjà toutes
+// ses sous-rubriques. À côté, un bouton déplie la liste de ces sous-rubriques
+// (champ « enfants » de content/navigation.json) : panneau déroulant sur
+// ordinateur, accordéon dans le menu du téléphone. Le bouton n'est affiché
+// qu'une fois nav.js chargé ; sans script, le panneau s'ouvre en CSS au survol
+// et au focus (voir « Sous-rubriques » dans composants.css).
 function menuPrincipal(nav, actif) {
-  const items = nav.map((n) => `<li style="--couleur-rubrique: var(--nav-${esc(n.id)})"><a href="${esc(n.url)}"${n.id === actif ? ' aria-current="page"' : ''}>
-    <span class="menu__puce" aria-hidden="true"></span>
-    <span class="menu__texte">
-      <span class="menu__libelle">${esc(n.libelle)}</span>
-      <span class="menu__desc">${esc(n.description)}</span>
-    </span>
-  </a></li>`).join('\n');
+  const items = nav.map((n) => {
+    const enfants = n.enfants || [];
+    const idSous = `sous-menu-${esc(n.id)}`;
+    const sousRubriques = enfants.length ? `
+    <button class="menu__deplier" type="button" aria-expanded="false" aria-controls="${idSous}">${icone('chevron', 'menu__chevron')}<span class="sr-only">Sous-rubriques : ${esc(n.libelle)}</span></button>
+    <ul class="menu__sous" id="${idSous}">${enfants.map((c) => `<li${c.miseEnAvant ? ' class="menu__sous-avant"' : ''}><a href="${esc(c.url)}">${esc(c.libelle)}</a></li>`).join('')}</ul>` : '';
+    return `<li class="menu__entree${n.id === actif ? ' menu__entree--active' : ''}" style="--couleur-rubrique: var(--nav-${esc(n.id)})">
+    <a class="menu__rubrique" href="${esc(n.url)}"${n.id === actif ? ' aria-current="page"' : ''}>
+      <span class="menu__puce" aria-hidden="true"></span>
+      <span class="menu__texte">
+        <span class="menu__libelle">${esc(n.libelle)}</span>
+        <span class="menu__desc">${esc(n.description)}</span>
+      </span>
+    </a>${sousRubriques}
+  </li>`;
+  }).join('\n');
   return `<ul class="menu__liste">${items}</ul>`;
 }
 
-function entete(site, nav, actif, actualitesCount, consultationsCount) {
+// Annonces de l'en-tête (« 13 actualités à connaître… », « Participez à
+// 2 consultations citoyennes ») : comptées une fois par le build (voir
+// definirAnnonces dans src/build.mjs) et reprises sur toutes les pages,
+// quelle que soit la rubrique, pas seulement sur l'accueil.
+let annonces = { actualites: 0, consultations: 0 };
+export function definirAnnonces(a) { annonces = a; }
+
+function liensAnnonces() {
+  const { actualites: actualitesCount, consultations: consultationsCount } = annonces;
+  return `${actualitesCount ? `<a class="entete__actus" href="/vie-locale/actualites.html"><span class="entete__actus-texte">${actualitesCount} actualité${actualitesCount > 1 ? 's' : ''} à connaître…</span>${icone('chevron', 'icone--mini')}</a>` : ''}
+      ${consultationsCount ? `<a class="entete__actus" href="/vie-locale/consultations.html"><span class="entete__actus-texte">Participez à ${consultationsCount} consultation${consultationsCount > 1 ? 's' : ''} citoyenne${consultationsCount > 1 ? 's' : ''}</span>${icone('chevron', 'icone--mini')}</a>` : ''}`;
+}
+
+// Sur téléphone, les mêmes annonces passent sur leur propre bandeau, sous
+// l'en-tête et hors de sa partie collante (voir .annonces-telephone dans
+// composants.css) : un seul des deux emplacements est affiché à la fois.
+function annoncesTelephone() {
+  if (!annonces.actualites && !annonces.consultations) return '';
+  return `<div class="annonces-telephone" role="region" aria-label="Annonces de la mairie">
+  <div class="conteneur annonces-telephone__inner">
+      ${liensAnnonces()}
+  </div>
+</div>`;
+}
+
+function entete(site, nav, actif) {
   return `<header class="entete">
   <div class="conteneur entete__barre">
     <a class="marque" href="/">
-      <span class="marque__blason" aria-hidden="true">${icone('mairie')}</span>
+      <span class="marque__blason" aria-hidden="true">${logoCommune('marque__logo')}</span>
       <span class="marque__texte">
         <span class="marque__nom">${esc(site.titre)}</span>
         <span class="marque__sous">${esc(site.baseline)}</span>
       </span>
     </a>
 
-    ${(actualitesCount || consultationsCount) ? `<div class="entete__annonces">
-      ${actualitesCount ? `<a class="entete__actus" href="/vie-locale/actualites.html">${actualitesCount} actualité${actualitesCount > 1 ? 's' : ''} à connaître…${icone('chevron', 'icone--mini')}</a>` : ''}
-      ${consultationsCount ? `<a class="entete__actus" href="/vie-locale/consultations.html">Participez à ${consultationsCount} consultation${consultationsCount > 1 ? 's' : ''} citoyenne${consultationsCount > 1 ? 's' : ''}${icone('chevron', 'icone--mini')}</a>` : ''}
+    ${(annonces.actualites || annonces.consultations) ? `<div class="entete__annonces">
+      ${liensAnnonces()}
     </div>` : ''}
 
     <div class="entete__actions">
@@ -101,6 +140,7 @@ function entete(site, nav, actif, actualitesCount, consultationsCount) {
         </div>
       </fieldset>
       <p class="panneau-a11y__aide">Ces réglages sont enregistrés dans votre navigateur, sur cet appareil uniquement. <a href="/accessibilite.html">Déclaration d'accessibilité</a></p>
+      <button class="bouton bouton--fantome panneau-a11y__fermer" type="button" data-ferme-a11y>${icone('fermer')}<span>Fermer</span></button>
     </div>
   </div>
 </header>`;
@@ -149,7 +189,7 @@ function overlayRecherche(site) {
 </div>`;
 }
 
-export function grouperHoraires(horaires) {
+function grouperHoraires(horaires) {
   const groupes = [];
   for (const h of horaires.filter((h) => h.ouvert)) {
     const g = groupes.find((g) => g.libelle === h.libelle);
@@ -158,26 +198,36 @@ export function grouperHoraires(horaires) {
   return groupes;
 }
 
-export function joursTexte(jours) {
+function joursTexte(jours) {
   if (jours.length === 1) return jours[0];
   const j = jours.map((jour, i) => (i === 0 ? jour : jour.toLowerCase()));
   return `${j.slice(0, -1).join(', ')} et ${j[j.length - 1]}`;
 }
 
+/** « Fermé le mardi, le samedi et le dimanche. », d'après site.json : une
+ *  phrase écrite à la main serait fausse au premier changement d'horaires. */
+function joursFermes(horaires) {
+  const jours = horaires.filter((h) => !h.ouvert).map((h) => `le ${h.jour.toLowerCase()}`);
+  if (!jours.length) return '';
+  return `Fermé ${jours.length === 1 ? jours[0] : `${jours.slice(0, -1).join(', ')} et ${jours[jours.length - 1]}`}.`;
+}
+
 function piedDePage(site, nav) {
   const m = site.mairie;
-  const joursFermes = m.horaires.filter((h) => !h.ouvert).map((h) => h.jour.toLowerCase());
   const horaires = grouperHoraires(m.horaires)
     .map((g) => `<li><span>${esc(joursTexte(g.jours))}</span><span>${esc(g.libelle)}</span></li>`).join('');
+  const fermes = joursFermes(m.horaires);
+  // Le libellé d'une colonne n'est pas un titre : un titre placé dans un
+  // <summary> se retrouve dans un bouton pour les lecteurs d'écran.
   const colonnes = nav.map((n) => `<details class="pied__colonne">
-    <summary><h3>${esc(n.libelle)}</h3>${icone('chevron', 'pied__chevron')}</summary>
+    <summary><span class="pied__rubrique">${esc(n.libelle)}</span>${icone('chevron', 'pied__chevron')}</summary>
     <ul>${n.enfants.slice(0, 6).map((c) => `<li><a href="${esc(c.url)}">${esc(c.libelle)}</a></li>`).join('')}</ul>
   </details>`).join('');
 
   return `<footer class="pied">
   <div class="conteneur pied__contact">
     <div class="pied__coordonnees">
-      <h3>${esc(m.nom)}</h3>
+      <h2>${esc(m.nom)}</h2>
       <address>
         ${esc(m.adresse)}<br>${esc(m.codePostal)} ${esc(m.ville)}<br>
         <a href="tel:${esc(m.telephoneLien)}">${esc(m.telephone)}</a><br>
@@ -185,9 +235,9 @@ function piedDePage(site, nav) {
       </address>
     </div>
     <div class="pied__horaires-bloc">
-      <h3>Horaires du secrétariat</h3>
+      <h2>Horaires du secrétariat</h2>
       <ul class="pied__horaires">${horaires}</ul>
-      ${joursFermes.length ? `<p class="pied__note">Fermé ${joursTexte(joursFermes.map((j) => j[0].toUpperCase() + j.slice(1)))}.</p>` : ''}
+      ${fermes ? `<p class="pied__note">${esc(fermes)}</p>` : ''}
     </div>
   </div>
 
@@ -196,7 +246,7 @@ function piedDePage(site, nav) {
   </div>
 
   <div class="conteneur pied__liens-utiles">
-    <h3>Sites utiles</h3>
+    <h2>Sites utiles</h2>
     <ul>${site.liensUtiles.map((l) => `<li>${l.logo
       ? lien(l.url, `<img src="/img/${esc(l.logo)}" alt="${esc(l.libelle)}" loading="lazy">`, { classe: 'bouton logo-lien' })
       : lien(l.url, esc(l.libelle))}</li>`).join('')}</ul>
@@ -227,7 +277,7 @@ function barreMobile(site) {
 </nav>`;
 }
 
-export function page({ site, nav, titre, description, contenu, actif = '', fil = [], classeCorps = '', sommaire = null, actualitesCount = null, consultationsCount = null }) {
+export function page({ site, nav, titre, description, contenu, actif = '', fil = [], classeCorps = '', sommaire = null }) {
   const titreComplet = titre ? `${titre} — ${site.titre}` : `${site.titre} — ${site.commune.departement}`;
   const asideSommaire = sommaire && sommaire.length > 1
     ? `<nav class="sommaire" aria-labelledby="sommaire-titre">
@@ -237,13 +287,14 @@ export function page({ site, nav, titre, description, contenu, actif = '', fil =
     : '';
 
   return `<!doctype html>
-<html lang="fr" data-theme="${esc(site.theme)}">
+<html lang="fr" data-theme="${esc(site.theme)}" data-commune="${esc(site.commune.nom)}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(titreComplet)}</title>
 <meta name="description" content="${esc(description || site.description)}">
 <meta name="theme-color" content="#ffffff">
+<link rel="preload" href="/assets/polices/source-sans-3-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/site.css">
 <link rel="icon" href="/assets/blason.svg" type="image/svg+xml">
 <script>
@@ -265,7 +316,8 @@ if(force&&['republique','garrigue','guichet'].indexOf(force)>-1)d.setAttribute('
 <a class="evitement" href="#contenu">Aller au contenu principal</a>
 <a class="evitement" href="#recherche-champ">Aller à la recherche</a>
 ${bandeauAlerte(site)}
-${entete(site, nav, actif, actualitesCount, consultationsCount)}
+${entete(site, nav, actif)}
+${annoncesTelephone()}
 ${fildAriane(fil)}
 <main id="contenu" class="principal" tabindex="-1">
 ${asideSommaire}
@@ -279,4 +331,4 @@ ${overlayRecherche(site)}
 </html>`;
 }
 
-export { icone, suggestions };
+export { icone, suggestions, grouperHoraires, joursTexte };

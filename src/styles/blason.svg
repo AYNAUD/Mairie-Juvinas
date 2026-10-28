@@ -1,6 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Mairie de Lecques">
-  <rect width="128" height="128" rx="26" fill="#45592f"/>
-  <polygon points="64,22 110,62 18,62" fill="#fff"/>
-  <rect x="30" y="62" width="68" height="42" fill="#fff"/>
-  <rect x="55" y="80" width="18" height="24" fill="#45592f"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Mairie de Juvinas">
+  <rect width="100" height="100" rx="20" fill="#6b3a1f"/>
+  <g fill="#fff" transform="translate(12 12) scale(.76)">
+    <path d="M0 100V74L20 52L33 63L56 38L78 61L89 53L100 63V100Z"/>
+    <path d="M63 17L13 7L61 29Z"/>
+    <path d="M64 22a8 8 0 1 0 16 0a8 8 0 1 0-16 0Z"/>
+  </g>
 </svg>

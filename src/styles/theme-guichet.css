@@ -35,6 +35,9 @@
   --info: #8ec9ff;
   --info-fond: #16263a;
   --eau: #8ec9ff;
+  /* Plan de zonage du PLU (page Urbanisme) : couleurs d'usage des PLU —
+     urbaine, à urbaniser, agricole, naturelle, assombries pour ce thème. */
+  --zone-u: #6a3530; --zone-au: #6b4d1e; --zone-a: #5a5326; --zone-n: #2e4f2d;
   --attention: #ffc46b;
   --attention-fond: #33280f;
 

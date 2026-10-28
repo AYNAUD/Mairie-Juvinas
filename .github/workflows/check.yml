@@ -1,0 +1,34 @@
+name: Vérifier
+
+# Juvinas n'a pas encore de déploiement automatique (ni Worker, ni
+# hébergement choisi) : ce workflow ne fait que la vérification : il fait tourner les mêmes
+# contrôles que "npm run check" en local (accessibilité, liens morts,
+# pertinence de la recherche) sur chaque push et chaque pull request, pour
+# avoir un signal rouge/vert visible dans GitHub.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      # Une seule dépendance (unpdf, voir CLAUDE.md « Recherche dans les
+      # comptes-rendus ») : sans cette étape, "npm run check" échoue dès son
+      # premier appel à "node src/build.mjs" (module introuvable).
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Build + accessibilité + liens + pertinence de la recherche
+        run: npm run check

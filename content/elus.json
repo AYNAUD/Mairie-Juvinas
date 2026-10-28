@@ -1,19 +1,71 @@
 {
   "intro": "Le conseil municipal de Juvinas est composé du maire, de deux adjoints et de huit conseillers municipaux, élus pour le mandat 2026-2032. Les séances sont publiques et ouvertes à tous les habitants.",
   "conseil": [
-    { "nom": "COURT", "prenom": "Jean-Claude", "fonction": "Maire" },
-    { "nom": "JOFFRE", "prenom": "Laurent", "fonction": "1er adjoint" },
-    { "nom": "REYNET", "prenom": "Nathalie", "fonction": "2e adjointe" },
-    { "nom": "BERTHIER", "prenom": "Alexandra", "fonction": "Conseillère municipale" },
-    { "nom": "DAMS", "prenom": "Thérèse", "fonction": "Conseillère municipale" },
-    { "nom": "DELAGE", "prenom": "Jean-Luc", "fonction": "Conseiller municipal" },
-    { "nom": "FILLIAT", "prenom": "Cédric", "fonction": "Conseiller municipal" },
-    { "nom": "PEYTIER", "prenom": "Monique", "fonction": "Conseillère municipale" },
-    { "nom": "PONS", "prenom": "Jean-Michel", "fonction": "Conseiller municipal" },
-    { "nom": "RAYMOND", "prenom": "Lysiane", "fonction": "Conseillère municipale" },
-    { "nom": "VOLLE", "prenom": "Daniel", "fonction": "Conseiller municipal" }
+    {
+      "nom": "COURT",
+      "prenom": "Jean-Claude",
+      "fonction": "Maire"
+    },
+    {
+      "nom": "JOFFRE",
+      "prenom": "Laurent",
+      "fonction": "1er adjoint"
+    },
+    {
+      "nom": "REYNET",
+      "prenom": "Nathalie",
+      "fonction": "2e adjointe"
+    },
+    {
+      "nom": "BERTHIER",
+      "prenom": "Alexandra",
+      "fonction": "Conseillère municipale"
+    },
+    {
+      "nom": "DAMS",
+      "prenom": "Thérèse",
+      "fonction": "Conseillère municipale"
+    },
+    {
+      "nom": "DELAGE",
+      "prenom": "Jean-Luc",
+      "fonction": "Conseiller municipal"
+    },
+    {
+      "nom": "FILLIAT",
+      "prenom": "Cédric",
+      "fonction": "Conseiller municipal"
+    },
+    {
+      "nom": "PEYTIER",
+      "prenom": "Monique",
+      "fonction": "Conseillère municipale"
+    },
+    {
+      "nom": "PONS",
+      "prenom": "Jean-Michel",
+      "fonction": "Conseiller municipal"
+    },
+    {
+      "nom": "RAYMOND",
+      "prenom": "Lysiane",
+      "fonction": "Conseillère municipale"
+    },
+    {
+      "nom": "VOLLE",
+      "prenom": "Daniel",
+      "fonction": "Conseiller municipal"
+    }
   ],
   "commissions": [],
-  "representations": [],
-  "_note": "Maire, adjoints et conseillers d'après linternaute.fr (une seule source) — à confirmer avant publication. Commissions et représentations intercommunales : aucune donnée publique trouvée, à compléter par la mairie."
+  "representations": [
+    {
+      "nom": "Conseil communautaire — Communauté de communes du Bassin d'Aubenas",
+      "titulaires": [
+        "Jean-Claude COURT"
+      ],
+      "suppleants": []
+    }
+  ],
+  "_note": "Maire, adjoints et conseillers : Répertoire national des élus (data.gouv.fr, version du 11 août 2026, municipales du 15 mars 2026), identique à la source linternaute.fr. Seuls nom, prénom et fonction sont repris (aucune donnée personnelle de plus). Commissions municipales : aucune donnée publique trouvée, à compléter par la mairie."
 }

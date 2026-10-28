@@ -9,7 +9,12 @@
     "dev": "node src/build.mjs && node tools/serve.mjs",
     "check": "node src/build.mjs && node tools/check.mjs && node tools/test-recherche.mjs",
     "entreprises": "node tools/fetch-entreprises.mjs",
+    "defibrillateurs": "node tools/fetch-defibrillateurs.mjs",
+    "finances": "node tools/fetch-finances.mjs",
     "carte": "node tools/fetch-carte-fond.mjs",
+    "carte:tourisme": "node tools/fetch-carte-tourisme.mjs",
+    "zonage": "node tools/fetch-zonage.mjs",
+    "pv:importer": "node tools/importer-pv.mjs",
     "test": "node tools/test-recherche.mjs"
   },
   "dependencies": {

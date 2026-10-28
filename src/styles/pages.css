@@ -5,6 +5,11 @@
 /* --- Accueil : héros ---------------------------------------------------- */
 .heros { padding-block: var(--e5) var(--e6); background: var(--fond-accentue); border-block-end: var(--trait) solid var(--bordure); margin-block-start: calc(-1 * var(--e5)); }
 @media (min-width: 48em) { .heros { padding-block: var(--e6) var(--e7); } }
+/* Vigilance météo orange ou rouge (views.mjs, bandeauVigilanceMeteo) : le
+   bandeau prend alors la place du héros contre l'en-tête, et le héros se
+   pose dessous au lieu de le recouvrir. */
+.principal > .alerte:first-child { margin-block-start: calc(-1 * var(--e5)); }
+.alerte:not([hidden]) + script + .heros { margin-block-start: 0; }
 .heros__titre { max-inline-size: 20ch; font-size: clamp(1.5625rem, 1.08rem + 2.16vw, 2.375rem); }
 .heros__intro { color: var(--texte-doux); margin-block: var(--e2) var(--e4); max-inline-size: 44rem; }
 @media (min-width: 48em) { .heros__intro { font-size: var(--t-grand); margin-block-end: var(--e5); } }
@@ -13,21 +18,30 @@
 .heros__suggestions-titre { font-size: var(--t-petit); text-transform: uppercase; letter-spacing: .06em; color: var(--texte-doux); font-weight: 600; margin-block-end: var(--e2); }
 
 /* Statut du secrétariat remonté dans le héros : même mécanique que
-   .pratique__statut (horaires.js cible tout élément [data-statut-mairie]),
-   habillée en pastille pour rester lisible sur une seule ligne. */
+   .pratique__statut (horaires.js cible tout élément [data-statut-mairie]).
+   Texte et lien forment un seul bloc à côté du point, pour que le point reste
+   en tête de la première ligne quand le texte se replie. Encadré à rayon
+   normal sur téléphone, où le texte tient souvent sur deux lignes ; pilule
+   seulement quand il y a la place de tenir sur une seule. */
 .pratique__statut.heros__statut {
-  display: inline-flex; flex-wrap: wrap; background: var(--fond-carte);
-  border: var(--trait) solid var(--bordure); border-radius: var(--rayon-pilule);
+  display: inline-flex; background: var(--fond-carte);
+  border: var(--trait) solid var(--bordure); border-radius: var(--rayon);
   padding: var(--e2) var(--e4); font-size: var(--t-petit); margin-block: 0 var(--e4);
 }
+@media (min-width: 48em) { .pratique__statut.heros__statut { border-radius: var(--rayon-pilule); } }
 .heros__statut a { font-weight: 500; text-decoration: underline; text-underline-offset: .2em; margin-inline-start: var(--e1); }
 
 .page-accueil .section--tuiles { margin-block-start: var(--e7); }
 
 /* --- Accueil : bloc pratique -------------------------------------------- */
 .section--pratique { background: var(--fond-alt); padding-block: var(--e7); margin-block-start: var(--e7); }
-.pratique__statut { display: flex; align-items: center; gap: var(--e2); margin-block: var(--e3); font-weight: 500; }
-.pastille { inline-size: .75rem; block-size: .75rem; border-radius: 50%; background: var(--texte-tres-doux); flex: none; }
+/* Point calé sur la première ligne du texte (1lh = hauteur de ligne, qui
+   varie avec l'interlignage choisi) plutôt que centré sur tout le bloc. */
+.pratique__statut { display: flex; align-items: flex-start; gap: var(--e2); margin-block: var(--e3); font-weight: 500; }
+.pastille {
+  inline-size: .75rem; block-size: .75rem; border-radius: 50%; background: var(--texte-tres-doux); flex: none;
+  margin-block-start: .4em; margin-block-start: calc((1lh - .75rem) / 2);
+}
 [data-ouverte="1"] .pastille { background: var(--succes); }
 [data-ouverte="0"] .pastille { background: var(--danger); }
 .pratique__horaires { display: grid; gap: var(--e1); max-inline-size: 26rem; }
@@ -50,7 +64,10 @@
 .pratique-colonne h3 { display: flex; align-items: center; gap: var(--e2); font-size: var(--t-corps); margin-block-end: var(--e3); }
 .pratique-colonne h3 .icone { color: var(--accent); }
 .pratique__contacts { display: grid; gap: var(--e3); margin-block: var(--e3); }
-.pratique__contacts li { display: flex; gap: var(--e3); align-items: flex-start; }
+.pratique__contacts li { display: flex; gap: var(--e3); align-items: center; }
+/* Téléphone et courriel : une ligne de texte ne fait que 27 px, la cible
+   tactile en demande 44. */
+.pratique__contacts a { display: inline-flex; align-items: center; min-block-size: var(--cible); }
 .pratique__contacts .icone { color: var(--accent); flex: none; }
 .pratique__boutons { display: flex; flex-wrap: wrap; gap: var(--e3); margin-block-start: var(--e4); }
 
@@ -102,6 +119,10 @@
 .article__image img { display: block; inline-size: 100%; block-size: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--rayon); }
 .article__image figcaption { margin-block-start: var(--e2); font-size: var(--t-mini); }
 .article__image figcaption a { color: var(--texte-doux); }
+/* Auteur et licence d'une photo reprise d'ailleurs (Wikimedia Commons…),
+   obligatoires pour la plupart des licences libres (champ image.credit,
+   lien image.source vers la page d'origine). */
+.article__credit { display: block; color: var(--texte-doux); }
 /* Le chapeau vit ici (dans .article__corps, pas dans l'en-tête) précisément
    pour qu'il s'enroule lui aussi autour de l'image comme le corps — sinon un
    chapeau long (résumé saisi trop généreusement) resterait affiché en pleine
@@ -162,6 +183,29 @@
 .paire dd { margin: 0; color: var(--texte-doux); }
 
 .retour { margin-block-start: var(--e6); }
+/* Flèche du lien de retour : la même icône, tournée vers la gauche. */
+.icone--retour { transform: scaleX(-1); }
+
+/* --- Bibliothèque documentaire : page d'un document ----------------------
+   Le document s'affiche dans le site (voir V.pageDocumentBibliotheque),
+   jamais plus large que la colonne : une image ou une vidéo se réduit, un
+   texte trop long défile dans son propre cadre. */
+.document__actions { display: flex; flex-wrap: wrap; gap: var(--e3); margin-block: var(--e4) var(--e5); }
+.document__actions .poids { font-weight: 400; }
+.document__vue img, .document__vue video { display: block; max-inline-size: 100%; block-size: auto; border-radius: var(--rayon); }
+.document__vue video { inline-size: 100%; background: var(--fond-inverse); }
+.document__vue audio { inline-size: 100%; }
+.document__pdf {
+  display: block; inline-size: 100%; block-size: 80vh; min-block-size: 24rem;
+  border: var(--trait) solid var(--bordure); border-radius: var(--rayon); background: var(--fond-carte);
+}
+.document__pdf p { padding: var(--e4); }
+.document__texte {
+  margin: 0; padding: var(--e4); max-block-size: 70vh; overflow: auto;
+  white-space: pre-wrap; overflow-wrap: anywhere; font-size: var(--t-petit);
+  background: var(--fond-carte); border: var(--trait) solid var(--bordure); border-radius: var(--rayon);
+}
+.document__texte:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .retour a { display: inline-flex; align-items: center; gap: var(--e2); font-weight: 500; }
 .retour .icone { transform: scaleX(-1); }
 .liens-suite { margin-block-start: var(--e5); padding: var(--e4); background: var(--fond-alt); border-radius: var(--rayon); }
@@ -175,7 +219,10 @@
 .carte--contact h2 { font-size: var(--t-h3); }
 .carte--urgence { border-color: var(--danger); }
 .urgences { display: grid; gap: var(--e2); }
-.urgences a { display: flex; align-items: baseline; gap: var(--e3); text-decoration: none; padding-block: var(--e1); }
+/* Grille plutôt que flex : la ligne reste centrée dans la cible de 44 px
+   (align-content), le numéro et son libellé alignés sur leur ligne de base,
+   et un libellé long passe à la ligne à côté du numéro, pas dessous. */
+.urgences a { display: grid; grid-template-columns: auto 1fr; align-items: baseline; align-content: center; column-gap: var(--e3); min-block-size: var(--cible); text-decoration: none; padding-block: var(--e1); }
 .urgences strong { font-size: var(--t-h3); color: var(--danger); font-variant-numeric: tabular-nums; }
 .urgences span { color: var(--texte); }
 .urgences a:hover span { text-decoration: underline; }
@@ -224,6 +271,19 @@
   background: var(--fond-carte); color: var(--texte); font-size: var(--t-corps);
 }
 .recherche-pv__champ:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+/* Bibliothèque documentaire : filtre par thème à côté du champ, dessous sur
+   petit écran. */
+.recherche-pv__champs { display: grid; gap: var(--e3); }
+.recherche-pv__boite--themes { max-inline-size: 46rem; }
+@media (min-width: 40em) {
+  .recherche-pv__boite--themes .recherche-pv__champs { grid-template-columns: 3fr 2fr; align-items: end; }
+}
+.recherche-pv__theme {
+  inline-size: 100%; min-block-size: var(--cible); box-sizing: border-box;
+  padding: var(--e2) var(--e3); border: 2px solid var(--bordure-forte); border-radius: var(--rayon);
+  background: var(--fond-carte); color: var(--texte); font-size: var(--t-corps);
+}
+.recherche-pv__theme:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .recherche-pv__champ::-webkit-search-cancel-button { cursor: pointer; }
 .recherche-pv__statut { font-size: var(--t-petit); color: var(--texte-doux); margin-block: var(--e2) 0; }
 .recherche-pv__resultats { list-style: none; margin: var(--e3) 0 0; padding: 0; display: grid; gap: var(--e3); }

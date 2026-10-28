@@ -10,7 +10,7 @@
    (qui committe content/entreprises.json s'il a changé) — un lancement
    manuel reste possible à tout moment via "npm run entreprises".
    ===================================================================== */
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -164,11 +164,33 @@ function infosActivite(codeNaf) {
   return { libelle, icone };
 }
 
+// L'API limite le nombre d'appels par seconde, par adresse IP — et les
+// machines de GitHub Actions partagent les leurs avec d'autres utilisateurs.
+// D'où une courte pause entre deux pages et, sur un refus « trop de
+// requêtes » (429) ou une panne passagère (5xx, coupure réseau), quelques
+// nouvelles tentatives espacées, en respectant Retry-After s'il est fourni.
+// Sans cela, un seul 429 faisait échouer toute la mise à jour de la nuit.
+const PAUSE_ENTRE_PAGES_MS = 300;
+const TENTATIVES = 5;
+const attendre = (ms) => new Promise((resoudre) => setTimeout(resoudre, ms));
+
 async function recupererPage(page) {
   const url = `${BASE}?code_commune=${CODE_COMMUNE}&etat_administratif=A&per_page=25&page=${page}`;
-  const r = await fetch(url);
-  if (!r.ok) throw new Error(`${r.status} sur ${url}`);
-  return r.json();
+  for (let essai = 1; ; essai++) {
+    let r = null;
+    try {
+      r = await fetch(url);
+    } catch (e) {
+      if (essai >= TENTATIVES) throw e;
+    }
+    if (r && r.ok) return r.json();
+    if (r && r.status !== 429 && r.status < 500) throw new Error(`${r.status} sur ${url}`);
+    if (essai >= TENTATIVES) throw new Error(`${r.status} sur ${url} (après ${TENTATIVES} tentatives)`);
+    const retryAfter = r ? Number(r.headers.get('retry-after')) : NaN;
+    const delai = Math.min(60000, retryAfter > 0 ? retryAfter * 1000 : 2000 * 2 ** (essai - 1));
+    console.log(`  ${r ? r.status : 'erreur réseau'} sur la page ${page}, nouvel essai dans ${Math.round(delai / 1000)} s`);
+    await attendre(delai);
+  }
 }
 
 console.log('\nAnnuaire des activités économiques (Sirene)');
@@ -234,18 +256,30 @@ while (page <= PAGE_MAX) {
 
   if (totalPages && page >= totalPages) break;
   page++;
+  await attendre(PAUSE_ENTRE_PAGES_MS);
 }
 
 entreprises.sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
 
+// La date n'avance que si la liste a changé : sinon le fichier reste
+// identique et le workflow de la nuit n'a rien à committer. Auparavant, la
+// seule date produisait un commit chaque nuit, avec vérification et
+// redéploiement du site à la clé. Sur la page, « Dernière modification
+// constatée » désigne ainsi le dernier changement réel de la liste (la
+// liste, elle, est relue chaque nuit).
+const CHEMIN_SORTIE = join(RACINE, 'content/entreprises.json');
+let precedent = null;
+try { precedent = JSON.parse(readFileSync(CHEMIN_SORTIE, 'utf8')); } catch { /* premier lancement */ }
+const inchangee = !!precedent && JSON.stringify(precedent.entreprises) === JSON.stringify(entreprises);
+
 const sortie = {
-  misAJour: new Date().toISOString().slice(0, 10),
+  misAJour: inchangee ? precedent.misAJour : new Date().toISOString().slice(0, 10),
   source: BASE,
   entreprises
 };
 
-writeFileSync(join(RACINE, 'content/entreprises.json'), JSON.stringify(sortie, null, 2) + '\n');
+writeFileSync(CHEMIN_SORTIE, JSON.stringify(sortie, null, 2) + '\n');
 const geolocalises = entreprises.filter((e) => e.lat && e.lon).length;
 console.log(`  ${entreprises.length} établissement(s) actif(s) retenu(s) à Juvinas (${ignorees} ignoré(s) sans adresse publique, ${sciExclues} SCI exclue(s))`);
 console.log(`  ${geolocalises} localisé(s) précisément (utilisés sur la carte)`);
-console.log('  → content/entreprises.json mis à jour\n');
+console.log(inchangee ? '  → liste inchangée, content/entreprises.json laissé tel quel\n' : '  → content/entreprises.json mis à jour\n');

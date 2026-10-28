@@ -1,12 +1,174 @@
 {
+  "_note": "Associations : répertoire Sirene (une description des activités manque : à compléter avec la mairie). Petite enfance et loisirs : Communauté de communes du Bassin d'Aubenas. Établissements scolaires : Annuaire de l'éducation (data.education.gouv.fr), à moins de 22 km, consulté le 28 octobre 2026 ; le collège de secteur dépend de l'adresse de l'élève.",
   "professionnels": [],
+  "associations": [
+    {
+      "nom": "Les Gens de Juvinas",
+      "resume": "Association enregistrée en 1978, dont le siège est à la mairie (répertoire Sirene, SIREN 901 754 093).",
+      "detail": "Ses activités ne sont pas décrites dans les registres publics : renseignez-vous auprès du secrétariat de mairie.",
+      "adresse": "Mairie, Le Village, 07600 Juvinas"
+    },
+    {
+      "nom": "Les Boucs ardéchois",
+      "resume": "Association enregistrée en octobre 2023, domiciliée au hameau d'Ainac (répertoire Sirene, SIREN 924 357 437).",
+      "adresse": "Hameau d'Ainac, 41 rue du Boussas, 07600 Juvinas"
+    },
+    {
+      "nom": "Aide aux sportifs de haut niveau des disciplines oubliées (ASHNDO)",
+      "resume": "Association enregistrée en 2016, domiciliée au quartier d'Ainac (répertoire Sirene, SIREN 822 351 482).",
+      "adresse": "Quartier Ainac, 07600 Juvinas"
+    }
+  ],
+  "petiteEnfance": [
+    {
+      "type": "Information et orientation",
+      "nom": "Pôle Info Accueil Petite Enfance (PIAPE)",
+      "note": "Le point d'entrée de la Communauté de communes du Bassin d'Aubenas pour connaître les modes d'accueil et être orienté.",
+      "adresse": "16 route de la Manufacture Royale, 07200 Ucel",
+      "telephone": "04 75 94 61 12",
+      "site": "https://www.bassin-aubenas.fr/services/petite-enfance/le-piape/"
+    },
+    {
+      "type": "Assistantes maternelles",
+      "nom": "Relais Petite Enfance",
+      "note": "Informe les parents et les assistantes maternelles agréées, et propose des temps collectifs d'éveil.",
+      "telephone": "04 75 94 61 12",
+      "site": "https://www.bassin-aubenas.fr/services/petite-enfance/relais-assistantes-maternelles/"
+    },
+    {
+      "type": "Parents et enfants",
+      "nom": "Lieu d'accueil parents-enfants (LAEP)",
+      "note": "Un espace de rencontre et de jeu pour les enfants de moins de 6 ans, accompagnés d'un parent.",
+      "telephone": "04 75 94 61 12",
+      "site": "https://www.bassin-aubenas.fr/services/petite-enfance/lieu-daccueil-parents-enfants-laep/"
+    },
+    {
+      "type": "Crèches",
+      "nom": "Crèches multi-accueils",
+      "note": "Les crèches du territoire sont gérées par la Communauté de communes : la liste et les contacts sont sur sa page dédiée.",
+      "telephone": "04 75 94 61 12",
+      "site": "https://www.bassin-aubenas.fr/services/petite-enfance/creches/"
+    }
+  ],
+  "etablissementsScolaires": [
+    {
+      "type": "Collège public",
+      "nom": "Collège Georges Gouy",
+      "note": "À Vals-les-Bains, le collège le plus proche de Juvinas.",
+      "adresse": "1 rue du Stade, 07600 Vals-les-Bains",
+      "telephone": "04 75 37 46 35",
+      "site": "https://college-georges-gouy-vals-les-bains.web.ac-grenoble.fr"
+    },
+    {
+      "type": "Collège public",
+      "nom": "Collège Joseph Durand",
+      "adresse": "La Prade, 07560 Montpezat-sous-Bauzon",
+      "telephone": "04 75 94 43 29",
+      "site": "https://college-joseph-durand-montpezat.web.ac-grenoble.fr"
+    },
+    {
+      "type": "Collège public",
+      "nom": "Collège de Jastres",
+      "note": "À Aubenas.",
+      "adresse": "12 boulevard de la Corniche, 07200 Aubenas",
+      "telephone": "04 75 35 55 33",
+      "site": "https://jastres.ent.auvergnerhonealpes.fr"
+    },
+    {
+      "type": "Collège public",
+      "nom": "Collège Roqua",
+      "note": "À Aubenas.",
+      "adresse": "Quartier Roqua, 07204 Aubenas",
+      "telephone": "04 75 93 52 32",
+      "site": "https://college-roqua-aubenas.web.ac-grenoble.fr"
+    },
+    {
+      "type": "Collège privé",
+      "nom": "Collège Saint-François d'Assise",
+      "note": "À Aubenas.",
+      "adresse": "2 boulevard de la Corniche, 07203 Aubenas",
+      "telephone": "04 75 35 69 80",
+      "site": "https://www.st-francois-dassise.eu"
+    },
+    {
+      "type": "Lycée polyvalent public",
+      "nom": "Lycée Marcel Gimond",
+      "note": "À Aubenas.",
+      "adresse": "Boulevard de l'Europe, 07205 Aubenas",
+      "telephone": "04 75 35 40 88",
+      "site": "https://lyceegimond.net/formations-gimond/"
+    },
+    {
+      "type": "Lycée polyvalent public",
+      "nom": "Lycée Astier",
+      "note": "À Aubenas.",
+      "adresse": "4 chemin de Roqua, 07205 Aubenas",
+      "telephone": "04 75 35 09 77",
+      "site": "https://astier.ent.auvergnerhonealpes.fr/"
+    },
+    {
+      "type": "Lycée agricole public",
+      "nom": "Lycée Olivier de Serres",
+      "note": "À Aubenas.",
+      "adresse": "76 chemin de Ripotier Haut, 07205 Aubenas",
+      "telephone": "04 75 35 17 55",
+      "site": "https://epl.aubenas.educagri.fr/"
+    },
+    {
+      "type": "Lycée polyvalent privé",
+      "nom": "Lycée Jules Froment",
+      "note": "À Aubenas.",
+      "adresse": "3 rue Albert Seibel, 07201 Aubenas",
+      "telephone": "04 75 93 80 00",
+      "site": "https://www.lycee-julesfroment.fr"
+    }
+  ],
+  "loisirsJeunesse": [
+    {
+      "nom": "Accueils de loisirs itinérants",
+      "note": "Organisés par la Communauté de communes du Bassin d'Aubenas pendant les vacances et certains mercredis : dates et lieux publiés sur son site.",
+      "telephone": "04 75 94 61 12",
+      "site": "https://www.bassin-aubenas.fr/services/"
+    },
+    {
+      "nom": "Stages multisports",
+      "note": "Stages sportifs pour les jeunes proposés par la Communauté de communes.",
+      "telephone": "04 75 94 61 12"
+    },
+    {
+      "nom": "Service d'information jeunesse itinérant",
+      "note": "Un service qui va à la rencontre des jeunes du territoire pour les informer et les orienter (emploi, formation, santé, loisirs).",
+      "telephone": "04 75 94 61 12"
+    }
+  ],
   "urgences": [
-    { "libelle": "SAMU", "numero": "15" },
-    { "libelle": "Police et gendarmerie", "numero": "17" },
-    { "libelle": "Pompiers", "numero": "18" },
-    { "libelle": "Numéro d'urgence européen", "numero": "112" },
-    { "libelle": "Urgence par SMS — personnes sourdes et malentendantes", "numero": "114" },
-    { "libelle": "Enfance en danger", "numero": "119" },
-    { "libelle": "Violences femmes info", "numero": "3919" }
+    {
+      "libelle": "SAMU",
+      "numero": "15"
+    },
+    {
+      "libelle": "Police et gendarmerie",
+      "numero": "17"
+    },
+    {
+      "libelle": "Pompiers",
+      "numero": "18"
+    },
+    {
+      "libelle": "Numéro d'urgence européen",
+      "numero": "112"
+    },
+    {
+      "libelle": "Urgence par SMS — personnes sourdes et malentendantes",
+      "numero": "114"
+    },
+    {
+      "libelle": "Enfance en danger",
+      "numero": "119"
+    },
+    {
+      "libelle": "Violences femmes info",
+      "numero": "3919"
+    }
   ]
 }

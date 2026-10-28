@@ -54,6 +54,9 @@ const CAS = [
   ['acte de naissance', '/demarches/acte-naissance.html'],
   ['quelquun est décédé', '/demarches/deces.html'],
   ['place au cimetière', '/demarches/concession-cimetiere.html'],
+  ['documents de la commune', '/mairie/bibliotheque-documentaire.html'],
+  ['bibliothèque documentaire', '/mairie/bibliotheque-documentaire.html'],
+  ['rapports et études de la commune', '/mairie/bibliotheque-documentaire.html'],
   ['numéro de ma parcelle', '/demarches/cadastre.html'],
   ['je veux acheter un terrain', '/demarches/certificat-urbanisme.html'],
   ['procès verbal conseil municipal', '/mairie/conseils-municipaux.html'],
@@ -62,7 +65,35 @@ const CAS = [
   ['rencontrer le maire', '/demarches/rendez-vous-elu.html'],
   ['signaler un lampadaire en panne', '/demarches/rendez-vous-elu.html'],
   ['commerçants de juvinas', '/vie-locale/professionnels.html'],
-  ['où sont les commerces', '/vie-locale/carte-acteurs-economiques.html']
+  ['où sont les commerces', '/vie-locale/carte-acteurs-economiques.html'],
+  ['jour de ramassage des poubelles', '/cadre-de-vie/dechets.html'],
+  ['quand sortir les poubelles', '/cadre-de-vie/dechets.html'],
+  ['transport à la demande', '/cadre-de-vie/transports.html'],
+  ['aller à aubenas le samedi', '/cadre-de-vie/transports.html'],
+  ['météorite de juvinas', '/mairie/histoire.html'],
+  ['chapelle sainte marguerite', '/vie-locale/tourisme.html'],
+  ['randonnées', '/vie-locale/tourisme.html'],
+  ['louer la salle vesta', '/demarches/salle-communale.html'],
+  ['trouver une nounou', '/demarches/creche.html'],
+  ['place en crèche', '/demarches/creche.html'],
+  ['que faire des enfants le mercredi', '/demarches/centre-loisirs.html'],
+  ['créer une association', '/demarches/association.html'],
+  ['obligation de débroussailler', '/demarches/debroussaillement.html'],
+  ['inscrire ma mère au registre canicule', '/demarches/registre-vulnerables.html'],
+  ['mon chien est de catégorie 2', '/demarches/chien-dangereux.html'],
+  ['permis de chasser', '/demarches/chasse-peche.html'],
+  ['je suis nouveau dans la commune', '/demarches/nouvel-habitant.html'],
+  ['feu de forêt', '/cadre-de-vie/risques.html'],
+  ['france services', '/cadre-de-vie/services.html'],
+  ['école de mon village', '/enfance-jeunesse/ecole.html'],
+  ['budget de la commune', '/mairie/budgets.html'],
+  ['ajouter à mon agenda', '/vie-locale/calendriers.html'],
+  ['calendrier de la commune', '/vie-locale/calendriers.html'],
+  ['fiche frigo', '/mairie/fiche-pratique.html'],
+  ['imprimer les numéros utiles', '/mairie/fiche-pratique.html'],
+  ['quel est mon canton', '/mairie/commune.html'],
+  ['qui est mon député', '/mairie/commune.html'],
+  ['communauté de communes', '/mairie/commune.html']
 ];
 
 const REPONSES = [
@@ -95,6 +126,20 @@ for (const [requete, id] of REPONSES) {
   const { reponse } = moteur.chercher(requete);
   if (reponse) console.log(`  ✓ « ${requete} » → ${reponse.t}`);
   else { echecs++; console.log(`  ✗ « ${requete} » → aucune réponse rapide (attendu ${id})`); }
+}
+
+// Une requête qui ne correspond à rien doit répondre « aucun résultat »,
+// pas planter : la page gardait alors les résultats de la requête d'avant.
+console.log('\nRequêtes sans résultat\n');
+for (const requete of ['zzzz', 'xqwvbn kjhg']) {
+  try {
+    const { resultats } = moteur.chercher(requete);
+    if (resultats.length) { echecs++; console.log(`  ✗ « ${requete} » → ${resultats.length} résultat(s) inattendu(s)`); }
+    else console.log(`  ✓ « ${requete} » → aucun résultat`);
+  } catch (e) {
+    echecs++;
+    console.log(`  ✗ « ${requete} » → erreur : ${e.message}`);
+  }
 }
 
 const total = CAS.length;

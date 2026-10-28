@@ -1,0 +1,128 @@
+{
+  "misAJour": "2026-10-28",
+  "source": "Géo'DAE — Base nationale des défibrillateurs (ministère de la Santé), via data.gouv.fr",
+  "rayonKm": 8,
+  "defibrillateurs": [
+    {
+      "commune": "Montpezat-sous-Bauzon",
+      "dansLaCommune": false,
+      "adresse": "815 Quartier Champagne les Soubeyrols",
+      "acces": "intérieur",
+      "precision": "Après le comptoir d’accueil - L au V 7h30/12h 13h30/17h30 S 8h30/11h30",
+      "horaires": null,
+      "latitude": 44.701942,
+      "longitude": 4.225555,
+      "distanceKm": 6.5
+    },
+    {
+      "commune": "Vals-les-Bains",
+      "dansLaCommune": false,
+      "adresse": "1 Rue du Stade",
+      "acces": "intérieur",
+      "precision": null,
+      "horaires": null,
+      "latitude": 44.6682,
+      "longitude": 4.36399,
+      "distanceKm": 6.5
+    },
+    {
+      "commune": "Lalevade-d'Ardèche",
+      "dansLaCommune": false,
+      "adresse": "30 route du pont des issoux",
+      "acces": "intérieur",
+      "precision": "salle des fêtes hall d'entrée - Selon évènements",
+      "horaires": null,
+      "latitude": 44.651493,
+      "longitude": 4.322413,
+      "distanceKm": 6.7
+    },
+    {
+      "commune": "Lalevade-d'Ardèche",
+      "dansLaCommune": false,
+      "adresse": "10 -12 avenue Centrale",
+      "acces": "intérieur",
+      "precision": "Hall mairie - L au V 07h30 / 17h30",
+      "horaires": null,
+      "latitude": 44.64997,
+      "longitude": 4.322162,
+      "distanceKm": 6.9
+    },
+    {
+      "commune": "Vals-les-Bains",
+      "dansLaCommune": false,
+      "adresse": "21 rue jean jaurès",
+      "acces": "intérieur",
+      "precision": "dans la pièce centrale ou d'activités - Jeudi 14h30/16h30",
+      "horaires": null,
+      "latitude": 44.664577,
+      "longitude": 4.365535,
+      "distanceKm": 6.9
+    },
+    {
+      "commune": "Lalevade-d'Ardèche",
+      "dansLaCommune": false,
+      "adresse": "5 Place de la gare",
+      "acces": "intérieur",
+      "precision": "Face au comptoir d'entrée - Selon évènements",
+      "horaires": null,
+      "latitude": 44.64565,
+      "longitude": 4.326387,
+      "distanceKm": 7.4
+    },
+    {
+      "commune": "Lalevade-d'Ardèche",
+      "dansLaCommune": false,
+      "adresse": "6 avenue de la Gare",
+      "acces": "intérieur",
+      "precision": null,
+      "horaires": null,
+      "latitude": 44.6451,
+      "longitude": 4.32758,
+      "distanceKm": 7.5
+    },
+    {
+      "commune": "Montpezat-sous-Bauzon",
+      "dansLaCommune": false,
+      "adresse": "171 allée de la Prade",
+      "acces": "intérieur",
+      "precision": null,
+      "horaires": null,
+      "latitude": 44.7111,
+      "longitude": 4.21008,
+      "distanceKm": 7.7
+    },
+    {
+      "commune": "Thueyts",
+      "dansLaCommune": false,
+      "adresse": "12 Rue du Pouget",
+      "acces": "extérieur",
+      "precision": null,
+      "horaires": "jour et nuit, 7 jours sur 7",
+      "latitude": 44.6761,
+      "longitude": 4.22256,
+      "distanceKm": 7.7
+    },
+    {
+      "commune": "Saint-Andéol-de-Vals",
+      "dansLaCommune": false,
+      "adresse": "350 Route d'Aubenas",
+      "acces": "extérieur",
+      "precision": null,
+      "horaires": "jour et nuit, 7 jours sur 7",
+      "latitude": 44.69063,
+      "longitude": 4.4009953,
+      "distanceKm": 7.7
+    },
+    {
+      "commune": "Thueyts",
+      "dansLaCommune": false,
+      "adresse": "7 Place du Champ de Mars",
+      "acces": "extérieur",
+      "precision": null,
+      "horaires": "jour et nuit, 7 jours sur 7",
+      "latitude": 44.6756,
+      "longitude": 4.22176,
+      "distanceKm": 7.8
+    }
+  ]
+}

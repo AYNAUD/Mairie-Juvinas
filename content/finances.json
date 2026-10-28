@@ -1,0 +1,138 @@
+{
+  "misAJour": "2026-10-28",
+  "source": "Comptes des communes — Observatoire des finances et de la gestion publique locales (OFGL), d'après les comptes de gestion de la DGFiP",
+  "exercice": 2025,
+  "population": 189,
+  "strate": {
+    "libelle": "100 à 199 habitants",
+    "nombreCommunes": 5326
+  },
+  "depenses": {
+    "total": 135042,
+    "postes": [
+      {
+        "libelle": "Le personnel communal",
+        "montant": 70578
+      },
+      {
+        "libelle": "Achats, énergie, entretien et services",
+        "montant": 31290
+      },
+      {
+        "libelle": "Subventions, participations et contributions obligatoires",
+        "montant": 2752
+      },
+      {
+        "libelle": "Intérêts des emprunts",
+        "montant": 3678
+      },
+      {
+        "libelle": "Autres charges",
+        "montant": 26745
+      }
+    ]
+  },
+  "recettes": {
+    "total": 206727,
+    "postes": [
+      {
+        "libelle": "Impôts et taxes locales",
+        "montant": 84674
+      },
+      {
+        "libelle": "Dotations de l'État",
+        "montant": 99503
+      },
+      {
+        "libelle": "Ventes, locations et services",
+        "montant": 8702
+      },
+      {
+        "libelle": "Autres recettes",
+        "montant": 13849
+      }
+    ]
+  },
+  "comparaisons": [
+    {
+      "libelle": "Dépenses de fonctionnement",
+      "commune": 715,
+      "strate": 851
+    },
+    {
+      "libelle": "dont personnel communal",
+      "commune": 373,
+      "strate": 238
+    },
+    {
+      "libelle": "Impôts locaux perçus",
+      "commune": 361,
+      "strate": 393
+    },
+    {
+      "libelle": "Dépenses d’équipement (travaux, achats durables)",
+      "commune": 448,
+      "strate": 504
+    },
+    {
+      "libelle": "Dette restant à rembourser",
+      "commune": 508,
+      "strate": 571
+    },
+    {
+      "libelle": "Épargne dégagée par le fonctionnement",
+      "commune": 379,
+      "strate": 252
+    }
+  ],
+  "historique": [
+    {
+      "exercice": 2018,
+      "equipement": 332536,
+      "dette": 211058,
+      "epargne": 35628
+    },
+    {
+      "exercice": 2019,
+      "equipement": 46954,
+      "dette": 201731,
+      "epargne": 48315
+    },
+    {
+      "exercice": 2020,
+      "equipement": 45527,
+      "dette": 152023,
+      "epargne": 52865
+    },
+    {
+      "exercice": 2021,
+      "equipement": 184220,
+      "dette": 141917,
+      "epargne": 44624
+    },
+    {
+      "exercice": 2022,
+      "equipement": 120430,
+      "dette": 131393,
+      "epargne": 51983
+    },
+    {
+      "exercice": 2023,
+      "equipement": 234120,
+      "dette": 120432,
+      "epargne": 77748
+    },
+    {
+      "exercice": 2024,
+      "equipement": 5232,
+      "dette": 109013,
+      "epargne": 30742
+    },
+    {
+      "exercice": 2025,
+      "equipement": 84611,
+      "dette": 96034,
+      "epargne": 71685
+    }
+  ]
+}

@@ -6,41 +6,118 @@
     "description": "Papiers, famille, citoyenneté, logement, cadre de vie : faire ma démarche.",
     "type": "action",
     "enfants": [
-      { "libelle": "Toutes les démarches", "url": "/demarches/" },
-      { "libelle": "Papiers et identité", "url": "/demarches/#papiers" },
-      { "libelle": "Famille et état civil", "url": "/demarches/#famille" },
-      { "libelle": "Citoyenneté et élections", "url": "/demarches/#citoyennete" },
-      { "libelle": "Enfance et scolarité", "url": "/demarches/#enfance" },
-      { "libelle": "Logement et urbanisme", "url": "/demarches/#logement" },
-      { "libelle": "Déchets et cadre de vie", "url": "/demarches/#cadre-de-vie" }
+      {
+        "libelle": "Toutes les démarches",
+        "url": "/demarches/"
+      },
+      {
+        "libelle": "Papiers et identité",
+        "url": "/demarches/#papiers"
+      },
+      {
+        "libelle": "Famille et état civil",
+        "url": "/demarches/#famille"
+      },
+      {
+        "libelle": "Citoyenneté et élections",
+        "url": "/demarches/#citoyennete"
+      },
+      {
+        "libelle": "Enfance et scolarité",
+        "url": "/demarches/#enfance"
+      },
+      {
+        "libelle": "Logement et urbanisme",
+        "url": "/demarches/#logement"
+      },
+      {
+        "libelle": "Déchets et cadre de vie",
+        "url": "/demarches/#cadre-de-vie"
+      },
+      {
+        "libelle": "Je m'installe à Juvinas",
+        "url": "/demarches/nouvel-habitant.html"
+      }
     ],
-    "icone": "document"
+    "icone": "document",
+    "photo": "mairie",
+    "photoAlt": "La mairie de Juvinas."
   },
   {
     "id": "vie-locale",
     "libelle": "Vie locale",
     "url": "/vie-locale/",
-    "description": "Actualités et consultations citoyennes de la commune.",
+    "description": "Actualités, consultations citoyennes, associations, acteurs économiques et tourisme.",
     "type": "editorial",
     "enfants": [
-      { "libelle": "Actualités", "url": "/vie-locale/actualites.html" },
-      { "libelle": "Acteurs économiques", "url": "/vie-locale/professionnels.html" },
-      { "libelle": "Consultations citoyennes", "url": "/vie-locale/consultations.html" },
-      { "libelle": "S'abonner aux actualités", "url": "/vie-locale/abonnement.html" }
+      {
+        "libelle": "Actualités",
+        "url": "/vie-locale/actualites.html"
+      },
+      {
+        "libelle": "Votre avis sur Juvinas",
+        "url": "/vie-locale/consultations.html"
+      },
+      {
+        "libelle": "Acteurs économiques",
+        "url": "/vie-locale/professionnels.html"
+      },
+      {
+        "libelle": "Associations",
+        "url": "/vie-locale/associations.html"
+      },
+      {
+        "libelle": "Tourisme et randonnées",
+        "url": "/vie-locale/tourisme.html"
+      },
+      {
+        "libelle": "La salle Vesta",
+        "url": "/vie-locale/salles.html"
+      },
+      {
+        "libelle": "Les dates dans votre agenda",
+        "url": "/vie-locale/calendriers.html"
+      },
+      {
+        "libelle": "S'abonner aux actualités",
+        "url": "/vie-locale/abonnement.html"
+      }
     ],
-    "icone": "association"
+    "icone": "association",
+    "photo": "village",
+    "photoAlt": "L'église et une rue du village de Juvinas."
   },
   {
     "id": "enfance-jeunesse",
     "libelle": "Enfance & jeunesse",
     "url": "/enfance-jeunesse/",
-    "description": "École et parcours citoyen des jeunes Juvinois.",
+    "description": "Petite enfance, école, collèges, loisirs et parcours citoyen des jeunes Juvinois.",
     "type": "editorial",
     "enfants": [
-      { "libelle": "École et cantine", "url": "/enfance-jeunesse/ecole.html" },
-      { "libelle": "Parcours citoyen", "url": "/enfance-jeunesse/parcours-citoyen.html" }
+      {
+        "libelle": "Petite enfance",
+        "url": "/enfance-jeunesse/petite-enfance.html"
+      },
+      {
+        "libelle": "École et cantine",
+        "url": "/enfance-jeunesse/ecole.html"
+      },
+      {
+        "libelle": "Collèges et lycées",
+        "url": "/enfance-jeunesse/colleges-lycees.html"
+      },
+      {
+        "libelle": "Centres de loisirs",
+        "url": "/enfance-jeunesse/loisirs.html"
+      },
+      {
+        "libelle": "Parcours citoyen",
+        "url": "/enfance-jeunesse/parcours-citoyen.html"
+      }
     ],
-    "icone": "ecole"
+    "icone": "ecole",
+    "photo": "village",
+    "photoAlt": "L'église et une rue du village de Juvinas."
   },
   {
     "id": "cadre-de-vie",
@@ -49,31 +126,89 @@
     "description": "Déchets, eau, urbanisme, environnement, risques et transports.",
     "type": "editorial",
     "enfants": [
-      { "libelle": "Déchets et tri", "url": "/cadre-de-vie/dechets.html" },
-      { "libelle": "Eau et assainissement", "url": "/cadre-de-vie/eau.html" },
-      { "libelle": "Urbanisme", "url": "/cadre-de-vie/urbanisme.html" },
-      { "libelle": "Environnement", "url": "/cadre-de-vie/environnement.html" },
-      { "libelle": "Risques et sécurité", "url": "/cadre-de-vie/risques.html" },
-      { "libelle": "Transports et déplacements", "url": "/cadre-de-vie/transports.html" },
-      { "libelle": "Services de proximité", "url": "/cadre-de-vie/services.html" }
+      {
+        "libelle": "Déchets et tri",
+        "url": "/cadre-de-vie/dechets.html"
+      },
+      {
+        "libelle": "Eau et assainissement",
+        "url": "/cadre-de-vie/eau.html"
+      },
+      {
+        "libelle": "Urbanisme",
+        "url": "/cadre-de-vie/urbanisme.html"
+      },
+      {
+        "libelle": "Environnement",
+        "url": "/cadre-de-vie/environnement.html"
+      },
+      {
+        "libelle": "Risques et sécurité",
+        "url": "/cadre-de-vie/risques.html"
+      },
+      {
+        "libelle": "Transports et déplacements",
+        "url": "/cadre-de-vie/transports.html"
+      },
+      {
+        "libelle": "Services de proximité",
+        "url": "/cadre-de-vie/services.html"
+      }
     ],
-    "icone": "nature"
+    "icone": "nature",
+    "photo": "village",
+    "photoAlt": "Le village de Juvinas et les reliefs ardéchois."
   },
   {
     "id": "mairie",
     "libelle": "La mairie",
     "url": "/mairie/",
-    "description": "Élus, conseil municipal, bulletins et contact.",
+    "description": "Élus, conseil municipal, budgets, bulletins, documents et contact.",
     "type": "editorial",
     "enfants": [
-      { "libelle": "Conseils municipaux", "url": "/mairie/conseils-municipaux.html" },
-      { "libelle": "Commissions", "url": "/mairie/commissions.html" },
-      { "libelle": "Les élus", "url": "/mairie/elus.html" },
-      { "libelle": "Contact et horaires", "url": "/mairie/contact.html" },
-      { "libelle": "Bulletins municipaux", "url": "/mairie/bulletins.html" },
-      { "libelle": "Découvrir Juvinas", "url": "/mairie/commune.html" },
-      { "libelle": "Histoire du village", "url": "/mairie/histoire.html" }
+      {
+        "libelle": "Les élus",
+        "url": "/mairie/elus.html"
+      },
+      {
+        "libelle": "Commissions",
+        "url": "/mairie/commissions.html"
+      },
+      {
+        "libelle": "Conseils municipaux",
+        "url": "/mairie/conseils-municipaux.html"
+      },
+      {
+        "libelle": "Budgets",
+        "url": "/mairie/budgets.html"
+      },
+      {
+        "libelle": "Bulletins municipaux",
+        "url": "/mairie/bulletins.html"
+      },
+      {
+        "libelle": "Découvrir Juvinas",
+        "url": "/mairie/commune.html"
+      },
+      {
+        "libelle": "Histoire du village",
+        "url": "/mairie/histoire.html"
+      },
+      {
+        "libelle": "Fiche pratique à imprimer",
+        "url": "/mairie/fiche-pratique.html"
+      },
+      {
+        "libelle": "Contact et horaires",
+        "url": "/mairie/contact.html"
+      },
+      {
+        "libelle": "Bibliothèque documentaire communale",
+        "url": "/mairie/bibliotheque-documentaire.html"
+      }
     ],
-    "icone": "mairie"
+    "icone": "mairie",
+    "photo": "mairie",
+    "photoAlt": "La mairie de Juvinas."
   }
 ]

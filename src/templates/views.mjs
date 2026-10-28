@@ -1,5 +1,9 @@
 import { page, esc, lien, icone, champRecherche, suggestions, grouperHoraires, joursTexte } from './layout.mjs';
+import { formatBibliotheque } from '../formats-documents.mjs';
 import { rendre } from '../markdown.mjs';
+import { texteActualiteEnHtml } from '../texte-actualite.mjs';
+import { quandRendezVous } from '../calendrier.mjs';
+import { grouperParSectionNaf } from '../naf.mjs';
 
 // Résumé court des horaires d'ouverture (bandeau d'accueil, repli sans JS) et
 // données machine pour l'amélioration JS (src/scripts/horaires.js) : les
@@ -107,8 +111,15 @@ function periodeActu(a) {
 
 // Contrairement aux actualités, les deux dates d'une consultation sont
 // toujours renseignées (voir content/consultations.json) : l'état se déduit
-// simplement de leur position par rapport à aujourd'hui.
-function etatConsultation(c, aujourdhui) {
+// normalement de leur position par rapport à aujourd'hui. Exception : une
+// consultation clôturée par avance (CONSULTATION-CLOTURE reçue avant la
+// dateFin initiale — voir commitClotureConsultation, worker/github.mjs) doit
+// afficher "Terminée" dès le jour même de la clôture, pas seulement le
+// lendemain de la nouvelle dateFin (aujourdhui > dateFin ne suffit pas si
+// les deux dates tombent le même jour) — d'où le champ "fermee", posé
+// explicitement par cette commande plutôt que déduit des dates.
+export function etatConsultation(c, aujourdhui) {
+  if (c.fermee) return 'terminee';
   if (aujourdhui < c.dateDebut) return 'a-venir';
   if (aujourdhui > c.dateFin) return 'terminee';
   return 'ouverte';
@@ -157,6 +168,17 @@ function blocResultatsFinaux(options, resultatsFinaux, titre) {
   </section>`;
 }
 
+// Distinct de blocResultatsFinaux (les chiffres) : ce que la mairie décide de
+// faire de la consultation une fois close — renseigné par CONSULTATION-CLOTURE
+// (voir worker/README.md), jamais généré automatiquement.
+function blocConclusions(conclusions) {
+  if (!conclusions) return '';
+  return `<section class="encadre" aria-labelledby="conclusions-titre">
+    <h2 id="conclusions-titre">Conclusions retenues de la consultation</h2>
+    ${conclusions.split('\n\n').map((p) => `<p>${esc(p)}</p>`).join('')}
+  </section>`;
+}
+
 function carteActu(a, opts = {}) {
   const titreTag = opts.titreTag || 'h3';
   return `<li class="carte carte--actu${a.epingle ? ' carte--actu-une' : ''}">
@@ -184,6 +206,33 @@ function carteGalerie(item, photos) {
 </li>`;
 }
 
+// Situation du moment en tête de l'accueil : vigilance météo orange ou
+// rouge dans le département, cours d'eau qui monte ou crue prévue par Vigicrues. Même
+// aspect que le bandeau d'alerte de la mairie (layout.mjs, bandeauAlerte),
+// mais caché par défaut : src/scripts/situation.js lit
+// {administration.urlBase}/situation (worker/donnees-publiques.mjs,
+// resumerSituation) et ne le montre qu'en orange ou en rouge, avec les
+// phrases que le Worker a rédigées (les mêmes que dans les alertes par
+// courriel). Sans JavaScript, ou si le Worker ne répond pas, rien ne
+// s'affiche : l'accueil reste celui d'un jour ordinaire. L'état des routes
+// n'est qu'un lien : reprendre les données d'Inforoute 30 demanderait
+// l'autorisation écrite du Département (liens configurés dans
+// site.json → situation).
+function bandeauSituation(ctx) {
+  const urlApi = `${ctx.site.administration.urlBase}/situation`;
+  const cfg = ctx.site.situation || {};
+  return `<div class="alerte" role="region" aria-label="Situation en cours" data-situation="${esc(urlApi)}" hidden>
+  <div class="conteneur alerte__inner">
+    ${icone('alerte')}
+    <div class="alerte__texte" data-contenu></div>
+    ${lien('/cadre-de-vie/risques.html', cfg.libelleConsignes || 'Consignes de sécurité', { classe: 'alerte__lien' })}
+    ${cfg.lienRoutes ? lien(cfg.lienRoutes, 'État des routes', { classe: 'alerte__lien' }) : ''}
+    ${cfg.lienVigilance ? lien(cfg.lienVigilance, 'Carte de Météo-France', { classe: 'alerte__lien' }) : ''}
+  </div>
+</div>
+<script src="/assets/situation.js" defer></script>`;
+}
+
 export function accueil(ctx) {
   const { site, nav, demarches, actualites, photos, consultations } = ctx;
   const parId = Object.fromEntries(demarches.map((d) => [d.id, d]));
@@ -197,15 +246,16 @@ export function accueil(ctx) {
   const nbConsultationsOuvertes = (consultations || []).filter((c) => etatConsultation(c, aujourdhui) === 'ouverte').length;
 
   const contenu = `
+${bandeauSituation(ctx)}
 <section class="heros" aria-labelledby="heros-titre">
   <div class="conteneur">
-    <h1 id="heros-titre" class="heros__titre">Que souhaitez-vous faire&nbsp;?</h1>
+    <h1 id="heros-titre" class="heros__titre sr-only">Que souhaitez-vous faire&nbsp;?</h1>
     <p class="heros__intro">Toutes vos démarches à ${esc(site.commune.nom)}, en trois clics au maximum.</p>
     ${champRecherche(site, { id: 'recherche', label: 'Rechercher une démarche ou une information' })}
     <p class="pratique__statut heros__statut" data-statut-mairie data-horaires="${esc(donneesHoraires(site.mairie.horaires))}">
       <span class="pastille" aria-hidden="true"></span>
-      <span data-statut-texte>${esc(resumeHoraires(site.mairie.horaires))}</span>
-      <a href="#pratique-titre">Voir le détail</a>
+      <span><span data-statut-texte>${esc(resumeHoraires(site.mairie.horaires))}</span>
+      <a href="#pratique-titre">Voir le détail</a></span>
     </p>
     <div class="heros__suggestions">
       <h2 class="heros__suggestions-titre">Recherches fréquentes</h2>
@@ -327,7 +377,7 @@ ${site.application ? `<section class="section section--appli" aria-labelledby="a
   </div>
 </section>` : ''}`;
 
-  return page({ site, nav, titre: '', description: site.description, contenu, actif: '', classeCorps: 'page-accueil', actualitesCount: actualites.length, consultationsCount: nbConsultationsOuvertes });
+  return page({ site, nav, titre: '', description: site.description, contenu, actif: '', classeCorps: 'page-accueil' });
 }
 
 /* ------------------------------------------------------- Liste des démarches */
@@ -376,10 +426,11 @@ export function ficheDemarche(ctx, d) {
   const parId = Object.fromEntries(demarches.map((x) => [x.id, x]));
   const cat = CATEGORIES[d.categorie] || {};
   const voirAussi = (d.voirAussi || []).map((id) => parId[id]).filter(Boolean);
+  const fil = [{ libelle: 'Accueil', url: '/' }, { libelle: 'Mes démarches', url: '/demarches/' }, { libelle: d.titreCourt }];
 
   const contenu = `<div class="conteneur conteneur--etroit">
   <article class="fiche">
-    ${banniereMuette(ctx, cat.photo, cat.photoAlt)}
+    ${d.photo ? banniereMuette(ctx, d.photo, d.photoAlt, d.photoCredit) : banniereMuette(ctx, cat.photo, cat.photoAlt, cat.photoCredit)}
     <header class="fiche__entete">
       <p class="fiche__categorie">${icone(cat.icone || 'document', 'icone--mini')}${esc(cat.titre || 'Démarche')}</p>
       <h1>${esc(d.titre)}</h1>
@@ -398,6 +449,8 @@ export function ficheDemarche(ctx, d) {
       <h2 id="a-quoi">À quoi ça sert</h2>
       <p>${esc(d.quoi)}</p>
     </section>
+
+    ${d.id === 'plu' ? planZonage(ctx, { niveau: 2, fiche: true }) : ''}
 
     <section class="fiche__bloc" aria-labelledby="comment">
       <h2 id="comment">Comment faire</h2>
@@ -418,9 +471,9 @@ export function ficheDemarche(ctx, d) {
     </section>
 
     ${d.documents && d.documents.length ? `<section class="documents" aria-labelledby="docs-${esc(d.id)}">
-      <h2 id="docs-${esc(d.id)}">Documents à télécharger</h2>
+      <h2 id="docs-${esc(d.id)}">Documents à consulter</h2>
       <ul class="liste-documents">
-        ${d.documents.map((doc) => `<li><a href="/documents/${esc(doc.fichier)}" download>${icone('telecharger', 'icone--mini')}<span>${esc(doc.libelle)}</span> <span class="poids">PDF</span></a></li>`).join('')}
+        ${d.documents.map((doc) => ligneDocument(ctx, { url: `/demarches/${d.id}.html`, actif: 'demarches', fil, ancre: `docs-${d.id}` }, doc)).join('')}
       </ul>
     </section>` : ''}
 
@@ -450,7 +503,7 @@ export function ficheDemarche(ctx, d) {
     site, nav, actif: 'demarches',
     titre: d.titre,
     description: d.resume,
-    fil: [{ libelle: 'Accueil', url: '/' }, { libelle: 'Mes démarches', url: '/demarches/' }, { libelle: d.titreCourt }],
+    fil,
     contenu
   });
 }
@@ -498,6 +551,11 @@ export function pageRecherche(ctx) {
 export function pageAbonnement(ctx) {
   const { site, nav } = ctx;
   const urlBase = site.administration.urlBase;
+  // Thèmes = catégories d'actualités (content/categories-actualites.json),
+  // « Alertes et sécurité » en tête : c'est le choix de ceux qui ne veulent
+  // être prévenus que de l'essentiel (crue, coupure d'eau…).
+  const ALERTES = 'Alertes et sécurité';
+  const themes = [...(ctx.categoriesActualites || [])].sort((a, b) => (b === ALERTES) - (a === ALERTES));
 
   const contenu = `<div class="conteneur conteneur--etroit">
   <header class="page-entete">
@@ -512,13 +570,20 @@ export function pageAbonnement(ctx) {
         <label for="abonnement-email">Votre adresse électronique</label>
         <input type="email" id="abonnement-email" name="email" required autocomplete="email" placeholder="vous@exemple.fr">
       </div>
+      ${themes.length ? `<fieldset class="champ-themes" aria-describedby="themes-aide">
+        <legend>Thèmes qui vous intéressent <span class="champ-themes__facultatif">(facultatif)</span></legend>
+        <p class="champ-themes__aide" id="themes-aide">Sans rien cocher, vous recevez toutes les actualités.${themes.includes(ALERTES) ? ` Pour n'être prévenu que d'une crue, d'une coupure d'eau ou d'une autre alerte, cochez seulement « ${ALERTES} ».` : ''}</p>
+        <ul class="cases">
+          ${themes.map((t, i) => `<li><input type="checkbox" id="theme-${i}" name="themes" value="${esc(t)}"><label for="theme-${i}">${esc(t)}</label></li>`).join('')}
+        </ul>
+      </fieldset>` : ''}
       <p class="champ-piege">
         <label for="abonnement-site">Ne remplissez pas ce champ, réservé à la détection automatisée</label>
         <input type="text" id="abonnement-site" name="site_web" tabindex="-1" autocomplete="off">
       </p>
       <button type="submit" class="bouton bouton--principal bouton--large">M'abonner</button>
     </form>
-    <p class="formulaire-simple__note">Un courriel de confirmation vous sera envoyé : votre inscription n'est effective qu'après avoir cliqué sur le lien qu'il contient. Vous pourrez vous désabonner à tout moment, en un clic, depuis n'importe quel courriel reçu. En savoir plus sur <a href="/donnees-personnelles.html">le traitement de vos données</a>.</p>
+    <p class="formulaire-simple__note">Un courriel de confirmation vous sera envoyé : votre inscription n'est effective qu'après avoir cliqué sur le lien qu'il contient. Déjà abonné&nbsp;? Remplissez de nouveau ce formulaire pour changer de thèmes : le lien de confirmation les enregistrera. Vous pourrez vous désabonner à tout moment, en un clic, depuis n'importe quel courriel reçu. En savoir plus sur <a href="/donnees-personnelles.html">le traitement de vos données</a>.</p>
   </section>
 
   <section class="section formulaire-simple" aria-labelledby="desabonnement-titre">
@@ -551,13 +616,22 @@ export function pageAbonnement(ctx) {
 function banniereMuette(ctx, nom, alt, credit) {
   if (!nom) return '';
   const d = (ctx.photos || {})[nom] || { largeur: 1200, hauteur: 800 };
+  // Photo sous licence libre (Wikimedia Commons) : son auteur et sa licence
+  // sont dus sous l'image, sur toute page qui l'affiche (content/photos.json).
+  // Prise hors de la commune (horsCommune) : le nom de l'auteur seul, lié à
+  // la page de la photo qui porte la licence (ce que permettent les licences
+  // Creative Commons 4.0 et CC0 de ces photos), sans autre légende.
+  const auteur = d.auteur ? (d.source ? lien(d.source, esc(d.auteur)) : esc(d.auteur)) : '';
+  const legende = d.horsCommune
+    ? auteur
+    : [credit ? esc(credit) : '', auteur ? `Photo : ${auteur}${d.licence ? `, ${esc(d.licence)}` : ''}.` : ''].filter(Boolean).join(' ');
   return `<figure class="banniere-page">
     <img src="/img/${esc(nom)}-1200.jpg"
          srcset="/img/${esc(nom)}-700.jpg 700w, /img/${esc(nom)}-1200.jpg 1200w"
          sizes="(min-width: 48em) 48rem, 100vw"
          width="${d.largeur}" height="${d.hauteur}" loading="lazy" decoding="async"
          alt="${esc(alt || '')}">
-    ${credit ? `<figcaption>${esc(credit)}</figcaption>` : ''}
+    ${legende ? `<figcaption>${legende}</figcaption>` : ''}
   </figure>`;
 }
 
@@ -565,7 +639,8 @@ function banniereMuette(ctx, nom, alt, credit) {
 // ou tableau de telles chaînes) ou du registre content/documents.json (objets
 // {fichier, libelle} déjà normalisés) — normaliserDocuments ramène les deux
 // formes à la même forme d'objet, sans toucher au parseur de front-matter.
-function normaliserDocuments(source) {
+// src/build.mjs l'applique au chargement des pages pour y poser le poids.
+export function normaliserDocuments(source) {
   if (!source) return [];
   return (Array.isArray(source) ? source : [source]).map((d) => {
     if (d && typeof d === 'object') return d;
@@ -574,15 +649,44 @@ function normaliserDocuments(source) {
   });
 }
 
-function ligneDocument(d) {
-  return `<li><a href="/documents/${esc(d.fichier)}" download>${icone('telecharger', 'icone--mini')}<span>${esc(d.libelle)}</span> <span class="poids">PDF</span></a></li>`;
+// Un document lié depuis une page du site (fiche démarche, page éditoriale,
+// élus, budgets, actualité…) s'ouvre dans sa propre page, rangée sous celle
+// d'où l'on vient (« /vie-locale/tourisme.html » →
+// « /vie-locale/tourisme/exemple-pdf.html ») et qui y ramène :
+// voir pageDocument. Le gabarit inscrit le document dans ctx.documentsLies
+// en écrivant son lien ; src/build.mjs écrit ensuite ces pages.
+// "parent" : la page qui porte le lien — { url, actif, fil } comme pour
+// page(), et "ancre", l'id du bloc de documents où revenir.
+function lienDocumentLie(ctx, parent, d) {
+  const url = `${parent.url.replace(/\.html$/, '')}/${String(d.fichier).replace(/\./g, '-').toLowerCase()}.html`;
+  ctx.documentsLies.set(url, { url, parent, d });
+  return url;
 }
 
-function blocDocuments(items) {
+/** Page d'un document lié (voir lienDocumentLie). */
+export function pageDocumentLie(ctx, { parent, d }) {
+  const titreParent = parent.fil.at(-1).libelle;
+  const retour = `Retour à « ${titreParent} »`;
+  return pageDocument(ctx, {
+    d, titre: d.libelle, actif: parent.actif,
+    meta: d.date ? `<span>${dateFr(d.date)}</span>` : '',
+    retour: { url: `${parent.url}#${parent.ancre}`, bouton: retour, lien: retour },
+    description: `${d.libelle} — ${titreParent}, commune de ${ctx.site.commune.nom} (${formatEtPoids(d)}).`,
+    fil: [...parent.fil.slice(0, -1), { libelle: titreParent, url: parent.url }, { libelle: d.libelle }]
+  });
+}
+
+// « PDF, 10,6 Mo » à côté du libellé : sur téléphone, l'habitant sait ce
+// qu'il va ouvrir avant de toucher le lien.
+function ligneDocument(ctx, parent, d) {
+  return `<li><a href="${lienDocumentLie(ctx, parent, d)}">${icone('document', 'icone--mini')}<span>${esc(d.libelle)}</span> <span class="poids">${esc(formatEtPoids(d))}</span></a></li>`;
+}
+
+function blocDocuments(ctx, parent, items) {
   if (!items || !items.length) return '';
   return `<section class="documents" aria-labelledby="documents-titre">
-    <h2 id="documents-titre">Documents à télécharger</h2>
-    <ul class="liste-documents">${items.map(ligneDocument).join('')}</ul>
+    <h2 id="documents-titre">Documents à consulter</h2>
+    <ul class="liste-documents">${items.map((d) => ligneDocument(ctx, { ...parent, ancre: 'documents-titre' }, d)).join('')}</ul>
   </section>`;
 }
 
@@ -603,9 +707,525 @@ function blocLiens(meta) {
   </section>`;
 }
 
+// Prochains passages du car, affichés sur la page « Transports et
+// déplacements » (content/pages/transports.md) quand site.json → transport
+// est renseigné : ligne, arrêt, identifiant de l'arrêt côté Worker, lien vers
+// les horaires officiels et départs théoriques (heure, direction, jours,
+// arrêts desservis). Les horaires du site reflètent le rendu sans JavaScript
+// et servent de repli si le Worker ne répond pas ; src/scripts/transport-lio.js
+// interroge {administration.urlBase}/transport/<identifiant> pour superposer
+// le temps réel officiel (retard, suppression). Le navigateur du visiteur
+// n'appelle jamais directement un service de transport tiers.
+function widgetTransportLio(ctx) {
+  const t = ctx.site.transport;
+  if (!t || !t.departs || !t.departs.length) return '';
+  const urlApi = `${ctx.site.administration.urlBase}/transport/${t.identifiant}`;
+  return `<section class="transport-lio" aria-labelledby="transport-lio-titre" data-api="${esc(urlApi)}">
+    <h2 id="transport-lio-titre">Prochains passages — ${esc(t.ligne)}, arrêt « ${esc(t.arret)} »</h2>
+    <ul class="transport-lio__liste">
+      ${t.departs.map((d, i) => `<li class="transport-lio__depart" data-index="${i}">
+        <span class="transport-lio__heure">${esc(d.heure)}</span>
+        <span class="transport-lio__direction">${esc(d.direction)}</span>
+        <span class="transport-lio__jours">${esc(d.joursTexte)}</span>
+        <span class="transport-lio__statut" data-statut></span>
+        ${(d.arrets || []).length ? `<details class="transport-lio__arrets">
+          <summary>Arrêts desservis ensuite ${icone('chevron', 'transport-lio__chevron')}</summary>
+          <ol>${d.arrets.map((a) => `<li>${esc(a)}</li>`).join('')}</ol>
+        </details>` : ''}
+      </li>`).join('')}
+    </ul>
+    <p class="transport-lio__note" data-note>Horaire théorique. ${t.lienHoraires ? lien(t.lienHoraires, 'Horaires complets et perturbations sur le site du réseau') : ''}.</p>
+  </section>
+  <script src="/assets/transport-lio.js" defer></script>`;
+}
+
+const nombreFr = (n, decimales = 2) => n.toLocaleString('fr-FR', { minimumFractionDigits: decimales, maximumFractionDigits: decimales });
+
+// Hauteur du cours d'eau aux stations qui encadrent le village (site.json →
+// riviere), sur la page « Risques et sécurité ». Sans JavaScript (ou si le Worker ne répond
+// pas) : un lien vers la fiche Vigicrues de chaque station et les repères
+// de crues historiques. Avec : src/scripts/vidourle.js interroge
+// {administration.urlBase}/vidourle (worker/donnees-publiques.mjs, qui lit
+// l'API publique Hub'Eau) et affiche la mesure, la tendance sur 3 heures
+// et la courbe des dernières 24 heures. Comme pour les cars liO, le
+// navigateur du visiteur n'appelle jamais directement un service tiers.
+function widgetRiviere(ctx) {
+  const config = ctx.site.riviere;
+  if (!config || !config.stations || !config.stations.length) return '';
+  const urlApi = `${ctx.site.administration.urlBase}/vidourle`;
+  return `<section class="direct" aria-labelledby="vidourle-titre" data-vidourle="${esc(urlApi)}">
+    <h3 id="vidourle-titre">${esc(config.nom)} en direct</h3>
+    <ul class="direct__stations">
+      ${config.stations.map((s) => `<li class="station" data-station="${esc(s.code)}">
+        <h4 class="station__nom">${esc(s.nom)}</h4>
+        <p class="station__position">${esc(s.position)}</p>
+        <p class="station__mesure" data-mesure>${lien(`https://www.vigicrues.gouv.fr/station/${s.code}`, `Hauteur actuelle à ${esc(s.nom)} sur Vigicrues`)}</p>
+        <div class="station__courbe" data-courbe hidden></div>
+        ${s.crues && s.crues.length ? `<p class="station__reperes">Pour comparer : ${s.crues.map((c) => `crue de ${esc(c.libelle)}, ${nombreFr(c.hauteur)} m`).join(' ; ')}.</p>` : ''}
+      </li>`).join('')}
+    </ul>
+    <p class="direct__note" data-note>Hauteurs mesurées par les stations de l'État, toutes les 5 à 60 minutes. Le zéro de chaque échelle est conventionnel : seule compte la comparaison avec les crues passées. La couleur de vigilance crues officielle est publiée sur ${lien('https://www.vigicrues.gouv.fr/', 'vigicrues.gouv.fr')}.</p>
+  </section>
+  <script src="/assets/vidourle.js" defer></script>`;
+}
+
+// Restrictions d'eau en vigueur dans la commune, sur la page « Eau et
+// assainissement ». Sans JavaScript : renvoi vers VigiEau, le service
+// officiel. Avec : src/scripts/restrictions-eau.js lit
+// {administration.urlBase}/eau/restrictions (worker/donnees-publiques.mjs,
+// qui interroge l'API VigiEau avec le code Insee de la commune).
+function widgetRestrictionsEau(ctx) {
+  const urlApi = `${ctx.site.administration.urlBase}/eau/restrictions`;
+  return `<section class="direct" aria-labelledby="secheresse-titre" data-restrictions="${esc(urlApi)}">
+    <h3 id="secheresse-titre">Restrictions d'eau à ${esc(ctx.site.commune.nom)} aujourd'hui</h3>
+    <div class="secheresse" data-contenu>
+      <p>La situation du jour est publiée par l'État sur ${lien('https://vigieau.gouv.fr/', 'VigiEau')} : indiquez-y votre adresse pour connaître les usages autorisés.</p>
+    </div>
+    <p class="direct__note">Eau du robinet, usages des particuliers. Vous puisez dans un puits, un forage ou un cours d'eau&nbsp;? Les règles peuvent différer : vérifiez sur ${lien('https://vigieau.gouv.fr/', 'vigieau.gouv.fr')}.</p>
+  </section>
+  <script src="/assets/restrictions-eau.js" defer></script>`;
+}
+
+// « Ma maison face aux risques », sur la page « Risques et sécurité ». Le
+// formulaire ne sert qu'avec JavaScript (src/scripts/risques-adresse.js
+// interroge {administration.urlBase}/risques/adresse, voir
+// worker/risques-adresse.mjs) : il reste donc caché sans lui, et la section
+// de la page renvoie alors vers Géorisques, le service officiel.
+function widgetRisquesAdresse(ctx) {
+  const urlApi = `${ctx.site.administration.urlBase}/risques/adresse`;
+  return `<section class="direct" aria-labelledby="risques-adresse-titre" data-risques-adresse="${esc(urlApi)}" hidden>
+    <h3 id="risques-adresse-titre">Les risques à mon adresse</h3>
+    <form class="adresse-risques">
+      <label for="risques-adresse-champ">Votre adresse à ${esc(ctx.site.commune.nom)}</label>
+      <input type="text" id="risques-adresse-champ" name="q" required minlength="3" maxlength="200" autocomplete="street-address" placeholder="Ex. : ${esc(ctx.site.mairie.adresse.replace(/^.*— /, ''))}">
+      <button type="submit" class="bouton bouton--principal">Voir les risques</button>
+    </form>
+    <div class="resultat-risques" data-resultat aria-live="polite"></div>
+    <p class="direct__note">Votre adresse n'est pas conservée : elle sert seulement à interroger l'IGN et Géorisques, le temps de la réponse. Ce résumé ne remplace pas l'état des risques officiel.</p>
+  </section>
+  <script src="/assets/risques-adresse.js" defer></script>`;
+}
+
+// Qualité de l'eau du robinet, sur la page « Eau et assainissement ». Sans
+// JavaScript : renvoi vers le site du ministère de la Santé, qui publie les
+// résultats du contrôle sanitaire commune par commune. Avec :
+// src/scripts/qualite-eau.js lit {administration.urlBase}/eau/qualite
+// (worker/donnees-publiques.mjs, API Hub'Eau Qualité de l'eau potable).
+function widgetQualiteEau(ctx) {
+  const urlApi = `${ctx.site.administration.urlBase}/eau/qualite`;
+  return `<section class="direct" aria-labelledby="qualite-eau-titre" data-qualite-eau="${esc(urlApi)}">
+    <h3 id="qualite-eau-titre">Qualité de l'eau du robinet</h3>
+    <div class="qualite-eau" data-contenu>
+      <p>L'eau est contrôlée par l'Agence régionale de santé. Les résultats sont publiés commune par commune sur ${lien(`https://orobnat.sante.gouv.fr/orobnat/afficherPage.do?methode=menu&usd=AEP&idRegion=${esc(ctx.site.commune.codeRegion || '')}`, 'le site du ministère de la Santé')}.</p>
+    </div>
+    <p class="direct__note">Contrôle sanitaire officiel (ARS ${esc(ctx.site.commune.region)}), repris par Hub'Eau. Les limites de qualité protègent la santé ; les références de qualité sont des indicateurs du bon fonctionnement des installations.</p>
+  </section>
+  <script src="/assets/qualite-eau.js" defer></script>`;
+}
+
+const texteDae = (d) => `${d.acces === 'extérieur' ? "À l'extérieur" : "À l'intérieur"}${d.precision ? ` (${esc(d.precision)})` : ''} · ${d.horaires ? `accessible ${esc(d.horaires)}` : "horaires d'accès non renseignés"}`;
+const lienCarte = (d, texte) => lien(`https://www.openstreetmap.org/?mlat=${d.latitude}&mlon=${d.longitude}#map=18/${d.latitude}/${d.longitude}`, texte);
+
+// Défibrillateurs de la commune et des environs (content/defibrillateurs.json,
+// base nationale Géo'DAE relue chaque semaine par
+// .github/workflows/donnees-publiques.yml) : celui de la commune d'abord,
+// puis les plus proches, avec la distance depuis la mairie.
+function blocDefibrillateurs(ctx) {
+  const dae = ctx.defibrillateurs;
+  if (!dae || !dae.defibrillateurs || !dae.defibrillateurs.length) return '';
+  const ligne = (d) => `<li class="dae${d.dansLaCommune ? ' dae--lecques' : ''}">
+      <p class="dae__lieu"><strong>${esc(d.commune)}</strong> — ${esc(d.adresse)}${d.dansLaCommune ? '' : ` <span class="dae__distance">à ${nombreFr(d.distanceKm, 1)} km</span>`}</p>
+      <p class="dae__acces">${texteDae(d)}</p>
+      <p class="dae__carte">${lienCarte(d, `Voir sur la carte<span class="sr-only"> le défibrillateur de ${esc(d.commune)}, ${esc(d.adresse)}</span>`)}</p>
+    </li>`;
+  return `<h2 id="defibrillateurs">Les défibrillateurs les plus proches</h2>
+  <p>En cas d'arrêt cardiaque : <strong>appelez le 15</strong>, commencez le massage cardiaque et faites chercher un défibrillateur. L'appareil guide son utilisateur à la voix, pas à pas : il n'est pas nécessaire d'être formé pour s'en servir.</p>
+  <ul class="liste-dae">${dae.defibrillateurs.map(ligne).join('')}</ul>
+  <p class="note-source">Source : base nationale des défibrillateurs Géo'DAE, relue automatiquement chaque semaine (dernière mise à jour le ${dateFr(dae.misAJour)}). Un appareil manque ou a changé de place&nbsp;? <a href="mailto:${esc(ctx.site.mairie.email)}?subject=${encodeURIComponent('Défibrillateur')}">Signalez-le à la mairie</a>.</p>`;
+}
+
+function blocSansReseau() {
+  return `<h2 id="sans-reseau">Même sans réseau</h2>
+  <p>Pendant un épisode d'orage violent, d'incendie ou de crue, le réseau mobile est souvent saturé. Sur la plupart des téléphones et ordinateurs récents, cette page et la <a href="/mairie/fiche-pratique.html">fiche pratique</a> restent consultables sans connexion dès votre première visite sur le site. Pour ne dépendre de rien, imprimez la fiche pratique et gardez-la près du téléphone.</p>`;
+}
+
+// Insère le widget juste avant le prochain <h2> suivant l'ancre donnée (ou en
+// fin de contenu s'il n'y en a pas) : place la carte des prochains passages à
+// la fin de la section « Les cars liO » du Markdown, sans que ce dernier ait
+// besoin de connaître le widget (le renderer Markdown maison n'a pas de
+// mécanisme d'inclusion de blocs HTML arbitraires, voir src/markdown.mjs).
+const tailleMo = (octets) => {
+  const mo = octets / 1e6;
+  return `${mo < 10 ? mo.toLocaleString('fr-FR', { maximumFractionDigits: 1 }) : Math.round(mo)} Mo`;
+};
+const TYPES_ZONE = [
+  ['U', 'Zones urbaines'],
+  ['AU', 'Zone à urbaniser'],
+  ['A', 'Zones agricoles'],
+  ['N', 'Zones naturelles'],
+];
+
+// Plan de zonage du PLU, sur la page « Urbanisme et PLU » et sur la fiche
+// « Consulter le PLU ». Zones et contours viennent du Géoportail de
+// l'urbanisme (tools/fetch-zonage.mjs, content/zonage-plu.json, simplifiés à
+// 3 m près), le fond (contour de la commune, voirie, cours d'eau) de
+// content/carte-fond.json : tout est dessiné ici en SVG, sans service de
+// cartographie tiers. Une seule carte, toute la commune : un zoom sur le
+// village, affiché en plus, passait pour un doublon. Chaque zone donne
+// son nom au survol ; la légende, qui la décrit en toutes lettres et renvoie
+// à la page du règlement qui la concerne, tient lieu d'alternative
+// textuelle. Le plan officiel (PDF, lourd) reste en lien : c'est lui qui
+// fait foi.
+
+// Une carte du plan de zonage, cadrée sur "cadre" (lon/lat). "largeur" est
+// celle du repère SVG : plus elle est petite, plus textes et traits
+// paraissent grands une fois la carte mise à l'échelle de la page.
+function dessinZonage(ctx, cadre, { largeur, tailleEtiquette, id, titre }) {
+  const { zonage, carteFond, site } = ctx;
+  const latRef = (cadre.minlat + cadre.maxlat) / 2;
+  const mLat = 111320;
+  const mLon = 111320 * Math.cos((latRef * Math.PI) / 180);
+  const echelle = largeur / ((cadre.maxlon - cadre.minlon) * mLon);
+  const hauteur = Math.round((cadre.maxlat - cadre.minlat) * mLat * echelle);
+  const proj = ([lon, lat]) => [Math.round((lon - cadre.minlon) * mLon * echelle), Math.round((cadre.maxlat - lat) * mLat * echelle)];
+  // Coordonnées entières, points confondus à l'arrondi retirés.
+  const chemin = (anneau) => {
+    const pts = [];
+    for (const p of anneau) {
+      const q = proj(p).join(',');
+      if (pts[pts.length - 1] !== q) pts.push(q);
+    }
+    return `M${pts.join('L')}Z`;
+  };
+  const ligne = (points) => points.map((p) => proj(p).join(',')).join(' ');
+
+  const zonesSvg = zonage.zones.map((z) => z.polygones.map((poly) => (
+    `<path class="plan-zonage__zone plan-zonage__zone--${esc(z.type.toLowerCase())}" data-code="${esc(z.code)}" data-intitule="${esc(z.description)}" d="${poly.anneaux.map(chemin).join('')}"><title>${esc(z.code)} — ${esc(z.description)}</title></path>`
+  )).join('')).join('');
+  // Une étiquette seulement là où la zone a la place de la porter (rayon
+  // libre autour du point, calculé par tools/fetch-zonage.mjs).
+  const etiquettesSvg = zonage.zones.flatMap((z) => z.polygones
+    .filter((p) => p.etiquette && p.rayonM * echelle >= tailleEtiquette * 0.9)
+    .map((p) => {
+      const [x, y] = proj(p.etiquette);
+      return `<text x="${x}" y="${y}">${esc(z.code)}</text>`;
+    })).join('');
+  const [mx, my] = proj([site.mairie.longitude, site.mairie.latitude]);
+
+  return `<svg viewBox="0 0 ${largeur} ${hauteur}" role="img" aria-labelledby="${id}">
+          <title id="${id}">${esc(titre)}</title>
+          <g>${zonesSvg}</g>
+          <g class="carte-lecques__routes">${carteFond.routes.map((r) => `<polyline points="${ligne(r.points)}"/>`).join('')}</g>
+          <g class="carte-lecques__riviere">${(carteFond.riviere || []).map((r) => `<polyline points="${ligne(r)}"/>`).join('')}</g>
+          <polygon class="plan-zonage__contour" points="${ligne(carteFond.communeContour)}"/>
+          <circle cx="${mx}" cy="${my}" r="${Math.round(tailleEtiquette / 3)}" class="carte-lecques__mairie-halo"/><circle cx="${mx}" cy="${my}" r="${Math.round(tailleEtiquette / 7)}" class="carte-lecques__mairie-point"/>
+          <g class="plan-zonage__etiquettes" font-size="${tailleEtiquette}">${etiquettesSvg}</g>
+        </svg>`;
+}
+
+function planZonage(ctx, { niveau = 3, fiche = false } = {}) {
+  const { zonage, carteFond } = ctx;
+  if (!zonage || !zonage.zones || !zonage.zones.length || !carteFond || !carteFond.bbox) return '';
+
+  const doc = zonage.document || {};
+  const reglement = doc.reglement;
+  const h = `h${niveau}`;
+  const hLegende = `h${niveau + 1}`;
+  const legende = TYPES_ZONE.map(([type, titre]) => {
+    const zones = zonage.zones.filter((z) => z.type === type);
+    if (!zones.length) return '';
+    return `<div>
+      <${hLegende}>${esc(titre)}</${hLegende}>
+      <dl>${zones.map((z) => `<div>
+        <dt><span class="plan-zonage__puce plan-zonage__puce--${esc(type.toLowerCase())}" aria-hidden="true"></span>${esc(z.code)}</dt>
+        <dd>${esc(z.description)}.${reglement && z.page ? ` ${lien(`${reglement.url}#page=${z.page}`, `Règlement, page ${z.page}`)}` : ''}</dd>
+      </div>`).join('')}</dl>
+    </div>`;
+  }).join('');
+
+  const approbation = doc.approbation
+    ? new Date(`${doc.approbation}T12:00:00Z`).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
+    : null;
+  const pieces = [
+    ...(doc.planches || []).map((p) => {
+      const numero = (String(p.titre).match(/(\d+)\s*$/) || [])[1];
+      return lien(p.url, `plan de zonage${numero ? `, planche ${numero}` : ''} (PDF${p.taille ? `, ${tailleMo(p.taille)}` : ''})`);
+    }),
+    ...(reglement ? [lien(reglement.url, `règlement écrit (PDF${reglement.taille ? `, ${tailleMo(reglement.taille)}` : ''})`)] : []),
+  ];
+
+  return `<section class="plan-zonage${fiche ? ' fiche__bloc' : ''}" aria-labelledby="plan-zonage-titre">
+    <${h} id="plan-zonage-titre">Le plan de zonage</${h}>
+    <div class="plan-zonage__duo">
+      <figure class="plan-zonage__carte">
+        ${dessinZonage(ctx, carteFond.bbox, { largeur: 700, tailleEtiquette: 26, id: 'plan-zonage-commune', titre: `Plan de zonage de toute la commune de ${ctx.site.commune.nom}, par type de zone. Détail de chaque zone dans la légende.` })}
+        <figcaption>Survolez ou touchez une zone pour son intitulé complet. Le point noir marque la mairie${(ctx.site.riviere || {}).nom ? `, le trait bleu ${esc(ctx.site.riviere.nom)}` : ''} ; chaque zone est décrite dans la légende.</figcaption>
+      </figure>
+      <div class="plan-zonage__legende">${legende}</div>
+    </div>
+    <p class="carte__detail">Plan simplifié, d'après le Géoportail de l'urbanisme.${pieces.length ? ` Le plan officiel${approbation ? `, approuvé le ${esc(approbation)},` : ''} fait foi : ${pieces.join(' · ')}.` : ''}</p>
+    <p class="carte__detail">Pour connaître la zone d'une adresse précise : <a href="/cadre-de-vie/risques.html#ma-maison-face-aux-risques">Ma maison face aux risques</a>.</p>
+  </section>
+  <script src="/assets/plan-zonage.js" defer></script>`;
+}
+
+// Carte « Autour de <commune> », sur la page Tourisme : sites, monuments et
+// randonnées à moins de 30 minutes en voiture (content/tourisme-sites.json).
+// Le fond (routes, rivières, villages, voie verte) et le temps de trajet
+// depuis la mairie sont relevés une fois pour toutes dans OpenStreetMap et
+// auprès de l'IGN (tools/fetch-carte-tourisme.mjs, content/carte-tourisme.json) :
+// tout est dessiné ici en SVG, sans service de cartographie tiers. Les
+// repères sont des liens HTML posés par-dessus, vers la fiche du site dans
+// la liste qui suit la carte : sans JavaScript, c'est elle qui décrit
+// chaque site et mène à son site officiel. src/scripts/carte-tourisme.js
+// en fait une infobulle, ouverte au survol, au clic, au toucher ou au clavier.
+const TYPES_TOURISME = [
+  ['site', 'Sites et monuments'],
+  ['rando', 'Randonnées balisées'],
+];
+const LARGEUR_TOURISME = 640; // repère SVG ; la carte s'affiche entre 36 et 42 rem de large
+
+// « À 7,1 km de la mairie, environ 15 min en voiture » : au-delà de 10
+// minutes, arrondi aux 5 minutes, l'heure de départ et la circulation
+// comptant plus que la minute près.
+function trajetTourisme(s, trajet) {
+  if (!trajet) return '';
+  const km = trajet.km.toLocaleString('fr-FR', { maximumFractionDigits: trajet.km < 10 ? 1 : 0 });
+  const minutes = trajet.minutes < 10 ? `${Math.max(1, trajet.minutes)} min` : `environ ${Math.round(trajet.minutes / 5) * 5} min`;
+  return `${s.type === 'rando' ? 'Départ à' : 'À'} ${km} km de la mairie, ${minutes} en voiture`;
+}
+
+// Espaces insécables entre un nombre et son unité (« 5,4 km », « 1 h 30 »,
+// « 17,6 °C ») : ils ne se séparent pas en fin de ligne.
+const insecables = (texte) => texte
+  .replace(/(\d) (?=[a-zA-Z°]{1,3}\b)/g, '$1 ')
+  .replace(/(\d) h (?=\d)/g, '$1 h ');
+
+// Le fond de carte et ses repères. "numeros" donne le numéro affiché de
+// chaque site, le même que dans la liste.
+function planTourisme(ctx, sites, numeros) {
+  const { carteTourisme: fond, carteFond, site } = ctx;
+  const { bbox } = fond;
+  const latRef = (bbox.minlat + bbox.maxlat) / 2;
+  const mLat = 111320;
+  const mLon = 111320 * Math.cos((latRef * Math.PI) / 180);
+  const echelle = LARGEUR_TOURISME / ((bbox.maxlon - bbox.minlon) * mLon);
+  const L = LARGEUR_TOURISME;
+  const H = Math.round((bbox.maxlat - bbox.minlat) * mLat * echelle);
+  const proj = ([lon, lat]) => [Math.round((lon - bbox.minlon) * mLon * echelle), Math.round((bbox.maxlat - lat) * mLat * echelle)];
+  // Coordonnées entières, points confondus à l'arrondi retirés.
+  const ligne = (points) => {
+    const pts = [];
+    for (const p of points) {
+      const q = proj(p).join(',');
+      if (pts[pts.length - 1] !== q) pts.push(q);
+    }
+    return pts.length > 1 ? `<polyline points="${pts.join(' ')}"/>` : '';
+  };
+  const lignes = (liste) => (liste || []).map(ligne).join('');
+
+  // Repères : un rond (site) ou un carré (randonnée) de 28 px, numéroté.
+  // Deux sites trop proches (deux sites à un kilomètre l'un de l'autre) se
+  // chevaucheraient : on les écarte juste assez, et un trait fin relie le
+  // repère déplacé à son emplacement exact. La mairie ne se couvre pas.
+  const RAYON = 15, ECART = 32;
+  const [mx, my] = proj([site.mairie.longitude, site.mairie.latitude]);
+  const reperes = sites.map((s) => {
+    const [x, y] = proj(s.position);
+    return { s, x0: x, y0: y, x, y };
+  });
+  const borner = (v, max) => Math.min(Math.max(v, RAYON + 2), max - RAYON - 2);
+  for (let tour = 0; tour < 80; tour++) {
+    let bouge = false;
+    for (let i = 0; i < reperes.length; i++) {
+      const a = reperes[i];
+      const dm = Math.hypot(a.x - mx, a.y - my) || 1;
+      if (dm < ECART * 0.75) {
+        const p = ECART * 0.75 - dm;
+        a.x += ((a.x - mx) / dm) * p; a.y += ((a.y - my) / dm) * p; bouge = true;
+      }
+      for (let j = i + 1; j < reperes.length; j++) {
+        const b = reperes[j];
+        let dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy);
+        if (d >= ECART) continue;
+        if (d === 0) { dx = 0; dy = 1; d = 1; }
+        const p = (ECART - d) / 2;
+        a.x -= (dx / d) * p; a.y -= (dy / d) * p;
+        b.x += (dx / d) * p; b.y += (dy / d) * p;
+        bouge = true;
+      }
+    }
+    for (const r of reperes) { r.x = borner(r.x, L); r.y = borner(r.y, H); }
+    if (!bouge) break;
+  }
+  for (const r of reperes) { r.x = Math.round(r.x); r.y = Math.round(r.y); }
+  const renvois = reperes
+    .filter((r) => Math.hypot(r.x - r.x0, r.y - r.y0) > 4)
+    .map((r) => `<line x1="${r.x0}" y1="${r.y0}" x2="${r.x}" y2="${r.y}"/><circle cx="${r.x0}" cy="${r.y0}" r="2.5"/>`)
+    .join('');
+
+  // Noms de villages : la commune d'abord, puis ceux qui accueillent un site,
+  // puis les plus peuplés, chacun là où il ne recouvre ni un repère ni un
+  // autre nom ; sinon, il n'est pas écrit.
+  const communes = new Set(sites.map((s) => s.commune));
+  const candidats = [
+    { nom: site.commune.nom, position: [site.mairie.longitude, site.mairie.latitude], lecques: true },
+    ...(fond.lieux || []).filter((l) => l.nom !== site.commune.nom && communes.has(l.nom)),
+    ...(fond.lieux || []).filter((l) => l.nom !== site.commune.nom && !communes.has(l.nom) && l.population >= 1500),
+  ];
+  const posees = [];
+  const libre = (rect) => rect.x1 >= 2 && rect.x2 <= L - 2 && rect.y1 >= 2 && rect.y2 <= H - 2
+    && !posees.some((p) => rect.x1 < p.x2 && rect.x2 > p.x1 && rect.y1 < p.y2 && rect.y2 > p.y1)
+    && !reperes.some((r) => r.x + RAYON + 2 > rect.x1 && r.x - RAYON - 2 < rect.x2 && r.y + RAYON + 2 > rect.y1 && r.y - RAYON - 2 < rect.y2);
+  const noms = [];
+  for (const c of candidats) {
+    const [x, y] = proj(c.position);
+    const taille = c.lecques ? 14 : 12;
+    const largeur = c.nom.length * taille * 0.52 + 2;
+    // À droite, à gauche, dessus, dessous ; puis, si un repère est posé sur
+    // le village, les mêmes positions et les
+    // diagonales, au-delà de lui.
+    const essais = [6, RAYON + 6, 2 * RAYON + 6].flatMap((d) => [
+      { tx: x + d, ty: y + taille * 0.35, ancre: 'start', x1: x + d - 1, x2: x + d + largeur, y1: y - taille * 0.65 },
+      { tx: x - d, ty: y + taille * 0.35, ancre: 'end', x1: x - d - largeur, x2: x - d + 1, y1: y - taille * 0.65 },
+      { tx: x, ty: y - d - 1, ancre: 'middle', x1: x - largeur / 2, x2: x + largeur / 2, y1: y - d - 1 - taille },
+      { tx: x, ty: y + d + taille, ancre: 'middle', x1: x - largeur / 2, x2: x + largeur / 2, y1: y + d },
+      ...(d > 6 ? [
+        { tx: x + d * 0.7, ty: y - d * 0.7, ancre: 'start', x1: x + d * 0.7 - 1, x2: x + d * 0.7 + largeur, y1: y - d * 0.7 - taille },
+        { tx: x - d * 0.7, ty: y - d * 0.7, ancre: 'end', x1: x - d * 0.7 - largeur, x2: x - d * 0.7 + 1, y1: y - d * 0.7 - taille },
+        { tx: x + d * 0.7, ty: y + d * 0.7 + taille, ancre: 'start', x1: x + d * 0.7 - 1, x2: x + d * 0.7 + largeur, y1: y + d * 0.7 },
+        { tx: x - d * 0.7, ty: y + d * 0.7 + taille, ancre: 'end', x1: x - d * 0.7 - largeur, x2: x - d * 0.7 + 1, y1: y + d * 0.7 },
+      ] : []),
+    ]);
+    const retenu = essais.find((e) => libre({ x1: e.x1, x2: e.x2, y1: e.y1, y2: e.y1 + taille + 1 }));
+    if (!retenu) continue;
+    posees.push({ x1: retenu.x1, x2: retenu.x2, y1: retenu.y1, y2: retenu.y1 + taille + 1 });
+    const point = c.lecques ? '' : `<circle cx="${x}" cy="${y}" r="2.5"/>`;
+    noms.push(`${point}<text x="${retenu.tx}" y="${Math.round(retenu.ty)}"${retenu.ancre === 'start' ? '' : ` text-anchor="${retenu.ancre}"`}${c.lecques ? ' class="carte-tourisme__lecques"' : ''}>${esc(c.nom)}</text>`);
+  }
+
+  // Échelle de 5 km, en bas à gauche.
+  const cinqKm = Math.round(5000 * echelle);
+  const echelleSvg = `<g class="carte-tourisme__echelle"><path d="M12 ${H - 18}v6h${cinqKm}v-6"/><text x="${12 + cinqKm / 2}" y="${H - 22}" text-anchor="middle">5 km</text></g>`;
+
+  const contour = carteFond && carteFond.communeContour
+    ? `<polygon class="carte-lecques__contour" points="${carteFond.communeContour.map((p) => proj(p).join(',')).join(' ')}"/>`
+    : '';
+  const rivieres = fond.rivieres || [];
+  const traces = sites.filter((s) => fond.traces && fond.traces[s.id]).map((s) => lignes(fond.traces[s.id])).join('');
+
+  const nbSites = sites.filter((s) => s.type === 'site').length;
+  const nbRandos = sites.length - nbSites;
+  const pct = (v, total) => Math.round((v / total) * 10000) / 100;
+  const marqueurs = reperes.map((r) => {
+    const { s } = r;
+    return `<li style="left:${pct(r.x, L)}%;top:${pct(r.y, H)}%"><a class="carte-tourisme__repere carte-tourisme__repere--${esc(s.type)}" href="#tourisme-${esc(s.id)}" data-site="${esc(s.id)}"><span aria-hidden="true">${numeros.get(s.id)}</span><span class="sr-only">${esc(s.nom)}${s.type === 'rando' ? ', randonnée' : ''}</span></a></li>`;
+  }).join('');
+
+  return `<div class="carte-tourisme__cadre">
+      <div class="carte-tourisme__plan" data-centre="${pct(mx, L)}">
+        <svg viewBox="0 0 ${L} ${H}" role="img" aria-labelledby="carte-tourisme-titre">
+          <title id="carte-tourisme-titre">Carte des environs de ${esc(site.commune.nom)} : ${nbSites} sites et monuments et ${nbRandos} randonnées à moins de 30 minutes en voiture, décrits dans la liste qui suit la carte.</title>
+          ${contour}
+          <g class="carte-tourisme__limite">${lignes(fond.departements)}</g>
+          <g class="carte-tourisme__rivieres">${rivieres.filter((r) => !r.principale).map((r) => lignes(r.lignes)).join('')}</g>
+          <g class="carte-lecques__riviere">${rivieres.filter((r) => r.principale).map((r) => lignes(r.lignes)).join('')}</g>
+          <g class="carte-tourisme__routes carte-tourisme__routes--locale">${lignes(fond.routes && fond.routes.locale)}</g>
+          <g class="carte-tourisme__routes">${lignes(fond.routes && fond.routes.principale)}</g>
+          <g class="carte-tourisme__routes carte-tourisme__routes--autoroute">${lignes(fond.routes && fond.routes.autoroute)}</g>
+          <g class="carte-tourisme__trace">${traces}</g>
+          <g class="carte-tourisme__renvois">${renvois}</g>
+          <circle cx="${mx}" cy="${my}" r="7" class="carte-lecques__mairie-halo"/><circle cx="${mx}" cy="${my}" r="3.5" class="carte-lecques__mairie-point"/>
+          <g class="carte-tourisme__noms">${noms.join('')}</g>
+          ${echelleSvg}
+        </svg>
+        <ol class="carte-tourisme__reperes" aria-label="Repères de la carte">${marqueurs}</ol>
+      </div>
+    </div>`;
+}
+
+function carteTourisme(ctx) {
+  const { tourismeSites, carteTourisme: fond } = ctx;
+  if (!tourismeSites || !tourismeSites.sites || !tourismeSites.sites.length) return '';
+  const trajets = (fond && fond.trajets) || {};
+  // Numérotés dans l'ordre d'affichage : les sites, puis les randonnées.
+  const groupes = TYPES_TOURISME
+    .map(([type, titre]) => ({ type, titre, sites: tourismeSites.sites.filter((s) => s.type === type) }))
+    .filter((g) => g.sites.length);
+  const sites = groupes.flatMap((g) => g.sites);
+  const numeros = new Map(sites.map((s, i) => [s.id, i + 1]));
+
+  const fiche = (s) => `<li id="tourisme-${esc(s.id)}" class="tourisme-site tourisme-site--${esc(s.type)}">
+        <span class="tourisme-site__numero" aria-hidden="true">${numeros.get(s.id)}</span>
+        <div class="tourisme-site__corps">
+          <h4 class="tourisme-site__nom">${esc(s.nom)}</h4>
+          <p class="tourisme-site__infos">${insecables([s.commune, s.parcours].filter(Boolean).map(esc).join(' · '))}${trajets[s.id] ? `<br>${insecables(esc(trajetTourisme(s, trajets[s.id])))}` : ''}</p>
+          <p>${insecables(esc(s.description))}</p>
+          <p class="tourisme-site__lien">${lien(s.url, `${esc(s.source)}<span class="sr-only"> : ${esc(s.nom)}</span>`)}</p>
+        </div>
+      </li>`;
+  const listes = groupes.map((g) => `<h3>${esc(g.titre)}</h3>
+    <ol class="tourisme-sites"${numeros.get(g.sites[0].id) > 1 ? ` start="${numeros.get(g.sites[0].id)}"` : ''}>
+      ${g.sites.map(fiche).join('')}
+    </ol>`).join('');
+
+  const avecTrace = sites.some((s) => fond && fond.traces && fond.traces[s.id]);
+  const carte = fond && fond.bbox
+    ? `<figure class="carte-tourisme__figure">
+      ${planTourisme(ctx, sites, numeros)}
+      <template id="carte-tourisme-fermer"><button type="button" class="infobulle-tourisme__fermer">${icone('fermer')}<span class="sr-only">Fermer</span></button></template>
+      <figcaption>
+        <p class="carte-tourisme__glisser">Faites glisser la carte pour voir tous les repères.</p>
+        <p class="carte-lecques__legende">
+          <span><span class="carte-tourisme__puce carte-tourisme__puce--site" aria-hidden="true"></span>Site ou monument</span>
+          <span><span class="carte-tourisme__puce carte-tourisme__puce--rando" aria-hidden="true"></span>Départ de randonnée</span>
+          ${avecTrace ? '<span><span class="carte-lecques__trait carte-tourisme__trait--trace" aria-hidden="true"></span>Voie verte</span>' : ''}
+          <span><span class="carte-lecques__puce carte-lecques__puce--mairie" aria-hidden="true"></span>Mairie de ${esc(ctx.site.commune.nom)}</span>
+          ${(ctx.site.riviere || {}).nom ? `<span><span class="carte-lecques__trait carte-lecques__trait--riviere" aria-hidden="true"></span>${esc(ctx.site.riviere.nom)}</span>` : ''}
+          ${ctx.site.commune.limiteDepartements ? `<span><span class="carte-lecques__trait carte-tourisme__trait--limite" aria-hidden="true"></span>${esc(ctx.site.commune.limiteDepartements)}</span>` : ''}
+        </p>
+        <p class="carte__detail">Touchez ou survolez un repère pour sa description et le lien vers son site officiel. Fond de carte : ${lien('https://www.openstreetmap.org/copyright', 'les contributeurs d’OpenStreetMap')} ; temps de trajet calculés depuis la mairie avec l'itinéraire de l'IGN.</p>
+      </figcaption>
+    </figure>`
+    : '';
+
+  return `<div class="carte-tourisme" data-carte-tourisme>
+    ${carte}
+    ${listes}
+  </div>
+  ${carte ? '<script src="/assets/carte-tourisme.js" defer></script>' : ''}`;
+}
+
+function insererApresSection(html, ancreSection, widget) {
+  const debut = html.indexOf(`id="${ancreSection}"`);
+  if (debut === -1) return html + widget;
+  const prochainH2 = html.indexOf('<h2', html.indexOf('</h2>', debut));
+  return prochainH2 === -1
+    ? html + widget
+    : html.slice(0, prochainH2) + widget + html.slice(prochainH2);
+}
+
 export function pageMarkdown(ctx, p) {
   const { site, nav } = ctx;
   let { html, sommaire } = rendre(p.corps);
+  if (p.slug === 'transports') html = insererApresSection(html, 'les-cars-lio', widgetTransportLio(ctx));
+  if (p.slug === 'urbanisme') html = insererApresSection(html, 'avant-tout-projet-consultez-le-plu', planZonage(ctx));
+  if (p.slug === 'tourisme') html = insererApresSection(html, `autour-de-${site.commune.nom.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-')}`, carteTourisme(ctx));
+  if (p.slug === 'eau') {
+    html = insererApresSection(html, 'l-eau-potable', widgetQualiteEau(ctx));
+    html = insererApresSection(html, 'preserver-la-ressource', widgetRestrictionsEau(ctx));
+  }
+  if (p.slug === 'risques') {
+    html = insererApresSection(html, (site.riviere && site.riviere.ancre) || 'les-cours-d-eau', widgetRiviere(ctx));
+    html = insererApresSection(html, 'ma-maison-face-aux-risques', widgetRisquesAdresse(ctx));
+    const dae = blocDefibrillateurs(ctx);
+    html += dae + blocSansReseau();
+    sommaire = [
+      ...sommaire,
+      ...(dae ? [{ id: 'defibrillateurs', texte: 'Défibrillateurs' }] : []),
+      { id: 'sans-reseau', texte: 'Même sans réseau' }
+    ];
+  }
   const rub = nav.find((n) => n.id === p.meta.rubrique);
   const fil = [{ libelle: 'Accueil', url: '/' }];
   if (rub) fil.push({ libelle: rub.libelle, url: rub.url });
@@ -613,7 +1233,13 @@ export function pageMarkdown(ctx, p) {
 
   // "bulletins" est une clé plate (comme "budgets"), pas "pages/bulletins" :
   // voir CLAUDE.md « Ajouter un document » et worker/README.md.
-  const documentsBulletins = p.slug === 'bulletins' ? (ctx.documents && ctx.documents.bulletins) || [] : [];
+  // Le plus récent en premier, d'après la date de parution. Le Worker ajoute
+  // chaque dépôt en fin de registre, sans date si le formulaire n'en a pas
+  // reçu (elle y est facultative) : un numéro sans date est le dernier
+  // déposé, il passe donc en tête.
+  const documentsBulletins = p.slug === 'bulletins'
+    ? [...((ctx.documents && ctx.documents.bulletins) || [])].sort((a, b) => (b.date || '9999').localeCompare(a.date || '9999'))
+    : [];
   const documents = [
     ...normaliserDocuments(p.meta.documents),
     ...documentsBulletins,
@@ -629,7 +1255,7 @@ export function pageMarkdown(ctx, p) {
     </header>
     <div class="prose">${html}</div>
     ${blocLiens(p.meta)}
-    ${blocDocuments(documents)}
+    ${blocDocuments(ctx, { url: p.url, actif: p.meta.rubrique, fil }, documents)}
   </article>
 </div>`;
 
@@ -705,32 +1331,45 @@ export function listeActualites(ctx) {
 
 export function articleActualite(ctx, a) {
   const { site, nav } = ctx;
-  const corps = a.corps ? a.corps.split('\n\n').map((p) => `<p>${esc(p)}</p>`).join('\n') : '';
+  // Gras, italique, listes, liens et retours à la ligne saisis dans le
+  // formulaire d'administration (voir src/texte-actualite.mjs).
+  const corps = a.corps ? texteActualiteEnHtml(a.corps, { lien: (url, html) => lien(url, html) }) : '';
+  const fil = [{ libelle: 'Accueil', url: '/' }, { libelle: 'Actualités', url: '/vie-locale/actualites.html' }, { libelle: a.titre }];
+  const parent = { url: `/vie-locale/actualites/${a.id}.html`, actif: 'vie-locale', fil, ancre: 'pour-aller-plus-loin' };
+  // Un PDF joint s'ouvre dans sa page du site (voir lienDocumentLie).
+  const lienSuite = (l) => {
+    if (l.type === 'externe') return lien(l.url, esc(l.libelle));
+    if (l.type !== 'document' || !String(l.url).startsWith('/documents/')) return `<a href="${esc(l.url)}">${esc(l.libelle)}</a>`;
+    const d = { fichier: decodeURIComponent(l.url.slice('/documents/'.length)), libelle: l.libelle, octets: l.octets };
+    return `<a href="${lienDocumentLie(ctx, parent, d)}">${esc(l.libelle)}</a> <span class="mention-fichier">(PDF${l.octets ? `, ${poidsFichier(l.octets)}` : ''})</span>`;
+  };
   const contenu = `<div class="conteneur conteneur--etroit">
   <article class="article">
     <header class="page-entete">
-      <p class="carte__meta"><span class="etiquette">${esc(a.categorie)}</span> ${periodeActu(a)}</p>
+      <p class="carte__meta"><span class="etiquette">${esc(a.categorie)}</span>${(a.themes || []).map((t) => ` <span class="etiquette">${esc(t)}</span>`).join('')} ${periodeActu(a)}</p>
       <h1>${esc(a.titre)}</h1>
     </header>
     <h2 class="sr-only">Détail de l'actualité</h2>
     <div class="article__corps">
       ${a.image ? `<figure class="article__image">
         <img src="${esc(a.image.chemin)}" alt="${esc(a.image.alt)}">
-        <figcaption><a href="${esc(a.image.cheminOriginal)}">Voir la photo en taille réelle</a></figcaption>
+        <figcaption><a href="${esc(a.image.cheminOriginal)}" data-photo-zoom>Voir la photo en taille réelle</a>${a.image.credit ? `
+          <span class="article__credit">Photo : ${a.image.source ? lien(a.image.source, esc(a.image.credit)) : esc(a.image.credit)}</span>` : ''}</figcaption>
       </figure>` : ''}
       ${a.chapeau ? `<p class="page-entete__intro">${esc(a.chapeau)}</p>` : ''}
       ${corps ? `<div class="prose">${corps}</div>` : ''}
     </div>
+    ${a.dateDebut ? `<p class="article__agenda"><a class="bouton bouton--secondaire" href="/vie-locale/actualites/${esc(a.id)}.ics" download>${icone('horloge')}<span>Ajouter à mon agenda</span></a></p>` : ''}
     ${a.liens && a.liens.length ? `<nav class="liens-suite" aria-label="Pour aller plus loin">
-      <h2>Pour aller plus loin</h2>
-      <ul>${a.liens.map((l) => `<li>${l.type === 'externe' ? lien(l.url, esc(l.libelle)) : `<a href="${esc(l.url)}">${esc(l.libelle)}</a>`}</li>`).join('')}</ul>
+      <h2 id="pour-aller-plus-loin">Pour aller plus loin</h2>
+      <ul>${a.liens.map((l) => `<li>${lienSuite(l)}</li>`).join('')}</ul>
     </nav>` : ''}
     <p class="retour"><a href="/vie-locale/actualites.html">${icone('fleche')}<span>Toutes les actualités</span></a></p>
   </article>
-</div>`;
+</div>${a.image ? `<script src="/assets/photo.js" defer></script>` : ''}`;
   return page({
     site, nav, actif: 'vie-locale', titre: a.titre, description: a.chapeau,
-    fil: [{ libelle: 'Accueil', url: '/' }, { libelle: 'Actualités', url: '/vie-locale/actualites.html' }, { libelle: a.titre }],
+    fil,
     contenu
   });
 }
@@ -830,11 +1469,13 @@ export function pageConsultation(ctx, c) {
     <p class="carte__meta">${badgeEtatConsultation(etat)} <span class="etiquette">${esc(c.theme)}</span></p>
     <h1>${esc(c.question)}</h1>
     <p class="page-entete__intro">${periodeConsultation(c, etat)}</p>
-    ${c.chapeau ? `<p>${esc(c.chapeau)}</p>` : ''}
+    ${/* Une incitation à participer ("Donnez votre avis en 2 minutes") n'a plus de sens une fois le vote clos. */
+      c.chapeau && etat !== 'terminee' ? `<p>${esc(c.chapeau)}</p>` : ''}
   </header>
   ${formulaireVote}
   ${c.corps ? `<div class="prose">${c.corps.split('\n\n').map((p) => `<p>${esc(p)}</p>`).join('')}</div>` : ''}
   ${blocResultats}
+  ${blocConclusions(c.conclusions)}
   <p class="retour"><a href="/vie-locale/consultations.html">${icone('fleche')}<span>Toutes les consultations</span></a></p>
 </div>`;
 
@@ -853,8 +1494,40 @@ function ligneContact(c) {
   if (c.telephone) bits.push(`<li>${icone('telephone', 'icone--mini')}<a href="tel:${esc(c.telephone.replace(/[^0-9+]/g, ''))}">${esc(c.telephone)}</a></li>`);
   if (c.email) bits.push(`<li>${icone('courriel', 'icone--mini')}<a href="mailto:${esc(c.email)}">${esc(c.email)}</a></li>`);
   if (c.site) bits.push(`<li>${icone('externe', 'icone--mini')}${lien(c.site, esc(c.site.replace(/^https?:\/\//, '').replace(/\/$/, '')))}</li>`);
+  for (const l of c.liens || []) bits.push(`<li>${icone('externe', 'icone--mini')}${lien(l.url, esc(l.libelle))}</li>`);
   if (c.horaires) bits.push(`<li>${icone('horloge', 'icone--mini')}<span>${esc(c.horaires)}</span></li>`);
   return bits.length ? `<ul class="contact-liste">${bits.join('')}</ul>` : '';
+}
+
+export function pageAssociations(ctx) {
+  const { site, nav, annuaire } = ctx;
+  const contenu = `<div class="conteneur">
+  ${banniereMuette(ctx, 'village', `Le village de ${site.commune.nom}.`)}
+  <header class="page-entete">
+    <h1>Les associations de ${esc(site.commune.nom)}</h1>
+    <p class="page-entete__intro">Les associations qui font vivre ${esc(site.commune.nom)}.</p>
+  </header>
+  <ul class="grille-cartes grille-cartes--large">
+    ${(annuaire.associations || []).map((a) => `<li class="carte">
+      <h2 class="carte__titre">${esc(a.nom)}</h2>
+      ${a.resume ? `<p class="carte__resume">${esc(a.resume)}</p>` : ''}
+      ${a.detail ? `<p class="carte__detail">${esc(a.detail)}</p>` : ''}
+      ${a.cotisation ? `<p class="carte__detail"><strong>Cotisation :</strong> ${esc(a.cotisation)}</p>` : ''}
+      ${ligneContact(a)}
+    </li>`).join('')}
+  </ul>
+  <aside class="encadre">
+    <h2>Créer une association, demander une subvention</h2>
+    <p>La commune accompagne les associations du village : mise à disposition de salles, relais dans le bulletin municipal, subventions votées en conseil municipal.</p>
+    <p><a class="bouton bouton--secondaire" href="/demarches/association.html">${icone('fleche')}<span>La démarche pas à pas</span></a></p>
+  </aside>
+</div>`;
+  return page({
+    site, nav, actif: 'vie-locale', titre: 'Associations',
+    description: `Les associations de ${site.commune.nom}.`,
+    fil: [{ libelle: 'Accueil', url: '/' }, { libelle: 'Vie locale', url: '/vie-locale/' }, { libelle: 'Associations' }],
+    contenu
+  });
 }
 
 // Nom des voies principales, seulement là où la carte n'est pas trop dense
@@ -966,7 +1639,7 @@ function carteActeurs(ctx) {
   const routesSvg = routes.map((r) => `<polyline points="${r.points.map((p) => proj(p).join(',')).join(' ')}"/>`).join('');
   const riviereSvg = (riviere || []).map((r) => `<polyline points="${r.map((p) => proj(p).join(',')).join(' ')}"/>`).join('');
 
-  const [mx, my] = proj([site.commune.longitude, site.commune.latitude]);
+  const [mx, my] = proj([site.mairie.longitude, site.mairie.latitude]);
   const mairieSvg = `<circle cx="${mx}" cy="${my}" r="8" class="carte-lecques__mairie-halo"/><circle cx="${mx}" cy="${my}" r="3.5" class="carte-lecques__mairie-point"/>`;
 
   const marqueurs = points.map((ent) => {
@@ -1061,50 +1734,182 @@ export function pageCarteActeurs(ctx) {
   });
 }
 
-export function pageProfessionnels(ctx) {
-  const { site, nav, annuaire, entreprises } = ctx;
-  const professionnels = (annuaire.professionnels || []);
-  const contenu = `<div class="conteneur">
-  ${banniereMuette(ctx, 'village', `Le village de ${site.commune.nom}.`)}
-  <header class="page-entete">
-    <h1>Acteurs économiques</h1>
-    <p class="page-entete__intro">Les professionnels installés à ${esc(site.commune.nom)} sont à votre écoute.</p>
-  </header>
-  ${professionnels.length ? `<ul class="grille-cartes grille-cartes--large">
-    ${professionnels.map((p) => `<li class="carte">
-      <p class="carte__meta"><span class="etiquette">${esc(p.activite)}</span></p>
-      <h2 class="carte__titre">${esc(p.nom)}</h2>
-      ${p.enseigne ? `<p class="carte__enseigne">${esc(p.enseigne)}</p>` : ''}
-      ${p.note ? `<p class="carte__detail">${esc(p.note)}</p>` : ''}
-      ${ligneContact(p)}
-    </li>`).join('')}
-  </ul>` : ''}
-  <aside class="encadre">
-    <h2>Vous êtes professionnel à ${esc(site.commune.nom)}&nbsp;?</h2>
-    <p>Signalez-vous au secrétariat de mairie pour figurer dans cet annuaire et dans le bulletin municipal. La présence dans l'annuaire est gratuite.</p>
-    <p><a class="bouton bouton--secondaire" href="mailto:${esc(site.mairie.email)}?subject=Inscription%20%C3%A0%20l%27annuaire%20des%20professionnels">${icone('courriel')}<span>Me faire connaître</span></a></p>
-  </aside>
-
-  ${entreprises && entreprises.entreprises && entreprises.entreprises.length ? `<section class="section section--sirene">
-    <h2>Annuaire officiel Sirene des activités économiques</h2>
-    <p class="page-entete__intro">Cette liste complémentaire est générée automatiquement à partir du répertoire Sirene de l'Insee (base officielle des entreprises, auto-entrepreneurs et associations).${professionnels.length ? ' Contrairement à la liste ci-dessus, elle' : ' Elle'} n'est pas relue à la main : elle recense les établissements actifs déclarés à ${esc(site.commune.nom)}, mais certaines adresses ne sont pas rendues publiques par leurs titulaires, et une activité récente peut ne pas encore y figurer.${entreprises.misAJour ? `<br>Dernière mise à jour&nbsp;: ${dateFr(entreprises.misAJour)}.` : ''}</p>
-    <p><a class="bouton bouton--secondaire" href="/vie-locale/carte-acteurs-economiques.html">${icone('carte')}<span>Cartographie des acteurs économiques</span></a></p>
-    <ul class="liste-entreprises">
-      ${entreprises.entreprises.map((ent) => `<li class="ligne-entreprise">
+const ligneEntreprise = (ent) => `<li class="ligne-entreprise">
         ${icone(ent.icone, 'icone--mini')}
         <span class="ligne-entreprise__corps">
           <span class="ligne-entreprise__nom">${lien(`https://annuaire-entreprises.data.gouv.fr/entreprise/${esc(ent.siren)}`, esc(ent.nom))}${ent.enseigne ? ` <span class="ligne-entreprise__enseigne">— ${esc(ent.enseigne)}</span>` : ''}</span>
           <span class="ligne-entreprise__meta">${ent.association ? 'Association' : esc(ent.nafLibelle || '')} · ${esc(ent.adresse)}${ent.dateCreation ? ` · créé le ${dateFr(ent.dateCreation)}` : ''}</span>
         </span>
-      </li>`).join('')}
-    </ul>
+      </li>`;
+
+// Annuaire Sirene regroupé par section NAF (src/naf.mjs), précédé d'un
+// filtre qui ne propose que les sections comptant au moins un
+// établissement. Sans JavaScript, chaque pastille mène à son groupe ; avec,
+// src/scripts/filtre-naf.js n'affiche plus que la section choisie (et la
+// garde dans l'adresse de la page, #naf-f).
+function annuaireSireneParSection(etablissements) {
+  const groupes = grouperParSectionNaf(etablissements);
+  const ancre = (s) => (s.lettre ? `naf-${s.lettre.toLowerCase()}` : 'naf-autre');
+  const pluriel = (n) => `${n} établissement${n > 1 ? 's' : ''}`;
+  // Chaque morceau de la pastille est un élément de la boîte flexible : les
+  // compléments .sr-only (« , section A, », « établissements ») donnent aux
+  // lecteurs d'écran une phrase complète que les espaces seuls ne donnent pas.
+  const nombrePastille = (n) => `<span class="filtre-naf__nombre">${n}<span class="sr-only"> établissement${n > 1 ? 's' : ''}</span></span>`;
+  return `<nav class="filtre-naf" aria-labelledby="filtre-naf-titre" data-filtre-naf>
+      <p class="filtre-naf__titre" id="filtre-naf-titre">Filtrer par secteur d'activité (section NAF de l'Insee)</p>
+      <ul class="filtre-naf__liste">
+        <li><a href="#annuaire-sirene" data-section="" data-libelle="Tous les secteurs" data-nombre="${etablissements.length}" aria-current="true"><span>Tous<span class="sr-only"> les secteurs, </span></span>${nombrePastille(etablissements.length)}</a></li>
+        ${groupes.map(({ section: s, etablissements: liste }) => `<li><a href="#${ancre(s)}" data-section="${ancre(s)}" data-libelle="${esc(s.lettre ? `Section ${s.lettre} — ${s.titre}` : s.titre)}" data-nombre="${liste.length}">${s.lettre ? `<span class="filtre-naf__lettre" aria-hidden="true">${s.lettre}</span>` : ''}<span>${esc(s.court)}${s.lettre ? `<span class="sr-only">, section ${s.lettre}, </span>` : ', '}</span>${nombrePastille(liste.length)}</a></li>`).join('')}
+      </ul>
+      <p class="filtre-naf__statut" role="status" aria-live="polite" data-statut></p>
+    </nav>
+    <div id="annuaire-sirene">
+      ${groupes.map(({ section: s, etablissements: liste }) => `<section class="groupe-naf" id="${ancre(s)}" aria-labelledby="${ancre(s)}-titre" data-groupe-naf>
+        <h3 class="groupe-naf__titre" id="${ancre(s)}-titre">${s.lettre ? `Section ${s.lettre} — ` : ''}${esc(s.titre)} <span class="groupe-naf__nombre">(${pluriel(liste.length)})</span></h3>
+        <ul class="liste-entreprises">
+          ${liste.map(ligneEntreprise).join('')}
+        </ul>
+      </section>`).join('')}
+    </div>
+    <script src="/assets/filtre-naf.js" defer></script>`;
+}
+
+// L'annuaire officiel Sirene d'abord (toutes les activités déclarées à
+// la commune, à jour sans entretien), puis les quelques activités que la
+// mairie présente plus en détail (content/annuaire.json → professionnels).
+export function pageProfessionnels(ctx) {
+  const { site, nav, annuaire, entreprises } = ctx;
+  const avecSirene = !!(entreprises && entreprises.entreprises && entreprises.entreprises.length);
+  const detail = annuaire.professionnels || [];
+  const avecDetail = detail.length > 0;
+  const contenu = `<div class="conteneur">
+  ${banniereMuette(ctx, 'village', `Le village de ${site.commune.nom}.`)}
+  <header class="page-entete">
+    <h1>Acteurs économiques</h1>
+    <p class="page-entete__intro">${avecSirene
+      ? `Toutes les activités déclarées à ${site.commune.nom}, d'après le répertoire officiel Sirene${avecDetail ? ', puis quelques-unes présentées plus en détail' : ''}.`
+      : `Les professionnels installés à ${site.commune.nom} et à proximité sont à votre écoute.`}</p>
+  </header>
+
+  ${avecSirene ? `<section class="section section--sirene">
+    <h2>Annuaire officiel Sirene des activités économiques</h2>
+    <p class="page-entete__intro">Cette liste est générée automatiquement à partir du répertoire Sirene de l'Insee (base officielle des entreprises, auto-entrepreneurs et associations). Elle n'est pas relue à la main : elle recense les établissements actifs déclarés à ${esc(site.commune.nom)}, mais certaines adresses ne sont pas rendues publiques par leurs titulaires, et une activité récente peut ne pas encore y figurer. ${avecDetail ? ' Quelques activités sont présentées plus en détail <a href="#quelques-activites">plus bas</a>.' : ''}${entreprises.misAJour ? `<br>Dernière modification constatée&nbsp;: ${dateFr(entreprises.misAJour)}.` : ''}</p>
+    <p><a class="bouton bouton--secondaire" href="/vie-locale/carte-acteurs-economiques.html">${icone('carte')}<span>Cartographie des acteurs économiques</span></a></p>
+    ${annuaireSireneParSection(entreprises.entreprises)}
     <p class="carte__detail">Une erreur, une fermeture, une activité manquante&nbsp;? <a href="mailto:${esc(site.mairie.email)}?subject=Annuaire%20Sirene%20-%20correction">Signalez-le au secrétariat de mairie</a>.</p>
   </section>` : ''}
+
+  ${avecDetail ? `<section class="section section--activites" aria-labelledby="quelques-activites">
+    <h2 id="quelques-activites">Quelques activités présentes sur la commune</h2>
+    <ul class="grille-cartes grille-cartes--large">
+      ${detail.map((p) => `<li class="carte">
+        <p class="carte__meta"><span class="etiquette">${esc(p.activite)}</span></p>
+        <h3 class="carte__titre">${esc(p.nom)}</h3>
+        ${p.enseigne ? `<p class="carte__enseigne">${esc(p.enseigne)}</p>` : ''}
+        ${p.note ? `<p class="carte__detail">${esc(p.note)}</p>` : ''}
+        ${ligneContact(p)}
+      </li>`).join('')}
+    </ul>
+  </section>` : ''}
+  <aside class="encadre">
+    <h2>Vous êtes professionnel à ${esc(site.commune.nom)}&nbsp;?</h2>
+    <p>Signalez-vous au secrétariat de mairie pour figurer parmi les activités présentées en détail et dans le bulletin municipal. C'est gratuit.</p>
+    <p><a class="bouton bouton--secondaire" href="mailto:${esc(site.mairie.email)}?subject=Inscription%20%C3%A0%20l%27annuaire%20des%20professionnels">${icone('courriel')}<span>Me faire connaître</span></a></p>
+  </aside>
 </div>`;
   return page({
     site, nav, actif: 'vie-locale', titre: 'Acteurs économiques',
     description: `Annuaire des professionnels et commerçants de ${site.commune.nom}.`,
     fil: [{ libelle: 'Accueil', url: '/' }, { libelle: 'Vie locale', url: '/vie-locale/' }, { libelle: 'Acteurs économiques' }],
+    contenu
+  });
+}
+
+export function pagePetiteEnfance(ctx) {
+  const { site, nav, annuaire } = ctx;
+  const contenu = `<div class="conteneur conteneur--etroit">
+  ${banniereMuette(ctx, 'village', `Le village de ${site.commune.nom}.`)}
+  <header class="page-entete">
+    <h1>Petite enfance</h1>
+    <p class="page-entete__intro">Les modes d'accueil des tout-petits pour les familles de ${esc(site.commune.nom)} : relais petite enfance, assistantes maternelles et crèches.</p>
+  </header>
+  <ul class="grille-cartes">
+    ${(annuaire.petiteEnfance || []).map((c) => `<li class="carte">
+      <p class="carte__meta"><span class="etiquette">${esc(c.type)}</span></p>
+      <h2 class="carte__titre">${esc(c.nom)}</h2>
+      ${c.enseigne ? `<p class="carte__enseigne">${esc(c.enseigne)}</p>` : ''}
+      ${c.note ? `<p class="carte__detail">${esc(c.note)}</p>` : ''}
+      ${ligneContact(c)}
+    </li>`).join('')}
+  </ul>
+  <aside class="encadre">
+    <h2>Préinscription en crèche</h2>
+    <p>Les crèches du territoire sont gérées par ${esc((site.commune.intercommunalite || {}).nom || 'la communauté de communes')}. La préinscription se demande auprès de son service Petite enfance.</p>
+    <p><a class="bouton bouton--secondaire" href="/demarches/creche.html">${icone('fleche')}<span>La démarche pas à pas</span></a></p>
+  </aside>
+</div>`;
+  return page({
+    site, nav, actif: 'enfance-jeunesse', titre: 'Petite enfance',
+    description: `Modes d'accueil des tout-petits pour les familles de ${site.commune.nom} : relais petite enfance, assistantes maternelles et crèches.`,
+    fil: [{ libelle: 'Accueil', url: '/' }, { libelle: 'Enfance & jeunesse', url: '/enfance-jeunesse/' }, { libelle: 'Petite enfance' }],
+    contenu
+  });
+}
+
+export function pageEtablissements(ctx) {
+  const { site, nav, annuaire } = ctx;
+  const contenu = `<div class="conteneur conteneur--etroit">
+  ${banniereMuette(ctx, 'village', `Le village de ${site.commune.nom}.`)}
+  <header class="page-entete">
+    <h1>Collèges et lycées</h1>
+    <p class="page-entete__intro">Les établissements les plus proches pour les jeunes de ${esc(site.commune.nom)} après l'école primaire. Le collège de secteur dépend de l'adresse : renseignez-vous auprès de la mairie.</p>
+  </header>
+  <ul class="grille-cartes grille-cartes--large">
+    ${(annuaire.etablissementsScolaires || []).map((et) => `<li class="carte">
+      <p class="carte__meta"><span class="etiquette">${esc(et.type)}</span></p>
+      <h2 class="carte__titre">${esc(et.nom)}</h2>
+      ${et.note ? `<p class="carte__detail">${esc(et.note)}</p>` : ''}
+      ${ligneContact(et)}
+    </li>`).join('')}
+  </ul>
+  <aside class="encadre">
+    <h2>Transport scolaire</h2>
+    <p>Les circuits de transport scolaire sont organisés par la Région et ${esc((site.commune.intercommunalite || {}).nom || 'la communauté de communes')}. Les horaires sont disponibles en mairie et sur le site de la communauté de communes.</p>
+  </aside>
+</div>`;
+  return page({
+    site, nav, actif: 'enfance-jeunesse', titre: 'Collèges et lycées',
+    description: `Collèges et lycées les plus proches de ${site.commune.nom}.`,
+    fil: [{ libelle: 'Accueil', url: '/' }, { libelle: 'Enfance & jeunesse', url: '/enfance-jeunesse/' }, { libelle: 'Collèges et lycées' }],
+    contenu
+  });
+}
+
+export function pageLoisirsJeunesse(ctx) {
+  const { site, nav, annuaire } = ctx;
+  const contenu = `<div class="conteneur conteneur--etroit">
+  ${banniereMuette(ctx, 'village', `Le village de ${site.commune.nom}.`)}
+  <header class="page-entete">
+    <h1>Centres de loisirs</h1>
+    <p class="page-entete__intro">Les mercredis, les vacances et les activités qui rendent les enfants et les jeunes acteurs de leurs loisirs.</p>
+  </header>
+  <ul class="grille-cartes">
+    ${(annuaire.loisirsJeunesse || []).map((c) => `<li class="carte">
+      <h2 class="carte__titre">${esc(c.nom)}</h2>
+      ${c.note ? `<p class="carte__detail">${esc(c.note)}</p>` : ''}
+      ${ligneContact(c)}
+    </li>`).join('')}
+  </ul>
+  <aside class="encadre">
+    <h2>Inscrire mon enfant</h2>
+    <p>Les dossiers sont généralement valables pour l'année scolaire, et les places pour les vacances partent vite.</p>
+    <p><a class="bouton bouton--secondaire" href="/demarches/centre-loisirs.html">${icone('fleche')}<span>La démarche pas à pas</span></a></p>
+  </aside>
+</div>`;
+  return page({
+    site, nav, actif: 'enfance-jeunesse', titre: 'Centres de loisirs',
+    description: `Accueils de loisirs pour les enfants et les jeunes de ${site.commune.nom}.`,
+    fil: [{ libelle: 'Accueil', url: '/' }, { libelle: 'Enfance & jeunesse', url: '/enfance-jeunesse/' }, { libelle: 'Centres de loisirs' }],
     contenu
   });
 }
@@ -1180,6 +1985,7 @@ export function pageContact(ctx) {
 export function pageElus(ctx) {
   const { site, nav, elus, documents } = ctx;
   const documentsElus = (documents && documents.elus) || [];
+  const fil = [{ libelle: 'Accueil', url: '/' }, { libelle: 'La mairie', url: '/mairie/' }, { libelle: 'Les élus' }];
   const contenu = `<div class="conteneur conteneur--etroit">
   ${banniereMuette(ctx, 'mairie', `La mairie de ${site.commune.nom}.`)}
   <header class="page-entete">
@@ -1188,14 +1994,17 @@ export function pageElus(ctx) {
   </header>
   <section class="section" aria-labelledby="conseil-titre">
     <h2 id="conseil-titre">Le conseil municipal</h2>
-    <ul class="grille-cartes grille-cartes--compacte">
+    <ul class="grille-cartes grille-cartes--elus">
       ${elus.conseil.map((p) => `<li class="carte carte--elu">
-        <p class="carte__nom">${esc(p.prenom)} ${esc(p.nom)}</p>
-        <p class="carte__fonction">${esc(p.fonction)}</p>
+        ${p.photo ? `<img class="carte__portrait" src="/img/elus/${esc(p.photo)}" alt="" width="240" height="240" loading="lazy" decoding="async">` : ''}
+        <div>
+          <p class="carte__nom">${esc(p.prenom)} ${esc(p.nom)}</p>
+          <p class="carte__fonction">${esc(p.fonction)}</p>
+        </div>
       </li>`).join('')}
     </ul>
   </section>
-  ${blocDocuments(documentsElus)}
+  ${blocDocuments(ctx, { url: '/mairie/elus.html', actif: 'mairie', fil }, documentsElus)}
   <aside class="encadre">
     <h2>Rencontrer un élu</h2>
     <p>Le maire et ses adjoints reçoivent sur rendez-vous. Les séances du conseil municipal sont publiques et ouvertes à tous les habitants.</p>
@@ -1205,7 +2014,7 @@ export function pageElus(ctx) {
   return page({
     site, nav, actif: 'mairie', titre: 'Les élus',
     description: `Le conseil municipal de ${site.commune.nom} : le maire, les adjoints et les conseillers municipaux.`,
-    fil: [{ libelle: 'Accueil', url: '/' }, { libelle: 'La mairie', url: '/mairie/' }, { libelle: 'Les élus' }],
+    fil,
     contenu
   });
 }
@@ -1213,6 +2022,7 @@ export function pageElus(ctx) {
 export function pageCommissions(ctx) {
   const { site, nav, elus, documents } = ctx;
   const documentsCommissions = (documents && documents.commissions) || [];
+  const fil = [{ libelle: 'Accueil', url: '/' }, { libelle: 'La mairie', url: '/mairie/' }, { libelle: 'Commissions' }];
   const contenu = `<div class="conteneur conteneur--etroit">
   ${banniereMuette(ctx, 'mairie', `La mairie de ${site.commune.nom}.`)}
   <header class="page-entete">
@@ -1243,12 +2053,12 @@ export function pageCommissions(ctx) {
     </ul>
   </section>
 
-  ${blocDocuments(documentsCommissions)}
+  ${blocDocuments(ctx, { url: '/mairie/commissions.html', actif: 'mairie', fil }, documentsCommissions)}
 </div>`;
   return page({
     site, nav, actif: 'mairie', titre: 'Commissions',
     description: `Commissions municipales et représentations de la commune de ${site.commune.nom} dans les syndicats intercommunaux.`,
-    fil: [{ libelle: 'Accueil', url: '/' }, { libelle: 'La mairie', url: '/mairie/' }, { libelle: 'Commissions' }],
+    fil,
     contenu
   });
 }
@@ -1261,8 +2071,11 @@ export function pageConseils(ctx) {
     <h1>Conseils municipaux</h1>
     <p class="page-entete__intro">Les procès-verbaux des séances, du plus récent au plus ancien. Les séances sont publiques et ouvertes à tous les habitants : n'hésitez pas à venir y assister.</p>
   </header>
-  <div id="recherche-pv"></div>
-  ${conseils.length ? `<nav class="ancres" aria-label="Années">
+  ${conseils.length ? `<div id="recherche-pv" data-recherche-documents data-index="/recherche-pv.json"
+    data-libelle="Rechercher dans les PV des conseils municipaux" data-exemple="ex. budget, voirie, cimetière…"
+    data-singulier="compte-rendu" data-pluriel="comptes-rendus"
+    data-aucun="Essayez un autre mot, ou parcourez les séances année par année ci-dessous."></div>
+  <nav class="ancres" aria-label="Années">
     <ul>${conseils.map((a) => `<li><a href="#annee-${a.annee}">${a.annee}</a></li>`).join('')}</ul>
   </nav>` : `<section class="section" aria-labelledby="aucune-seance-titre">
     <h2 id="aucune-seance-titre">Aucune séance enregistrée pour le moment</h2>
@@ -1272,7 +2085,7 @@ export function pageConseils(ctx) {
     const docsAnnee = (documents && documents[`conseils/${a.annee}`]) || [];
     return `<section class="section section--annee" id="annee-${a.annee}" aria-labelledby="titre-${a.annee}">
     <h2 id="titre-${a.annee}">${a.annee}</h2>
-    <div class="tableau-defilant tableau-defilant--vertical" role="region" aria-labelledby="titre-${a.annee}" tabindex="0">
+    <div class="tableau-defilant" role="region" aria-labelledby="titre-${a.annee}" tabindex="0">
     <table class="tableau tableau--conseils">
       <caption class="sr-only">Séances du conseil municipal de ${esc(site.commune.nom)} en ${a.annee}</caption>
       <thead><tr><th scope="col">Date</th><th scope="col">Compte-rendu</th></tr></thead>
@@ -1280,9 +2093,11 @@ export function pageConseils(ctx) {
         ${a.seances.map((s) => {
           const local = docsAnnee.find((d) => d.date === s.date);
           const date = `<td>${dateFr(s.date)}</td>`;
-          if (local) return `<tr>${date}<td><a href="/documents/${esc(local.fichier)}" download>${icone('telecharger', 'icone--mini')}<span>${esc(s.libelle)}</span> <span class="poids">PDF</span></a></td></tr>`;
+          if (local) return `<tr>${date}<td><a href="${urlSeanceConseil(s.date)}">${icone('document', 'icone--mini')}<span>${esc(s.libelle)}</span> <span class="poids">${esc(formatEtPoids(local))}</span></a></td></tr>`;
           if (s.url) return `<tr>${date}<td>${lien(s.url, `${icone('telecharger', 'icone--mini')}<span>${esc(s.libelle)}</span>`)}</td></tr>`;
-          return `<tr class="indisponible">${date}<td>${icone('horloge', 'icone--mini')}<em>${esc(s.note || 'À paraître')}</em></td></tr>`;
+          // Sans note : séance récente dont le PV n'est pas encore publié.
+          // Avec note : PV absent pour une autre raison (lien d'origine erroné…).
+          return `<tr class="indisponible">${date}<td>${icone(s.note ? 'mairie' : 'horloge', 'icone--mini')}<em>${esc(s.note || 'À paraître')}</em></td></tr>`;
         }).join('')}
       </tbody>
     </table>
@@ -1299,10 +2114,521 @@ export function pageConseils(ctx) {
   });
 }
 
-// pageBudgets (Lecques) retirée de ce fork : elle affichait des montants
-// réels par section, qu'aucune source publique ne permet de reconstituer
-// pour une autre commune. À réécrire une fois que la mairie de Juvinas aura
-// fourni son budget détaillé (voir content/budgets.json).
+/** Séances dont le PV est déposé sur le site (catégorie "conseils/<année>"
+ *  de content/documents.json, rapprochée de content/conseils.json par la
+ *  date) : chacune a sa page, voir pageSeanceConseil. */
+export function seancesAvecPv(conseils, documents) {
+  return (conseils || []).flatMap((a) => {
+    const docs = (documents && documents[`conseils/${a.annee}`]) || [];
+    return a.seances
+      .map((s) => ({ annee: a.annee, seance: s, doc: docs.find((d) => d.date === s.date) }))
+      .filter((x) => x.doc);
+  });
+}
+
+/** Page d'une séance : sa date, unique comme la séance elle-même. */
+export function urlSeanceConseil(date) {
+  return `/mairie/conseils-municipaux/seance-${date}.html`;
+}
+
+// Page d'une séance du conseil municipal : le PV affiché dans le site, comme
+// un document de la bibliothèque (voir pageDocument). Le lien direct vers le
+// PDF, qui le téléchargeait, laissait l'habitant sur téléphone dans une
+// visionneuse sans retour possible au site.
+export function pageSeanceConseil(ctx, s, d, annee) {
+  return pageDocument(ctx, {
+    d, titre: s.libelle, titrePage: `Conseil municipal — ${s.libelle}`,
+    meta: '<span class="etiquette">Procès-verbal</span>',
+    retour: { url: `/mairie/conseils-municipaux.html#annee-${annee}`, bouton: 'Retour aux conseils municipaux', lien: 'Toutes les séances du conseil municipal' },
+    description: `Procès-verbal du conseil municipal de ${ctx.site.commune.nom} — ${s.libelle} (${formatEtPoids(d)}).`,
+    fil: [{ libelle: 'Accueil', url: '/' }, { libelle: 'La mairie', url: '/mairie/' },
+      { libelle: 'Conseils municipaux', url: '/mairie/conseils-municipaux.html' }, { libelle: s.libelle }]
+  });
+}
+
+/** Documents de la bibliothèque documentaire communale, regroupés par année
+ *  (clés "bibliotheque/<année>" de content/documents.json, voir CLAUDE.md
+ *  « Ajouter un document »), années et documents du plus récent au plus
+ *  ancien. */
+export function anneesBibliotheque(documents) {
+  return Object.entries(documents || {})
+    .filter(([categorie, docs]) => /^bibliotheque\/\d{4}$/.test(categorie) && docs.length)
+    .map(([categorie, docs]) => ({
+      annee: Number(categorie.slice('bibliotheque/'.length)),
+      docs: [...docs].sort((a, b) => (b.date || '').localeCompare(a.date || '') || a.libelle.localeCompare(b.libelle, 'fr'))
+    }))
+    .sort((a, b) => b.annee - a.annee);
+}
+
+/** Page d'un document de la bibliothèque : le nom du fichier, sans point
+ *  (« ruisseau-capotier.mp4 » → « ruisseau-capotier-mp4 ») — unique, comme
+ *  le fichier lui-même dans public/documents/, et sans extension trompeuse
+ *  pour Cloudflare ou Apache, qui servent les pages sans « .html ». */
+export function urlDocumentBibliotheque(d) {
+  return `/mairie/bibliotheque-documentaire/${String(d.fichier).replace(/\./g, '-').toLowerCase()}.html`;
+}
+
+// « PDF, 1,2 Mo », « Vidéo MP4, 14 Mo » : ce qu'est le fichier et ce qu'il
+// pèse, annoncés avant de l'ouvrir (d.octets posé par src/build.mjs).
+function formatEtPoids(d) {
+  const format = formatBibliotheque(d.fichier);
+  const libelle = format ? format.libelle : 'Fichier';
+  return d.octets ? `${libelle}, ${poidsFichier(d.octets)}` : libelle;
+}
+
+// « 350 Ko », « 10,6 Mo ». Espace insécable : le nombre ne se sépare
+// jamais de son unité.
+function poidsFichier(octets) {
+  return octets < 1024 * 1024
+    ? `${Math.max(1, Math.round(octets / 1024))}\u00a0Ko`
+    : `${(octets / (1024 * 1024)).toLocaleString('fr-FR', { maximumFractionDigits: 1 })}\u00a0Mo`;
+}
+
+// Même présentation que les conseils municipaux (une section par année, et
+// la recherche dans le texte des PDF de recherche-pv.js), plus les thèmes de
+// chaque document, repris des catégories des actualités.
+export function pageBibliothequeDocumentaire(ctx) {
+  const { site, nav, documents, categoriesActualites } = ctx;
+  const annees = anneesBibliotheque(documents);
+  // Thèmes proposés par le filtre de la recherche : seulement ceux qui ont
+  // au moins un document (un thème vide ne donnerait jamais de résultat),
+  // dans l'ordre de content/categories-actualites.json.
+  const themesUtilises = new Set(annees.flatMap((a) => a.docs.flatMap((d) => d.themes || [])));
+  const themesFiltre = [
+    ...(categoriesActualites || []).filter((t) => themesUtilises.has(t)),
+    ...[...themesUtilises].filter((t) => !(categoriesActualites || []).includes(t)).sort((a, b) => a.localeCompare(b, 'fr'))
+  ];
+  const contenu = `<div class="conteneur conteneur--etroit">
+  ${banniereMuette(ctx, 'mairie', `La mairie de ${site.commune.nom}.`)}
+  <header class="page-entete">
+    <h1>Bibliothèque documentaire communale</h1>
+    <p class="page-entete__intro">Les documents publiés par la commune, classés par année, du plus récent au plus ancien : rapports, études, plans, arrêtés, photos, enregistrements et autres documents de référence. Tous s'ouvrent directement dans votre navigateur.</p>
+  </header>
+  ${annees.length ? `<div id="recherche-bibliotheque" data-recherche-documents data-index="/recherche-bibliotheque.json"
+    data-libelle="Rechercher dans la bibliothèque documentaire" data-exemple="ex. sécheresse, voirie, école…"
+    data-singulier="document" data-pluriel="documents"
+    data-aucun="Essayez un autre mot ou un autre thème, ou parcourez les documents année par année ci-dessous."
+    data-themes="${esc(JSON.stringify(themesFiltre))}"></div>
+  <nav class="ancres" aria-label="Années">
+    <ul>${annees.map((a) => `<li><a href="#annee-${a.annee}">${a.annee}</a></li>`).join('')}</ul>
+  </nav>
+  ${annees.map((a) => `<section class="section section--annee" id="annee-${a.annee}" aria-labelledby="titre-${a.annee}">
+    <h2 id="titre-${a.annee}">${a.annee}</h2>
+    <div class="tableau-defilant" role="region" aria-labelledby="titre-${a.annee}" tabindex="0">
+    <table class="tableau tableau--conseils tableau--bibliotheque">
+      <caption class="sr-only">Documents de la bibliothèque documentaire communale en ${a.annee}</caption>
+      <thead><tr><th scope="col">Date</th><th scope="col">Document</th><th scope="col">Thèmes</th></tr></thead>
+      <tbody>
+        ${a.docs.map((d) => `<tr>
+          <td>${d.date ? dateFr(d.date) : ''}</td>
+          <td><a href="${urlDocumentBibliotheque(d)}">${icone('document', 'icone--mini')}<span>${esc(d.libelle)}</span> <span class="poids">${esc(formatEtPoids(d))}</span></a></td>
+          <td>${(d.themes || []).map((t) => `<span class="etiquette">${esc(t)}</span>`).join(' ')}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+    </div>
+  </section>`).join('')}
+</div>
+<script src="/assets/recherche-pv.js" defer></script>` : `<section class="section" aria-labelledby="titre-vide">
+    <h2 id="titre-vide">Aucun document pour le moment</h2>
+    <p>Les documents de la commune apparaîtront ici, classés par année, dès leur publication.</p>
+  </section>
+</div>`}`;
+  return page({
+    site, nav, actif: 'mairie', titre: 'Bibliothèque documentaire communale',
+    description: `Les documents publiés par la commune de ${site.commune.nom}, classés par année et par thème, avec une recherche dans leur texte.`,
+    fil: [{ libelle: 'Accueil', url: '/' }, { libelle: 'La mairie', url: '/mairie/' }, { libelle: 'Bibliothèque documentaire communale' }],
+    contenu
+  });
+}
+
+// Page d'un document de la bibliothèque. "texte" : contenu d'un .txt, lu au
+// build (voir src/build.mjs), affiché tel quel.
+export function pageDocumentBibliotheque(ctx, d, annee, texte) {
+  return pageDocument(ctx, {
+    d, texte, titre: d.libelle,
+    meta: `${(d.themes || []).map((t) => `<span class="etiquette">${esc(t)}</span>`).join(' ')}${d.date ? ` <span>${dateFr(d.date)}</span>` : ''}`,
+    retour: { url: `/mairie/bibliotheque-documentaire.html#annee-${annee}`, bouton: 'Retour à la bibliothèque', lien: 'Toute la bibliothèque documentaire' },
+    description: `${d.libelle} — Bibliothèque documentaire communale de ${ctx.site.commune.nom} (${formatEtPoids(d)}).`,
+    fil: [{ libelle: 'Accueil', url: '/' }, { libelle: 'La mairie', url: '/mairie/' },
+      { libelle: 'Bibliothèque documentaire communale', url: '/mairie/bibliotheque-documentaire.html' }, { libelle: d.libelle }]
+  });
+}
+
+// Un document affiché dans le site, avec l'en-tête, le menu et un retour à
+// la liste d'où l'on vient. Ouvert seul, un PDF, une image ou une vidéo
+// occupe tout l'écran sans aucun moyen de revenir au site — surtout sur
+// téléphone (même constat que pour les photos des actualités, voir
+// src/scripts/photo.js). "meta" : HTML déjà échappé, au-dessus du titre.
+function pageDocument(ctx, { d, texte = null, titre, titrePage = titre, actif = 'mairie', meta, retour, description, fil }) {
+  const { site, nav } = ctx;
+  const format = formatBibliotheque(d.fichier);
+  const type = format ? format.type : '';
+  const src = `/documents/${esc(d.fichier)}`;
+  const libelle = esc(titre);
+  const ouvrir = (texteLien) => `<a href="${src}" target="_blank" rel="noopener">${texteLien}</a>`;
+  let vue;
+  if (type.startsWith('image/')) {
+    vue = `<img class="document__image" src="${src}" alt="${libelle}">`;
+  } else if (type.startsWith('video/')) {
+    vue = `<video class="document__video" src="${src}" controls preload="metadata">
+      <p>Ce navigateur ne lit pas cette vidéo dans la page : ${ouvrir('ouvrez-la dans un nouvel onglet')}.</p>
+    </video>`;
+  } else if (type.startsWith('audio/')) {
+    vue = `<audio class="document__audio" src="${src}" controls preload="metadata">
+      <p>Ce navigateur ne lit pas cet enregistrement dans la page : ${ouvrir('ouvrez-le dans un nouvel onglet')}.</p>
+    </audio>`;
+  } else if (type === 'text/plain' && texte != null) {
+    vue = `<pre class="document__texte" tabindex="0">${esc(texte)}</pre>`;
+  } else if (type === 'application/pdf') {
+    // Les navigateurs d'ordinateur affichent le PDF dans la page ; ceux qui
+    // ne savent pas (Chrome sur Android) montrent le paragraphe de repli.
+    vue = `<object class="document__pdf" data="${src}" type="application/pdf" aria-label="${libelle}">
+      <p>Ce navigateur n'affiche pas le PDF dans la page : ${ouvrir('ouvrez-le dans un nouvel onglet')} ou téléchargez-le avec le bouton ci-dessus.</p>
+    </object>`;
+  } else {
+    vue = `<p>${ouvrir('Ouvrir le document dans un nouvel onglet')}.</p>`;
+  }
+  const contenu = `<div class="conteneur conteneur--etroit">
+  <article class="article document">
+    <header class="page-entete">
+      ${meta ? `<p class="carte__meta">${meta}</p>` : ''}
+      <h1>${libelle}</h1>
+    </header>
+    <p class="document__actions">
+      <a class="bouton bouton--secondaire" href="${retour.url}">${icone('fleche', 'icone--retour')}<span>${esc(retour.bouton)}</span></a>
+      <a class="bouton bouton--secondaire" href="${src}" target="_blank" rel="noopener">${icone('externe')}<span>Ouvrir dans un nouvel onglet</span></a>
+      <a class="bouton bouton--fantome" href="${src}" download>${icone('telecharger')}<span>Télécharger <span class="poids">(${esc(formatEtPoids(d))})</span></span></a>
+    </p>
+    <h2 class="sr-only">Le document</h2>
+    <div class="document__vue">${vue}</div>
+    <p class="retour"><a href="${retour.url}">${icone('fleche', 'icone--retour')}<span>${esc(retour.lien)}</span></a></p>
+  </article>
+</div>`;
+  return page({ site, nav, actif, titre: titrePage, description, fil, contenu });
+}
+
+// Parts entières qui totalisent exactement 100 (méthode du plus fort reste) :
+// arrondir chaque part séparément donnerait parfois 99 ou 101 €.
+function surCent(montants) {
+  const total = montants.reduce((n, m) => n + m, 0) || 1;
+  const exactes = montants.map((m) => (m * 100) / total);
+  const parts = exactes.map(Math.floor);
+  const ordre = exactes.map((x, i) => [x - Math.floor(x), i]).sort((a, b) => b[0] - a[0]);
+  for (let k = 0; k < 100 - parts.reduce((n, x) => n + x, 0); k++) parts[ordre[k][1]]++;
+  return parts;
+}
+
+// « Les comptes en clair » (content/finances.json, relu chaque semaine
+// depuis l'OFGL par .github/workflows/donnees-publiques.yml) : le réalisé
+// de l'exercice, en complément du budget voté saisi par la mairie.
+function blocComptes(ctx) {
+  const f = ctx.finances;
+  if (!f) return '';
+  const euros0 = (n) => `${n.toLocaleString('fr-FR')} €`;
+  const repartition = (titre, id, bloc) => {
+    const parts = surCent(bloc.postes.map((p) => p.montant));
+    return `<div class="comptes__bloc">
+      <h3 id="${id}">${titre}</h3>
+      <ul class="repartition" aria-labelledby="${id}">
+        ${bloc.postes.map((p, i) => `<li>
+          <span class="repartition__libelle">${esc(p.libelle)}</span>
+          <span class="repartition__part">${parts[i]} €</span>
+          <span class="repartition__piste" aria-hidden="true"><span class="repartition__valeur" style="inline-size:${parts[i]}%"></span></span>
+        </li>`).join('')}
+      </ul>
+      <p class="note-source">Sur un total de ${euros0(bloc.total)} en ${f.exercice}.</p>
+    </div>`;
+  };
+  const strate = f.strate && f.strate.libelle;
+  return `<section class="section" aria-labelledby="comptes-titre">
+    <h2 id="comptes-titre">Les comptes ${f.exercice} en clair</h2>
+    <p>Ce que la commune a réellement dépensé et encaissé pour son fonctionnement courant en ${f.exercice}, d'après les comptes publiés par l'État.</p>
+    <div class="comptes">
+      ${repartition('Sur 100 € dépensés', 'comptes-depenses', f.depenses)}
+      ${repartition('Sur 100 € encaissés', 'comptes-recettes', f.recettes)}
+    </div>
+    ${strate ? `<h3 class="comptes__titre" id="comparaison-titre">${esc(ctx.site.commune.nom)} et les communes de sa taille</h3>
+    <div class="tableau-defilant" role="region" aria-labelledby="comparaison-titre" tabindex="0">
+    <table class="tableau">
+      <caption class="sr-only">Montants par habitant en ${f.exercice} : ${esc(ctx.site.commune.nom)} comparée à la moyenne des communes de ${esc(strate)}</caption>
+      <thead><tr><th scope="col">Par habitant, en ${f.exercice}</th><th scope="col">${esc(ctx.site.commune.nom)}</th><th scope="col">Communes de ${esc(strate)}</th></tr></thead>
+      <tbody>
+        ${f.comparaisons.map((c) => `<tr><th scope="row">${esc(c.libelle)}</th><td>${euros0(c.commune)}</td><td>${c.strate == null ? '—' : euros0(c.strate)}</td></tr>`).join('')}
+      </tbody>
+    </table>
+    </div>
+    <p class="note-source">Moyenne calculée sur ${f.strate.nombreCommunes ? `${f.strate.nombreCommunes.toLocaleString('fr-FR')} communes` : 'les communes'} de ${esc(strate)} dont les comptes ${f.exercice} sont publiés. Les dépenses d'équipement varient beaucoup d'une année à l'autre, au rythme des chantiers.</p>` : ''}
+    ${f.historique && f.historique.length > 1 ? `<details class="comptes__historique">
+      <summary>Évolution depuis ${f.historique[0].exercice}</summary>
+      <div class="tableau-defilant" role="region" aria-label="Évolution des comptes depuis ${f.historique[0].exercice}" tabindex="0">
+      <table class="tableau">
+        <caption class="sr-only">Dépenses d'équipement, dette restant due et épargne brute de la commune, par année</caption>
+        <thead><tr><th scope="col">Année</th><th scope="col">Dépenses d'équipement</th><th scope="col">Dette restant due</th><th scope="col">Épargne brute</th></tr></thead>
+        <tbody>${f.historique.slice().reverse().map((h) => `<tr><th scope="row">${h.exercice}</th><td>${euros0(h.equipement)}</td><td>${euros0(h.dette)}</td><td>${euros0(h.epargne)}</td></tr>`).join('')}</tbody>
+      </table>
+      </div>
+    </details>` : ''}
+    <p class="note-source">Source : ${lien('https://data.ofgl.fr/explore/dataset/ofgl-base-communes/', 'comptes des communes publiés par l’OFGL')}, d'après les comptes de gestion de la DGFiP (budget principal). Chiffres relus automatiquement chaque semaine — dernière vérification le ${dateFr(f.misAJour)}.</p>
+  </section>`;
+}
+
+export function pageBudgets(ctx) {
+  const { site, nav, budgets, documents } = ctx;
+  const documentsBudgets = (documents && documents.budgets) || [];
+  const fil = [{ libelle: 'Accueil', url: '/' }, { libelle: 'La mairie', url: '/mairie/' }, { libelle: 'Budgets' }];
+  const euros = (n) => n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+  // Le budget détaillé (sections, commentaire, projets) est saisi à la main
+  // par la mairie : tant qu'elle ne l'a pas transmis, la page ne montre que
+  // les comptes publics (OFGL) et les documents déposés — jamais de montant
+  // reconstitué ou inventé.
+  const detaille = Array.isArray(budgets.sections) && budgets.sections.length > 0;
+  const max = detaille ? Math.max(...budgets.sections.map((s) => s.montant)) : 0;
+  const titreBudget = detaille ? `Budget ${budgets.annee}` : 'Budgets et comptes';
+  const contenu = `<div class="conteneur conteneur--etroit">
+  ${banniereMuette(ctx, 'mairie', `La mairie de ${site.commune.nom}.`)}
+  <header class="page-entete">
+    <h1>${titreBudget}</h1>
+    <p class="page-entete__intro">${detaille
+      ? `Voté le ${dateFr(budgets.voteLe)}, pour un total de ${euros(budgets.total)}.`
+      : `Les comptes de la commune de ${esc(site.commune.nom)} en clair, et les documents budgétaires publiés par la mairie.`}</p>
+  </header>
+
+  ${detaille ? `<section class="section" aria-labelledby="sections-titre">
+    <h2 id="sections-titre">Répartition</h2>
+    <div class="tableau-defilant" role="region" aria-labelledby="sections-titre" tabindex="0">
+    <table class="tableau">
+      <caption class="sr-only">Budget ${budgets.annee} de la commune de ${esc(site.commune.nom)}, par section, comparé à l'exercice précédent</caption>
+      <thead><tr><th scope="col">Section</th><th scope="col">Montant ${budgets.annee}</th><th scope="col">Exercice précédent</th></tr></thead>
+      <tbody>
+        ${budgets.sections.map((s) => `<tr>
+          <th scope="row">${esc(s.nom)}</th>
+          <td>${euros(s.montant)}</td>
+          <td>${euros(s.montantPrecedent)}</td>
+        </tr>`).join('')}
+      </tbody>
+      <tfoot><tr><th scope="row">Total</th><td>${euros(budgets.total)}</td><td></td></tr></tfoot>
+    </table>
+    </div>
+    <ul class="barres" aria-hidden="true">
+      ${budgets.sections.map((s) => `<li><span class="barres__label">${esc(s.nom)}</span><span class="barres__piste"><span class="barres__valeur" style="inline-size:${Math.round((s.montant / max) * 100)}%"></span></span></li>`).join('')}
+    </ul>
+  </section>` : ''}
+
+  ${detaille && budgets.commentaire ? `<section class="section prose" aria-labelledby="commentaire-titre">
+    <h2 id="commentaire-titre">Ce qu'il faut retenir</h2>
+    ${budgets.commentaire.split('\n\n').map((p) => `<p>${esc(p)}</p>`).join('')}
+  </section>` : ''}
+
+  ${detaille && (budgets.projets || []).length ? `<section class="section" aria-labelledby="projets-titre">
+    <h2 id="projets-titre">Projets d'investissement</h2>
+    <ul class="liste-detail">
+      ${budgets.projets.map((p) => `<li><h3>${esc(p.titre)}</h3><p>${esc(p.detail)}</p></li>`).join('')}
+    </ul>
+  </section>` : ''}
+
+  ${blocComptes(ctx)}
+
+  <section class="documents" aria-labelledby="docs-budget">
+    <h2 id="docs-budget">Documents à consulter</h2>
+    ${documentsBudgets.length ? `<ul class="liste-documents">${documentsBudgets.map((d) => ligneDocument(ctx, { url: '/mairie/budgets.html', actif: 'mairie', fil, ancre: 'docs-budget' }, d)).join('')}</ul>` : ''}
+    <p class="pied__note">Le budget détaillé de l'exercice en cours est consultable en mairie aux heures d'ouverture.</p>
+  </section>
+</div>`;
+  return page({
+    site, nav, actif: 'mairie', titre: titreBudget,
+    description: detaille
+      ? `Le budget ${budgets.annee} de la commune de ${site.commune.nom} : fonctionnement, investissement et projets.`
+      : `Les comptes de la commune de ${site.commune.nom} en clair et les documents budgétaires.`,
+    fil,
+    contenu
+  });
+}
+
+/* --------------------------------------- Agenda, fiche pratique, hors ligne */
+
+const listeUrgences = (annuaire) => `<ul class="urgences">
+  ${annuaire.urgences.map((u) => `<li><a href="tel:${esc(u.numero)}"><strong>${esc(u.numero)}</strong> <span>${esc(u.libelle)}</span></a></li>`).join('')}
+</ul>`;
+
+const daeDeLaCommune = (ctx) => ((ctx.defibrillateurs && ctx.defibrillateurs.defibrillateurs) || []).filter((d) => d.dansLaCommune);
+
+// Les calendriers (src/calendrier.mjs, écrits par src/build.mjs dans
+// /calendriers/) : l'abonnement webcal:// fait relire le fichier par
+// l'agenda chaque jour, sans rien transmettre à la mairie. L'adresse est
+// rendue pour site.url, puis réécrite par src/scripts/outils.js pour le
+// domaine réellement consulté (utile sur le site de développement).
+export function pageCalendriers(ctx) {
+  const { site, nav, actualites } = ctx;
+  const hote = site.url.replace(/^https?:\/\//, '');
+  const aujourdhui = new Date().toISOString().slice(0, 10);
+  const aVenir = actualites
+    .filter((a) => a.dateDebut && (a.dateFin || a.dateDebut) >= aujourdhui)
+    .sort((a, b) => a.dateDebut.localeCompare(b.dateDebut));
+
+  const carte = ({ id, titre, resume, fichier, contenu }) => `<section class="carte carte--calendrier" aria-labelledby="cal-${id}">
+    <h2 id="cal-${id}">${titre}</h2>
+    <p>${resume}</p>
+    ${contenu}
+    <p class="calendrier__actions">
+      <a class="bouton bouton--principal" href="webcal://${esc(hote)}/calendriers/${fichier}" data-webcal="/calendriers/${fichier}">${icone('horloge')}<span>S'abonner<span class="sr-only"> au calendrier « ${titre} »</span></span></a>
+      <a class="bouton bouton--secondaire" href="/calendriers/${fichier}" download>${icone('telecharger')}<span>Télécharger<span class="sr-only"> le calendrier « ${titre} »</span></span></a>
+    </p>
+    <p class="note-source">Adresse à copier dans votre agenda : <code class="adresse-agenda" data-adresse="/calendriers/${fichier}">${esc(site.url)}/calendriers/${fichier}</code></p>
+  </section>`;
+
+  const contenu = `<div class="conteneur conteneur--etroit">
+  <header class="page-entete">
+    <h1>Les dates du village dans votre agenda</h1>
+    <p class="page-entete__intro">Abonnez votre téléphone ou votre ordinateur aux calendriers de la commune : les rendez-vous s'ajoutent à votre agenda et se mettent à jour tout seuls.</p>
+  </header>
+
+  <div class="calendriers">
+    ${carte({
+      id: 'reguliers', titre: 'Les rendez-vous réguliers', fichier: 'rendez-vous-reguliers.ics',
+      resume: 'Les services qui reviennent chaque semaine ou chaque mois.',
+      contenu: `<ul class="liste-rdv">${(site.rendezVousReguliers || []).map((r) => `<li><a href="${esc(r.url)}">${esc(r.titre)}</a> — ${esc(quandRendezVous(r.regle))}</li>`).join('')}</ul>`
+    })}
+    ${carte({
+      id: 'evenements', titre: 'Les événements du village', fichier: 'evenements.ics',
+      resume: 'Manifestations, réunions et rendez-vous annoncés dans les actualités de la commune.',
+      contenu: aVenir.length
+        ? `<ul class="liste-rdv">${aVenir.map((a) => `<li><a href="/vie-locale/actualites/${esc(a.id)}.html">${esc(a.titre)}</a> — ${periodeActu(a)}</li>`).join('')}</ul>`
+        : `<p>Aucun événement n'est annoncé pour le moment. Dès qu'une manifestation sera publiée dans les actualités, elle apparaîtra dans votre agenda.</p>`
+    })}
+  </div>
+
+  <section class="section prose" aria-labelledby="comment-titre">
+    <h2 id="comment-titre">Comment s'abonner&nbsp;?</h2>
+    <ul>
+      <li><strong>iPhone, iPad, Mac</strong> : touchez « S'abonner », puis confirmez.</li>
+      <li><strong>Android (Google Agenda)</strong> : copiez l'adresse du calendrier. Sur un ordinateur, ouvrez Google Agenda, choisissez « Autres agendas », puis « À partir de l'URL », et collez l'adresse. Il apparaît ensuite sur votre téléphone.</li>
+      <li><strong>Outlook</strong> : « Ajouter un calendrier », puis « S'abonner à partir du web », et collez l'adresse.</li>
+      <li><strong>Pour une seule fois</strong> : « Télécharger » ajoute les dates actuelles, sans mise à jour automatique.</li>
+    </ul>
+    <p>S'abonner ne transmet aucune information à la mairie : votre agenda relit simplement ce fichier de temps en temps. Chaque événement daté des actualités propose aussi un bouton « Ajouter à mon agenda ».</p>
+  </section>
+</div>`;
+
+  return page({
+    site, nav, actif: 'vie-locale', titre: 'Les dates dans votre agenda',
+    description: `Abonnez votre agenda aux rendez-vous réguliers et aux événements de la commune de ${site.commune.nom}.`,
+    fil: [{ libelle: 'Accueil', url: '/' }, { libelle: 'Vie locale', url: '/vie-locale/' }, { libelle: 'Les dates dans votre agenda' }],
+    contenu
+  });
+}
+
+// La « fiche frigo » : l'essentiel sur une page A4 à imprimer, entièrement
+// tirée de site.json, annuaire.json et defibrillateurs.json — rien à
+// maintenir à part. Mise en page d'impression : src/styles/impression.css.
+export function pageFichePratique(ctx) {
+  const { site, nav, annuaire } = ctx;
+  const m = site.mairie;
+  const dae = daeDeLaCommune(ctx);
+  const horaires = grouperHoraires(m.horaires)
+    .map((g) => `<li><span>${esc(joursTexte(g.jours))}</span><span>${esc(g.libelle)}</span></li>`).join('');
+
+  const contenu = `<div class="conteneur conteneur--etroit">
+  <header class="page-entete">
+    <h1>L'essentiel de ${esc(site.commune.nom)}</h1>
+    <p class="page-entete__intro">Les numéros et les rendez-vous utiles sur une seule page, à imprimer et à garder près du téléphone ou sur le réfrigérateur.</p>
+    <p><button type="button" class="bouton bouton--principal" data-imprimer hidden>${icone('document')}<span>Imprimer cette fiche</span></button></p>
+  </header>
+
+  <div class="fiche-pratique">
+    <section class="fiche-pratique__bloc fiche-pratique__bloc--urgence" aria-labelledby="fp-urgences">
+      <h2 id="fp-urgences">En cas d'urgence</h2>
+      ${listeUrgences(annuaire)}
+    </section>
+
+    <section class="fiche-pratique__bloc" aria-labelledby="fp-mairie">
+      <h2 id="fp-mairie">La mairie</h2>
+      <p>${esc(m.adresse)}, ${esc(m.codePostal)} ${esc(m.ville)}</p>
+      <p><a href="tel:${esc(m.telephoneLien)}"><strong>${esc(m.telephone)}</strong></a><br><a href="mailto:${esc(m.email)}">${esc(m.email)}</a></p>
+      <ul class="fiche-pratique__horaires">${horaires}</ul>
+    </section>
+
+    ${dae.length ? `<section class="fiche-pratique__bloc" aria-labelledby="fp-dae">
+      <h2 id="fp-dae">Défibrillateur</h2>
+      ${dae.map((d) => `<p><strong>${esc(d.adresse)}</strong><br>${texteDae(d)}</p>`).join('')}
+      <p class="note-source">Arrêt cardiaque : appelez le 15, massez, défibrillez.</p>
+    </section>` : ''}
+
+    <section class="fiche-pratique__bloc" aria-labelledby="fp-rdv">
+      <h2 id="fp-rdv">Rendez-vous réguliers</h2>
+      <ul class="fiche-pratique__liste">${(site.rendezVousReguliers || []).map((r) => `<li><strong>${esc(r.titre)}</strong> — ${esc(quandRendezVous(r.regle))}. ${esc(r.detail || '')}</li>`).join('')}</ul>
+    </section>
+
+    ${site.riviere && site.riviere.fichePratique ? `<section class="fiche-pratique__bloc" aria-labelledby="fp-crue">
+      <h2 id="fp-crue">${esc(site.riviere.fichePratique.titre)}</h2>
+      <p>${esc(site.riviere.fichePratique.texte)}</p>
+    </section>` : ''}
+
+    <section class="fiche-pratique__bloc" aria-labelledby="fp-site">
+      <h2 id="fp-site">Sur internet</h2>
+      <p><strong>${esc(site.url.replace(/^https?:\/\//, ''))}</strong> : démarches, actualités, conseils municipaux, et l'abonnement aux actualités par courriel.</p>
+    </section>
+  </div>
+  <p class="note-source">Fiche générée le ${dateFr(new Date().toISOString().slice(0, 10))} à partir des informations du site.</p>
+</div>`;
+
+  return page({
+    site, nav, actif: 'mairie', titre: 'Fiche pratique à imprimer', classeCorps: 'page-fiche-pratique',
+    description: `Numéros d'urgence, horaires de la mairie, défibrillateur et rendez-vous réguliers de ${site.commune.nom} sur une page à imprimer.`,
+    fil: [{ libelle: 'Accueil', url: '/' }, { libelle: 'La mairie', url: '/mairie/' }, { libelle: 'Fiche pratique' }],
+    contenu
+  });
+}
+
+// Page servie par le service worker (src/scripts/sw.js) quand une page
+// demandée n'est ni en ligne ni déjà enregistrée sur l'appareil. Tout son
+// contenu doit rester utile sans réseau : les appels téléphoniques
+// fonctionnent, les liens pointent vers des pages mises en cache.
+export function pageHorsLigne(ctx) {
+  const { site, nav, annuaire } = ctx;
+  const m = site.mairie;
+  const dae = daeDeLaCommune(ctx);
+  const contenu = `<div class="conteneur conteneur--etroit">
+  <header class="page-entete">
+    <h1>Pas de connexion pour le moment</h1>
+    <p class="page-entete__intro">Cette page n'a pas pu être chargée. Voici l'essentiel, enregistré sur votre appareil.</p>
+  </header>
+
+  <div class="contact-grille">
+    <section class="carte carte--contact carte--urgence" aria-labelledby="hl-urgences">
+      <h2 id="hl-urgences">Numéros d'urgence</h2>
+      ${listeUrgences(annuaire)}
+      <p class="note-source">Les appels d'urgence fonctionnent même sans connexion internet.</p>
+    </section>
+
+    <section class="carte carte--contact" aria-labelledby="hl-pages">
+      <h2 id="hl-pages">Consultable sans connexion</h2>
+      <ul class="liste-rdv">
+        <li><a href="/cadre-de-vie/risques.html">Consignes en cas de crue ou de canicule</a></li>
+        <li><a href="/mairie/fiche-pratique.html">Fiche pratique : numéros et rendez-vous utiles</a></li>
+        <li><a href="/mairie/contact.html">Contact et horaires de la mairie</a></li>
+        <li><a href="/">Accueil du site</a></li>
+      </ul>
+    </section>
+
+    ${dae.length ? `<section class="carte carte--contact" aria-labelledby="hl-dae">
+      <h2 id="hl-dae">Défibrillateur</h2>
+      ${dae.map((d) => `<p><strong>${esc(d.adresse)}</strong><br>${texteDae(d)}</p>`).join('')}
+    </section>` : ''}
+
+    <section class="carte carte--contact" aria-labelledby="hl-mairie">
+      <h2 id="hl-mairie">${esc(m.nom)}</h2>
+      <p><a href="tel:${esc(m.telephoneLien)}"><strong>${esc(m.telephone)}</strong></a></p>
+      <p>${esc(m.adresse)}, ${esc(m.codePostal)} ${esc(m.ville)}</p>
+    </section>
+  </div>
+</div>`;
+  return page({
+    site, nav, titre: 'Pas de connexion',
+    description: 'Page affichée hors connexion : numéros d\'urgence et pages enregistrées sur votre appareil.',
+    contenu
+  });
+}
 
 /* -------------------------------------------------- Thèmes, plan, erreur */
 

@@ -130,6 +130,9 @@
       var s = scorer(index[i], requeteNorm, mots);
       if (s > 0) notes.push({ entree: index[i], score: s });
     }
+    // Rien ne correspond : la page affiche « Aucun résultat » (notes[0]
+    // n'existant pas, la suite plantait et laissait les anciens résultats).
+    if (!notes.length) return { resultats: [], reponse: reponse };
     notes.sort(function (a, b) { return b.score - a.score; });
     // On écarte la traîne : un résultat très en dessous du meilleur est du bruit,
     // et le bruit fait douter l'usager de tous les autres résultats.

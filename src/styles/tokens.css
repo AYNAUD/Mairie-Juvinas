@@ -2,21 +2,48 @@
    Variables de conception. AUCUNE couleur n'est écrite ailleurs que dans
    ce fichier et dans les trois fichiers theme-*.css.
    ------------------------------------------------------------------------ */
+
+/* Polices hébergées sur le site lui-même — jamais chargées depuis un tiers
+   (src/styles/polices/, copiées dans /assets/polices/ ; licence SIL OFL
+   1.1, fichiers de licence à côté). Sous-ensemble latin, français compris
+   (œ, €, guillemets, espaces fines). Sans elles, Android affichait Roboto
+   et Noto Serif, faute de Trebuchet MS et d'Iowan Old Style.
+   - Source Sans 3 (Adobe) : le texte, dans les trois thèmes. Très lisible,
+     chiffres et zéro classiques (Atkinson Hyperlegible, essayée, barre son
+     zéro : « Ø4 66 8Ø 11 83 »). Un seul fichier variable, toutes graisses.
+   - Spectral (Production Type, Paris) : les titres du thème garrigue, en
+     graisse 500 seulement. font-synthesis interdit au navigateur d'en
+     fabriquer un faux gras quand un titre demande 600. */
+@font-face {
+  font-family: "Source Sans 3";
+  src: url("/assets/polices/source-sans-3-latin-wght-normal.woff2") format("woff2");
+  font-weight: 200 900; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Spectral";
+  src: url("/assets/polices/spectral-latin-500-normal.woff2") format("woff2");
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+html { font-synthesis: style; }
+
 :root {
   /* Espacement — échelle de 4 px */
   --e1: .25rem; --e2: .5rem; --e3: .75rem; --e4: 1rem; --e5: 1.5rem;
   --e6: 2rem; --e7: 3rem; --e8: 4rem; --e9: 6rem;
 
   /* Typographie — fluide, sans jamais descendre sous 16 px pour le corps */
-  --police-corps: "Trebuchet MS", "Helvetica Neue", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --police-corps: "Source Sans 3", "Trebuchet MS", "Helvetica Neue", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --police-titre: var(--police-corps);
   --graisse-titre: 600;
   --interlettrage-titre: -.01em;
 
-  --t-corps: 1rem;
-  --t-petit: .875rem;
-  --t-mini: .8125rem;
-  --t-grand: 1.0625rem;
+  /* Source Sans 3 a un œil plus petit que Trebuchet MS (hauteur des
+     minuscules 0,486 contre 0,523) : un cran de plus (17 px au lieu de 16)
+     lui rend la taille apparente de l'ancienne police. */
+  --t-corps: 1.0625rem;
+  --t-petit: .9375rem;
+  --t-mini: .875rem;
+  --t-grand: 1.125rem;
   --t-h1: clamp(1.5rem, 1.1rem + 1.8vw, 2.25rem);
   --t-h2: clamp(1.25rem, .975rem + 1vw, 1.625rem);
   --t-h3: clamp(1rem, .9rem + .43vw, 1.1875rem);
@@ -56,8 +83,9 @@
 }
 
 /* Base ------------------------------------------------------------------- */
-html { scroll-behavior: smooth; }
-[data-anime="0"] html { scroll-behavior: auto; }
+/* Pas de défilement animé : un lien vers une section (catégories des
+   démarches depuis le menu, sommaires « Sur cette page ») y mène directement,
+   sans faire défiler toute la page sous les yeux. */
 
 body {
   margin: 0;

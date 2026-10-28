@@ -27,12 +27,39 @@
       "type": "mail"
     },
     "actionsSecondaires": [
-      { "libelle": "Appeler le secrétariat", "url": "tel:+33475882156", "type": "tel" },
-      { "libelle": "Les élus", "url": "/mairie/elus.html", "type": "interne" },
-      { "libelle": "Les comptes-rendus du conseil", "url": "/mairie/conseils-municipaux.html", "type": "interne" }
+      {
+        "libelle": "Appeler le secrétariat",
+        "url": "tel:+33475882156",
+        "type": "tel"
+      },
+      {
+        "libelle": "Les élus",
+        "url": "/mairie/elus.html",
+        "type": "interne"
+      },
+      {
+        "libelle": "Les comptes-rendus du conseil",
+        "url": "/mairie/conseils-municipaux.html",
+        "type": "interne"
+      }
     ],
-    "motsCles": ["rendez-vous", "maire", "élu", "adjoint", "signaler", "problème", "voirie", "éclairage", "nid de poule", "nuisance", "doléance", "conseil municipal"],
-    "voirAussi": ["listes-electorales"]
+    "motsCles": [
+      "rendez-vous",
+      "maire",
+      "élu",
+      "adjoint",
+      "signaler",
+      "problème",
+      "voirie",
+      "éclairage",
+      "nid de poule",
+      "nuisance",
+      "doléance",
+      "conseil municipal"
+    ],
+    "voirAussi": [
+      "listes-electorales"
+    ]
   },
   {
     "id": "carte-identite",
@@ -41,7 +68,7 @@
     "resume": "Première demande, renouvellement, perte ou vol de votre carte nationale d'identité.",
     "categorie": "papiers",
     "lieu": "ailleurs",
-    "lieuDetail": "Dans une mairie équipée d'un dispositif de recueil — la mairie de Juvinas ne l'est pas. À VÉRIFIER : la mairie équipée la plus proche (probablement Aubenas, Vals-les-Bains ou Privas — à confirmer sur le simulateur ANTS ci-dessous).",
+    "lieuDetail": "Dans une mairie équipée d'un dispositif de recueil — celle de Juvinas ne l'est pas. Trouvez la plus proche et prenez rendez-vous : le simulateur et la carte de l'ANTS (lien ci-dessous) indiquent les mairies équipées autour de vous.",
     "icone": "identite",
     "quoi": "La carte nationale d'identité (CNI) est gratuite, sauf en cas de perte ou de vol. Elle est valable 15 ans pour un majeur et 10 ans pour un mineur.",
     "etapes": [
@@ -65,11 +92,32 @@
       "type": "externe"
     },
     "actionsSecondaires": [
-      { "libelle": "Trouver un rendez-vous près de chez moi", "url": "https://rendezvouspasseport.ants.gouv.fr/", "type": "externe" },
-      { "libelle": "Tout savoir sur la carte d'identité", "url": "https://www.service-public.fr/particuliers/vosdroits/N358", "type": "externe" }
+      {
+        "libelle": "Trouver un rendez-vous près de chez moi",
+        "url": "https://rendezvouspasseport.ants.gouv.fr/",
+        "type": "externe"
+      },
+      {
+        "libelle": "Tout savoir sur la carte d'identité",
+        "url": "https://www.service-public.fr/particuliers/vosdroits/N358",
+        "type": "externe"
+      }
     ],
-    "motsCles": ["cni", "carte nationale identité", "papiers", "identité", "pièce d'identité", "renouvellement", "perte", "vol", "ants"],
-    "voirAussi": ["passeport", "acte-naissance"]
+    "motsCles": [
+      "cni",
+      "carte nationale identité",
+      "papiers",
+      "identité",
+      "pièce d'identité",
+      "renouvellement",
+      "perte",
+      "vol",
+      "ants"
+    ],
+    "voirAussi": [
+      "passeport",
+      "acte-naissance"
+    ]
   },
   {
     "id": "passeport",
@@ -102,11 +150,30 @@
       "type": "externe"
     },
     "actionsSecondaires": [
-      { "libelle": "Trouver un rendez-vous près de chez moi", "url": "https://rendezvouspasseport.ants.gouv.fr/", "type": "externe" },
-      { "libelle": "Tout savoir sur le passeport", "url": "https://www.service-public.fr/particuliers/vosdroits/N360", "type": "externe" }
+      {
+        "libelle": "Trouver un rendez-vous près de chez moi",
+        "url": "https://rendezvouspasseport.ants.gouv.fr/",
+        "type": "externe"
+      },
+      {
+        "libelle": "Tout savoir sur le passeport",
+        "url": "https://www.service-public.fr/particuliers/vosdroits/N360",
+        "type": "externe"
+      }
     ],
-    "motsCles": ["passeport", "passport", "voyage", "étranger", "biométrique", "ants", "titre de voyage"],
-    "voirAussi": ["carte-identite", "acte-naissance"]
+    "motsCles": [
+      "passeport",
+      "passport",
+      "voyage",
+      "étranger",
+      "biométrique",
+      "ants",
+      "titre de voyage"
+    ],
+    "voirAussi": [
+      "carte-identite",
+      "acte-naissance"
+    ]
   },
   {
     "id": "carte-grise",
@@ -138,8 +205,18 @@
       "type": "externe"
     },
     "actionsSecondaires": [],
-    "motsCles": ["carte grise", "certificat immatriculation", "véhicule", "voiture", "immatriculation", "cession", "ants"],
-    "voirAussi": ["permis-conduire"]
+    "motsCles": [
+      "carte grise",
+      "certificat immatriculation",
+      "véhicule",
+      "voiture",
+      "immatriculation",
+      "cession",
+      "ants"
+    ],
+    "voirAussi": [
+      "permis-conduire"
+    ]
   },
   {
     "id": "permis-conduire",
@@ -170,8 +247,19 @@
       "type": "externe"
     },
     "actionsSecondaires": [],
-    "motsCles": ["permis de conduire", "permis", "conduire", "code", "auto-école", "perte permis", "points"],
-    "voirAussi": ["carte-grise", "recensement-citoyen"]
+    "motsCles": [
+      "permis de conduire",
+      "permis",
+      "conduire",
+      "code",
+      "auto-école",
+      "perte permis",
+      "points"
+    ],
+    "voirAussi": [
+      "carte-grise",
+      "recensement-citoyen"
+    ]
   },
   {
     "id": "acte-naissance",
@@ -203,11 +291,31 @@
       "type": "mail"
     },
     "actionsSecondaires": [
-      { "libelle": "Appeler le secrétariat", "url": "tel:+33475882156", "type": "tel" },
-      { "libelle": "Demander un acte d'une autre commune", "url": "https://www.service-public.fr/particuliers/vosdroits/F1427", "type": "externe" }
+      {
+        "libelle": "Appeler le secrétariat",
+        "url": "tel:+33475882156",
+        "type": "tel"
+      },
+      {
+        "libelle": "Demander un acte d'une autre commune",
+        "url": "https://www.service-public.fr/particuliers/vosdroits/F1427",
+        "type": "externe"
+      }
     ],
-    "motsCles": ["acte de naissance", "extrait de naissance", "état civil", "acte de mariage", "acte de décès", "copie intégrale", "livret de famille"],
-    "voirAussi": ["mariage", "pacs", "carte-identite"]
+    "motsCles": [
+      "acte de naissance",
+      "extrait de naissance",
+      "état civil",
+      "acte de mariage",
+      "acte de décès",
+      "copie intégrale",
+      "livret de famille"
+    ],
+    "voirAussi": [
+      "mariage",
+      "pacs",
+      "carte-identite"
+    ]
   },
   {
     "id": "listes-electorales",
@@ -238,11 +346,31 @@
       "type": "externe"
     },
     "actionsSecondaires": [
-      { "libelle": "M'inscrire en mairie", "url": "mailto:mairie@juvinas.fr?subject=Inscription%20sur%20les%20listes%20%C3%A9lectorales", "type": "mail" },
-      { "libelle": "Toutes les informations sur les élections", "url": "https://www.service-public.fr/particuliers/vosdroits/N47", "type": "externe" }
+      {
+        "libelle": "M'inscrire en mairie",
+        "url": "mailto:mairie@juvinas.fr?subject=Inscription%20sur%20les%20listes%20%C3%A9lectorales",
+        "type": "mail"
+      },
+      {
+        "libelle": "Toutes les informations sur les élections",
+        "url": "https://www.service-public.fr/particuliers/vosdroits/N47",
+        "type": "externe"
+      }
     ],
-    "motsCles": ["listes électorales", "inscription électorale", "voter", "vote", "élections", "carte électorale", "bureau de vote", "nouvel habitant"],
-    "voirAussi": ["procuration", "recensement-citoyen"]
+    "motsCles": [
+      "listes électorales",
+      "inscription électorale",
+      "voter",
+      "vote",
+      "élections",
+      "carte électorale",
+      "bureau de vote",
+      "nouvel habitant"
+    ],
+    "voirAussi": [
+      "procuration",
+      "recensement-citoyen"
+    ]
   },
   {
     "id": "procuration",
@@ -251,7 +379,7 @@
     "resume": "Absent le jour du scrutin ? Confiez votre vote à un autre électeur.",
     "categorie": "citoyennete",
     "lieu": "ailleurs",
-    "lieuDetail": "Demande en ligne, puis passage obligatoire en gendarmerie, commissariat ou tribunal. À VÉRIFIER : la gendarmerie compétente pour Juvinas (probablement à Aubenas ou dans le secteur — à confirmer).",
+    "lieuDetail": "Demande en ligne, puis passage obligatoire en gendarmerie, commissariat ou tribunal — ou dans un consulat à l'étranger. Trouvez le lieu le plus proche de chez vous avec l'annuaire de service-public.fr.",
     "icone": "procuration",
     "quoi": "Si vous ne pouvez pas vous rendre à votre bureau de vote, vous pouvez donner procuration à un autre électeur. Votre mandataire n'a plus besoin d'être inscrit dans la même commune que vous, mais il devra voter dans votre bureau de vote.",
     "etapes": [
@@ -272,10 +400,22 @@
       "type": "externe"
     },
     "actionsSecondaires": [
-      { "libelle": "Comprendre le vote par procuration", "url": "https://www.service-public.fr/particuliers/vosdroits/F1604", "type": "externe" }
+      {
+        "libelle": "Comprendre le vote par procuration",
+        "url": "https://www.service-public.fr/particuliers/vosdroits/F1604",
+        "type": "externe"
+      }
     ],
-    "motsCles": ["procuration", "voter procuration", "absent élection", "mandataire", "maprocuration"],
-    "voirAussi": ["listes-electorales"]
+    "motsCles": [
+      "procuration",
+      "voter procuration",
+      "absent élection",
+      "mandataire",
+      "maprocuration"
+    ],
+    "voirAussi": [
+      "listes-electorales"
+    ]
   },
   {
     "id": "recensement-citoyen",
@@ -305,10 +445,25 @@
       "type": "tel"
     },
     "actionsSecondaires": [
-      { "libelle": "Comprendre le recensement citoyen", "url": "https://www.service-public.fr/particuliers/vosdroits/F870", "type": "externe" }
+      {
+        "libelle": "Comprendre le recensement citoyen",
+        "url": "https://www.service-public.fr/particuliers/vosdroits/F870",
+        "type": "externe"
+      }
     ],
-    "motsCles": ["recensement", "recensement citoyen", "16 ans", "jdc", "journée défense", "attestation de recensement", "bac"],
-    "voirAussi": ["listes-electorales", "permis-conduire"]
+    "motsCles": [
+      "recensement",
+      "recensement citoyen",
+      "16 ans",
+      "jdc",
+      "journée défense",
+      "attestation de recensement",
+      "bac"
+    ],
+    "voirAussi": [
+      "listes-electorales",
+      "permis-conduire"
+    ]
   },
   {
     "id": "mariage",
@@ -341,11 +496,30 @@
       "type": "mail"
     },
     "actionsSecondaires": [
-      { "libelle": "Appeler le secrétariat", "url": "tel:+33475882156", "type": "tel" },
-      { "libelle": "Tout savoir sur le mariage", "url": "https://www.service-public.fr/particuliers/vosdroits/N142", "type": "externe" }
+      {
+        "libelle": "Appeler le secrétariat",
+        "url": "tel:+33475882156",
+        "type": "tel"
+      },
+      {
+        "libelle": "Tout savoir sur le mariage",
+        "url": "https://www.service-public.fr/particuliers/vosdroits/N142",
+        "type": "externe"
+      }
     ],
-    "motsCles": ["mariage", "se marier", "noces", "bans", "témoins", "livret de famille", "cérémonie"],
-    "voirAussi": ["pacs", "acte-naissance"]
+    "motsCles": [
+      "mariage",
+      "se marier",
+      "noces",
+      "bans",
+      "témoins",
+      "livret de famille",
+      "cérémonie"
+    ],
+    "voirAussi": [
+      "pacs",
+      "acte-naissance"
+    ]
   },
   {
     "id": "pacs",
@@ -377,11 +551,29 @@
       "type": "mail"
     },
     "actionsSecondaires": [
-      { "libelle": "Appeler le secrétariat", "url": "tel:+33475882156", "type": "tel" },
-      { "libelle": "Tout savoir sur le PACS", "url": "https://www.service-public.fr/particuliers/vosdroits/N15660", "type": "externe" }
+      {
+        "libelle": "Appeler le secrétariat",
+        "url": "tel:+33475882156",
+        "type": "tel"
+      },
+      {
+        "libelle": "Tout savoir sur le PACS",
+        "url": "https://www.service-public.fr/particuliers/vosdroits/N15660",
+        "type": "externe"
+      }
     ],
-    "motsCles": ["pacs", "pacte civil de solidarité", "se pacser", "concubinage", "union", "partenaire"],
-    "voirAussi": ["mariage", "acte-naissance"]
+    "motsCles": [
+      "pacs",
+      "pacte civil de solidarité",
+      "se pacser",
+      "concubinage",
+      "union",
+      "partenaire"
+    ],
+    "voirAussi": [
+      "mariage",
+      "acte-naissance"
+    ]
   },
   {
     "id": "naissance",
@@ -390,7 +582,7 @@
     "resume": "Déclaration obligatoire dans les 5 jours, à la mairie du lieu de naissance.",
     "categorie": "famille",
     "lieu": "ailleurs",
-    "lieuDetail": "À la mairie de la commune où l'enfant est né. À VÉRIFIER : la maternité de rattachement habituelle des habitants de Juvinas (probablement Aubenas ou Privas — à confirmer).",
+    "lieuDetail": "À la mairie de la commune où l'enfant est né. La maternité transmet en général elle-même la déclaration : vérifiez-le auprès d'elle.",
     "icone": "bebe",
     "quoi": "La naissance se déclare à la mairie du lieu de naissance, dans les cinq jours qui suivent l'accouchement — généralement celle de la maternité.",
     "etapes": [
@@ -413,10 +605,24 @@
       "type": "externe"
     },
     "actionsSecondaires": [
-      { "libelle": "Demander un acte de naissance", "url": "/demarches/acte-naissance.html", "type": "interne" }
+      {
+        "libelle": "Demander un acte de naissance",
+        "url": "/demarches/acte-naissance.html",
+        "type": "interne"
+      }
     ],
-    "motsCles": ["naissance", "déclarer naissance", "bébé", "filiation", "reconnaissance", "livret de famille", "maternité"],
-    "voirAussi": ["acte-naissance"]
+    "motsCles": [
+      "naissance",
+      "déclarer naissance",
+      "bébé",
+      "filiation",
+      "reconnaissance",
+      "livret de famille",
+      "maternité"
+    ],
+    "voirAussi": [
+      "acte-naissance"
+    ]
   },
   {
     "id": "deces",
@@ -447,22 +653,44 @@
       "type": "tel"
     },
     "actionsSecondaires": [
-      { "libelle": "Décès, obsèques et sépulture", "url": "https://www.service-public.fr/particuliers/vosdroits/N165", "type": "externe" },
-      { "libelle": "Réserver une concession au cimetière", "url": "/demarches/concession-cimetiere.html", "type": "interne" }
+      {
+        "libelle": "Décès, obsèques et sépulture",
+        "url": "https://www.service-public.fr/particuliers/vosdroits/N165",
+        "type": "externe"
+      },
+      {
+        "libelle": "Réserver une concession au cimetière",
+        "url": "/demarches/concession-cimetiere.html",
+        "type": "interne"
+      }
     ],
-    "motsCles": ["décès", "mort", "obsèques", "funérailles", "sépulture", "pompes funèbres", "acte de décès", "inhumation", "crémation", "succession"],
-    "voirAussi": ["concession-cimetiere", "acte-naissance"]
+    "motsCles": [
+      "décès",
+      "mort",
+      "obsèques",
+      "funérailles",
+      "sépulture",
+      "pompes funèbres",
+      "acte de décès",
+      "inhumation",
+      "crémation",
+      "succession"
+    ],
+    "voirAussi": [
+      "concession-cimetiere",
+      "acte-naissance"
+    ]
   },
   {
     "id": "concession-cimetiere",
     "titre": "Réserver une concession au cimetière",
     "titreCourt": "Concession au cimetière",
-    "resume": "Concession au cimetière communal de Juvinas — durée et tarif à vérifier auprès de la mairie.",
+    "resume": "Concession au cimetière communal de Juvinas : durée et tarif fixés par le conseil municipal, à demander au secrétariat.",
     "categorie": "famille",
     "lieu": "mairie",
     "lieuDetail": "Auprès du secrétariat de la mairie de Juvinas.",
     "icone": "cimetiere",
-    "quoi": "La commune propose des concessions au cimetière communal. La réservation se fait directement auprès du secrétariat de mairie, qui indique les emplacements disponibles. À COMPLÉTER : durée et tarif des concessions (non trouvés en source publique, propres à chaque commune et fixés par délibération).",
+    "quoi": "La commune propose des concessions au cimetière communal. La réservation se fait directement auprès du secrétariat de mairie, qui indique les emplacements disponibles, la durée des concessions et leur tarif (fixés par délibération du conseil municipal).",
     "etapes": [
       "Prendre contact avec le secrétariat de mairie, par téléphone ou aux heures d'ouverture.",
       "Convenir d'un emplacement parmi ceux disponibles.",
@@ -475,17 +703,30 @@
       "Les coordonnées des ayants droit désignés"
     ],
     "delai": "Selon les disponibilités et les heures d'ouverture du secrétariat.",
-    "cout": "À VÉRIFIER auprès de la mairie — fixé par délibération du conseil municipal.",
+    "cout": "Fixé par délibération du conseil municipal : à demander au secrétariat de mairie.",
     "action": {
       "libelle": "Contacter le secrétariat",
       "url": "tel:+33475882156",
       "type": "tel"
     },
     "actionsSecondaires": [
-      { "libelle": "Écrire à la mairie", "url": "mailto:mairie@juvinas.fr?subject=Concession%20au%20cimeti%C3%A8re", "type": "mail" }
+      {
+        "libelle": "Écrire à la mairie",
+        "url": "mailto:mairie@juvinas.fr?subject=Concession%20au%20cimeti%C3%A8re",
+        "type": "mail"
+      }
     ],
-    "motsCles": ["cimetière", "concession", "tombe", "caveau", "sépulture", "inhumation"],
-    "voirAussi": ["deces"]
+    "motsCles": [
+      "cimetière",
+      "concession",
+      "tombe",
+      "caveau",
+      "sépulture",
+      "inhumation"
+    ],
+    "voirAussi": [
+      "deces"
+    ]
   },
   {
     "id": "permis-de-construire",
@@ -494,9 +735,9 @@
     "resume": "Abri de jardin, clôture, piscine, extension, ravalement : quelle autorisation demander ?",
     "categorie": "logement",
     "lieu": "mairie",
-    "lieuDetail": "Dépôt à la mairie de Juvinas, ou par voie dématérialisée. À VÉRIFIER : le document d'urbanisme applicable à Juvinas (PLU, carte communale ou règlement national d'urbanisme — RNU) et le service instructeur (probablement la Communauté de communes du Bassin d'Aubenas).",
+    "lieuDetail": "Dépôt à la mairie de Juvinas, ou par voie dématérialisée. Juvinas n'a ni plan local d'urbanisme ni carte communale : c'est le règlement national d'urbanisme (RNU) qui s'applique. Renseignez-vous en mairie sur le service qui instruit votre dossier.",
     "icone": "travaux",
-    "quoi": "Presque tous les travaux modifiant l'aspect extérieur d'un bâtiment ou créant de la surface nécessitent une autorisation d'urbanisme. Les règles applicables dépendent du document d'urbanisme en vigueur à Juvinas — à vérifier avant de dessiner votre projet.",
+    "quoi": "Presque tous les travaux modifiant l'aspect extérieur d'un bâtiment ou créant de la surface nécessitent une autorisation d'urbanisme. À Juvinas, aucun plan local d'urbanisme ni carte communale n'est en vigueur (Géoportail de l'urbanisme : commune au règlement national d'urbanisme) : la constructibilité est limitée et les projets sont examinés au cas par cas, avec l'avis de l'État. Parlez-en à la mairie avant de déposer un dossier.",
     "etapes": [
       "Vérifier auprès de la mairie le document d'urbanisme applicable à votre terrain et les règles qui s'y appliquent.",
       "Déterminer l'autorisation nécessaire : déclaration préalable pour un abri de jardin, une clôture, une piscine de moins de 100 m² ou une extension de moins de 20 m² ; permis de construire au-delà.",
@@ -519,11 +760,32 @@
       "type": "mail"
     },
     "actionsSecondaires": [
-      { "libelle": "Déclaration préalable : le détail", "url": "https://www.service-public.fr/particuliers/vosdroits/F17578", "type": "externe" },
-      { "libelle": "Permis de construire : le détail", "url": "https://www.service-public.fr/particuliers/vosdroits/F1986", "type": "externe" }
+      {
+        "libelle": "Déclaration préalable : le détail",
+        "url": "https://www.service-public.fr/particuliers/vosdroits/F17578",
+        "type": "externe"
+      },
+      {
+        "libelle": "Permis de construire : le détail",
+        "url": "https://www.service-public.fr/particuliers/vosdroits/F1986",
+        "type": "externe"
+      }
     ],
-    "motsCles": ["permis de construire", "travaux", "déclaration préalable", "abri de jardin", "clôture", "piscine", "extension", "urbanisme", "construire"],
-    "voirAussi": ["certificat-urbanisme", "cadastre"]
+    "motsCles": [
+      "permis de construire",
+      "travaux",
+      "déclaration préalable",
+      "abri de jardin",
+      "clôture",
+      "piscine",
+      "extension",
+      "urbanisme",
+      "construire"
+    ],
+    "voirAussi": [
+      "certificat-urbanisme",
+      "cadastre"
+    ]
   },
   {
     "id": "certificat-urbanisme",
@@ -554,8 +816,20 @@
       "type": "mail"
     },
     "actionsSecondaires": [],
-    "motsCles": ["certificat d'urbanisme", "cu", "cua", "cub", "terrain constructible", "acheter un terrain", "vendre terrain", "notaire"],
-    "voirAussi": ["permis-de-construire", "cadastre"]
+    "motsCles": [
+      "certificat d'urbanisme",
+      "cu",
+      "cua",
+      "cub",
+      "terrain constructible",
+      "acheter un terrain",
+      "vendre terrain",
+      "notaire"
+    ],
+    "voirAussi": [
+      "permis-de-construire",
+      "cadastre"
+    ]
   },
   {
     "id": "cadastre",
@@ -584,90 +858,629 @@
       "type": "externe"
     },
     "actionsSecondaires": [
-      { "libelle": "Le Géoportail de l'IGN", "url": "https://www.geoportail.gouv.fr/", "type": "externe" }
+      {
+        "libelle": "Le Géoportail de l'IGN",
+        "url": "https://www.geoportail.gouv.fr/",
+        "type": "externe"
+      }
     ],
-    "motsCles": ["cadastre", "parcelle", "plan cadastral", "limite de propriété", "bornage", "terrain", "numéro de parcelle", "géomètre"],
-    "voirAussi": ["certificat-urbanisme", "permis-de-construire"]
+    "motsCles": [
+      "cadastre",
+      "parcelle",
+      "plan cadastral",
+      "limite de propriété",
+      "bornage",
+      "terrain",
+      "numéro de parcelle",
+      "géomètre"
+    ],
+    "voirAussi": [
+      "certificat-urbanisme",
+      "permis-de-construire"
+    ]
   },
   {
     "id": "ecole-cantine",
     "titre": "Inscrire mon enfant à l'école et à la cantine",
     "titreCourt": "École et cantine",
-    "resume": "À COMPLÉTER PAR LA MAIRIE — Juvinas (187 habitants) n'a probablement pas d'école propre : scolarisation vraisemblablement via un regroupement pédagogique intercommunal (RPI), à confirmer.",
+    "resume": "Juvinas n'a pas d'école : la mairie vous indique l'école de rattachement et les modalités d'inscription.",
     "categorie": "enfance",
     "lieu": "ailleurs",
-    "lieuDetail": "À CONFIRMER : établissement de rattachement, organisation du RPI éventuel, gestionnaire de la cantine et du transport scolaire.",
+    "lieuDetail": "Mairie de Juvinas (inscription administrative), puis école de rattachement. Les écoles publiques les plus proches : Aizac, Labastide-sur-Bésorgues, Vals-les-Bains, Antraigues.",
     "icone": "ecole",
-    "quoi": "Fiche à compléter par la mairie de Juvinas : école de rattachement, modalités d'inscription, restauration scolaire, transport. Aucune information fiable trouvée en source publique — ne pas publier tel quel.",
+    "quoi": "Il n'existe pas d'école sur la commune (l'Annuaire de l'éducation de l'Éducation nationale n'en recense aucune à Juvinas). L'inscription d'un enfant se fait d'abord à la mairie de résidence, qui délivre un certificat d'inscription, puis auprès de la direction de l'école de rattachement. Cette école dépend de la sectorisation scolaire de la commune : renseignez-vous auprès du secrétariat de mairie.",
     "etapes": [
-      "Contacter le secrétariat de la mairie de Juvinas pour connaître l'école de rattachement et la marche à suivre."
+      "Contacter le secrétariat de la mairie de Juvinas pour connaître l'école de rattachement et obtenir le certificat d'inscription.",
+      "Prendre rendez-vous avec la direction de l'école pour l'admission de l'enfant, avec les pièces ci-dessous.",
+      "Se renseigner auprès de l'école ou de sa commune sur la cantine, la garderie et le transport scolaire."
     ],
     "pieces": [
       "Le livret de famille ou un acte de naissance de l'enfant",
       "Un justificatif de domicile à Juvinas",
-      "Le carnet de santé attestant des vaccinations obligatoires"
+      "Le carnet de santé attestant des vaccinations obligatoires",
+      "Le certificat de radiation si l'enfant change d'école"
     ],
-    "delai": "À COMPLÉTER.",
-    "cout": "À COMPLÉTER.",
-    "action": {
-      "libelle": "Contacter la mairie",
-      "url": "tel:+33475882156",
-      "type": "tel"
-    },
-    "actionsSecondaires": [],
-    "motsCles": ["cantine", "restauration scolaire", "inscrire mon enfant", "inscription scolaire", "école", "rentrée", "rpi"],
-    "voirAussi": []
-  },
-  {
-    "id": "encombrants",
-    "titre": "Faire enlever un encombrant ou déposer un déchet",
-    "titreCourt": "Encombrants et déchets",
-    "resume": "À COMPLÉTER PAR LA MAIRIE — modalités de collecte des encombrants et déchetterie de rattachement non confirmées.",
-    "categorie": "cadre-de-vie",
-    "lieu": "ailleurs",
-    "lieuDetail": "À CONFIRMER : la collecte des déchets et encombrants relève probablement de la Communauté de communes du Bassin d'Aubenas, à vérifier.",
-    "icone": "poubelle",
-    "quoi": "Fiche à compléter par la mairie de Juvinas : jours de collecte, déchetterie la plus proche, modalités d'enlèvement des encombrants.",
-    "etapes": [
-      "Contacter le secrétariat de la mairie de Juvinas ou la Communauté de communes du Bassin d'Aubenas pour connaître les modalités exactes."
-    ],
-    "pieces": [],
-    "delai": "À COMPLÉTER.",
-    "cout": "À COMPLÉTER.",
+    "delai": "Inscription avant la rentrée de septembre ; les écoles reçoivent généralement de mai à juin.",
+    "cout": "L'école publique est gratuite ; la cantine et la garderie sont payantes selon l'école.",
     "action": {
       "libelle": "Contacter la mairie",
       "url": "tel:+33475882156",
       "type": "tel"
     },
     "actionsSecondaires": [
-      { "libelle": "Communauté de communes du Bassin d'Aubenas", "url": "https://www.bassin-aubenas.fr", "type": "externe" }
+      {
+        "libelle": "Écoles les plus proches",
+        "url": "/enfance-jeunesse/ecole.html",
+        "type": "interne"
+      }
     ],
-    "motsCles": ["encombrants", "déchets", "déchetterie", "ordures", "tri"],
-    "voirAussi": []
+    "motsCles": [
+      "cantine",
+      "restauration scolaire",
+      "inscrire mon enfant",
+      "inscription scolaire",
+      "école",
+      "rentrée",
+      "rpi"
+    ],
+    "voirAussi": [],
+    "aSavoir": "La liste des écoles proches est donnée à titre d'information : elle n'indique pas l'école de rattachement de votre adresse, que seule la mairie peut confirmer."
+  },
+  {
+    "id": "encombrants",
+    "titre": "Faire enlever un encombrant ou déposer un déchet",
+    "titreCourt": "Encombrants et déchets",
+    "resume": "Collecte des ordures ménagères, enlèvement des encombrants sur rendez-vous, déchèteries gratuites : tout se passe avec la Communauté de communes.",
+    "categorie": "cadre-de-vie",
+    "lieu": "ailleurs",
+    "lieuDetail": "Service collecte de la Communauté de communes du Bassin d'Aubenas : 0 800 07 60 15 (appel gratuit), du lundi au vendredi de 8h30 à 12h.",
+    "icone": "poubelle",
+    "quoi": "Les déchets ménagers sont collectés par la Communauté de communes du Bassin d'Aubenas (CCBA) : ordures ménagères le lundi, emballages recyclables le mercredi des semaines impaires. Le verre, le papier et les déchèteries relèvent du SIDOMSA. Pour un objet trop volumineux, la déchèterie est la première solution ; la CCBA n'assure un ramassage complémentaire, sur rendez-vous, que si vous ne pouvez pas vous y rendre.",
+    "etapes": [
+      "Pour un objet volumineux, aller d'abord à la déchèterie (accès gratuit pour les habitants de la CCBA) : adresses et horaires sur le site du SIDOMSA.",
+      "Si ce n'est pas possible : appeler le 0 800 07 60 15 au moins 48 heures avant, pour un ramassage sur rendez-vous (3 gros objets au maximum, qui ne rentrent pas dans un véhicule).",
+      "Déposer les objets devant chez vous la veille du passage, à partir de 19 h, sans gêner les piétons ni la circulation.",
+      "Un dépôt sauvage constaté ? Le signaler à la mairie, qui s'occupe de l'enlèvement."
+    ],
+    "pieces": [],
+    "delai": "Appeler au moins 48 heures avant le passage.",
+    "cout": "Gratuit pour les particuliers.",
+    "action": {
+      "libelle": "Appeler le service collecte : 0 800 07 60 15",
+      "url": "tel:+33800076015",
+      "type": "tel"
+    },
+    "actionsSecondaires": [
+      {
+        "libelle": "Déchets et tri à Juvinas",
+        "url": "/cadre-de-vie/dechets.html",
+        "type": "interne"
+      },
+      {
+        "libelle": "Planning des encombrants (CCBA)",
+        "url": "https://www.bassin-aubenas.fr/services/collecte-des-dechets/planning-des-encombrants/",
+        "type": "externe"
+      },
+      {
+        "libelle": "SIDOMSA : déchèteries, verre, papier",
+        "url": "https://www.sidomsa.net",
+        "type": "externe"
+      }
+    ],
+    "motsCles": [
+      "encombrants",
+      "déchets",
+      "déchetterie",
+      "déchèterie",
+      "ordures",
+      "tri",
+      "poubelle",
+      "bac jaune",
+      "canapé",
+      "matelas",
+      "dépôt sauvage",
+      "collecte",
+      "sidomsa"
+    ],
+    "voirAussi": [],
+    "aSavoir": "Un dépôt sur la voie publique en dehors des conditions prévues peut être sanctionné d'une amende pouvant atteindre 1 500 €."
   },
   {
     "id": "salle-communale",
     "titre": "Louer la salle communale",
     "titreCourt": "Salle communale",
-    "resume": "À COMPLÉTER PAR LA MAIRIE — existence, capacité et tarif d'une salle communale à Juvinas non confirmés.",
+    "resume": "La salle Vesta, sous la mairie : renseignements et réservation auprès du secrétariat.",
     "categorie": "cadre-de-vie",
     "lieu": "mairie",
     "lieuDetail": "Auprès du secrétariat de la mairie de Juvinas.",
     "icone": "salle",
-    "quoi": "Fiche à compléter par la mairie de Juvinas : existence d'une salle communale, capacité, équipement, tarif et modalités de réservation.",
+    "quoi": "La commune dispose de la salle Vesta, située sous la mairie et inaugurée le 29 mars 2019. La capacité, l'équipement, les tarifs et les conditions de location sont fixés par la commune : demandez-les au secrétariat.",
     "etapes": [
-      "Contacter le secrétariat de la mairie de Juvinas pour connaître les disponibilités."
+      "Appeler ou écrire au secrétariat de mairie pour connaître les disponibilités à la date souhaitée.",
+      "Demander les conditions de location et le règlement d'utilisation.",
+      "Confirmer la réservation par écrit, avec l'attestation d'assurance demandée.",
+      "Faire l'état des lieux avant et après l'utilisation."
     ],
     "pieces": [],
-    "delai": "À COMPLÉTER.",
-    "cout": "À COMPLÉTER.",
+    "delai": "Réservez plusieurs semaines à l'avance pour les week-ends.",
+    "cout": "Fixé par la commune : à demander au secrétariat.",
     "action": {
       "libelle": "Contacter la mairie",
       "url": "tel:+33475882156",
       "type": "tel"
     },
-    "actionsSecondaires": [],
-    "motsCles": ["salle communale", "location salle", "événement", "vin d'honneur", "réunion"],
-    "voirAussi": ["mariage"]
+    "actionsSecondaires": [
+      {
+        "libelle": "Écrire à la mairie",
+        "url": "mailto:mairie@juvinas.fr?subject=Location%20de%20la%20salle%20Vesta",
+        "type": "mail"
+      },
+      {
+        "libelle": "La salle Vesta",
+        "url": "/vie-locale/salles.html",
+        "type": "interne"
+      }
+    ],
+    "motsCles": [
+      "salle communale",
+      "salle vesta",
+      "vesta",
+      "location salle",
+      "événement",
+      "vin d'honneur",
+      "réunion",
+      "anniversaire",
+      "fête"
+    ],
+    "voirAussi": [
+      "mariage"
+    ]
+  },
+  {
+    "id": "registre-vulnerables",
+    "titre": "S'inscrire sur le registre des personnes vulnérables",
+    "titreCourt": "Registre canicule",
+    "resume": "Personne âgée ou handicapée vivant chez elle : être appelée et aidée par la mairie en cas de canicule ou d'autre situation exceptionnelle.",
+    "categorie": "famille",
+    "lieu": "mairie",
+    "lieuDetail": "Auprès du secrétariat de mairie de Juvinas : par courriel, par téléphone ou sur place.",
+    "icone": "accueil",
+    "quoi": "La commune tient un registre confidentiel des personnes fragiles qui vivent à leur domicile (article L121-6-1 du code de l'action sociale et des familles). Quand le préfet déclenche un plan d'alerte — canicule, grand froid ou autre situation exceptionnelle —, la mairie contacte les personnes inscrites pour prendre de leurs nouvelles et organiser l'aide nécessaire. L'inscription est facultative : elle peut être demandée par la personne elle-même ou, pour elle, par un proche, un voisin ou son médecin, si elle ne s'y oppose pas.",
+    "etapes": [
+      "Vérifier que la personne peut être inscrite : 65 ans et plus, 60 ans et plus reconnue inapte au travail, ou adulte en situation de handicap, vivant à son domicile.",
+      "Envoyer la demande au secrétariat : le bouton ci-dessous prépare un courriel à compléter. Vous pouvez aussi téléphoner ou passer en mairie.",
+      "La mairie enregistre l'inscription. Prévenez-la ensuite de tout changement : téléphone, adresse, personne à prévenir.",
+      "En cas d'alerte, la mairie appelle les personnes inscrites et organise l'aide nécessaire."
+    ],
+    "pieces": [
+      "Nom, prénom et date de naissance de la personne",
+      "Son adresse et son numéro de téléphone",
+      "Le motif de l'inscription : âge ou situation de handicap",
+      "Les coordonnées d'une personne à prévenir en cas d'urgence"
+    ],
+    "delai": "Immédiat. L'inscription reste valable tant que vous ne demandez pas à en sortir.",
+    "cout": "Gratuit.",
+    "action": {
+      "libelle": "Préparer ma demande par courriel",
+      "url": "mailto:mairie@juvinas.fr?subject=Inscription%20au%20registre%20des%20personnes%20vuln%C3%A9rables&body=Bonjour%2C%0A%0AJe%20demande%20l%27inscription%20sur%20le%20registre%20des%20personnes%20vuln%C3%A9rables%20de%20la%20commune%20de%20Juvinas%20pour%20%3A%0A%0ANom%20et%20pr%C3%A9nom%20%3A%0ADate%20de%20naissance%20%3A%0AAdresse%20%C3%A0%20Juvinas%20%3A%0AT%C3%A9l%C3%A9phone%20%3A%0AMotif%20%2865%20ans%20et%20plus%20/%2060%20ans%20et%20plus%20reconnu%20inapte%20au%20travail%20/%20situation%20de%20handicap%29%20%3A%0APersonne%20%C3%A0%20pr%C3%A9venir%20en%20cas%20d%27urgence%20%28nom%20et%20t%C3%A9l%C3%A9phone%29%20%3A%0A%0ADemande%20faite%20par%20%28si%20vous%20n%27%C3%AAtes%20pas%20la%20personne%20concern%C3%A9e%29%20%3A%0A%0ACordialement%2C",
+      "type": "mail"
+    },
+    "actionsSecondaires": [
+      {
+        "libelle": "Appeler le secrétariat",
+        "url": "tel:+33475882156",
+        "type": "tel"
+      },
+      {
+        "libelle": "Risques et consignes de sécurité",
+        "url": "/cadre-de-vie/risques.html",
+        "type": "interne"
+      }
+    ],
+    "aSavoir": "Les informations recueillies sont confidentielles : elles ne servent qu'à porter assistance aux personnes inscrites et ne sont transmises, en cas d'alerte, qu'au préfet et aux services chargés de l'aide. Vous pouvez demander à tout moment à être retiré du registre.",
+    "motsCles": [
+      "registre",
+      "canicule",
+      "personne âgée",
+      "personne vulnérable",
+      "personne isolée",
+      "handicap",
+      "fortes chaleurs",
+      "grand froid",
+      "plan canicule",
+      "solidarité"
+    ],
+    "voirAussi": [
+      "rendez-vous-elu",
+      "nouvel-habitant"
+    ]
+  },
+  {
+    "id": "creche",
+    "titre": "Trouver un mode de garde pour mon tout-petit",
+    "titreCourt": "Crèche et assistantes maternelles",
+    "resume": "Relais petite enfance, crèche ou assistante maternelle : par où commencer depuis Juvinas.",
+    "categorie": "enfance",
+    "lieu": "ailleurs",
+    "lieuDetail": "Pôle Info Accueil Petite Enfance (PIAPE) de la Communauté de communes du Bassin d'Aubenas.",
+    "icone": "bebe",
+    "quoi": "Juvinas n'a pas de crèche : l'accueil des moins de trois ans passe par les services de la Communauté de communes du Bassin d'Aubenas (CCBA) — un pôle d'information et d'accueil (PIAPE), un relais petite enfance, un lieu d'accueil parents-enfants et des crèches multi-accueils — ou par une assistante maternelle agréée.",
+    "etapes": [
+      "Prendre contact avec le PIAPE de la CCBA, qui présente les modes d'accueil disponibles et oriente les familles.",
+      "Pour une crèche multi-accueil : faire une demande de préinscription auprès du service petite enfance de la CCBA, en anticipant plusieurs mois.",
+      "Pour une assistante maternelle : consulter la liste des professionnelles agréées auprès du relais petite enfance, ou sur monenfant.fr, puis les contacter directement.",
+      "Demander à la CAF les aides pour la garde d'un enfant de moins de 6 ans."
+    ],
+    "pieces": [
+      "Le livret de famille ou l'acte de naissance de l'enfant",
+      "Un justificatif de domicile",
+      "Votre numéro d'allocataire CAF",
+      "Les justificatifs de ressources du foyer"
+    ],
+    "delai": "Anticipez : les places en crèche se réservent plusieurs mois à l'avance, souvent dès la grossesse.",
+    "cout": "Variable selon le mode de garde et le quotient familial. La CAF verse des aides pour la garde d'un enfant de moins de 6 ans.",
+    "action": {
+      "libelle": "Le pôle petite enfance de la CCBA",
+      "url": "https://www.bassin-aubenas.fr/services/petite-enfance/",
+      "type": "externe"
+    },
+    "actionsSecondaires": [
+      {
+        "libelle": "Appeler la CCBA : 04 75 94 61 12",
+        "url": "tel:+33475946112",
+        "type": "tel"
+      },
+      {
+        "libelle": "Trouver un mode d'accueil sur monenfant.fr",
+        "url": "https://monenfant.fr/",
+        "type": "externe"
+      },
+      {
+        "libelle": "Petite enfance autour de Juvinas",
+        "url": "/enfance-jeunesse/petite-enfance.html",
+        "type": "interne"
+      }
+    ],
+    "aSavoir": "Le détail des structures (adresses, permanences, téléphones) est publié par la CCBA : la mairie de Juvinas n'en tient pas de liste propre.",
+    "motsCles": [
+      "crèche",
+      "garde d'enfant",
+      "assistante maternelle",
+      "nounou",
+      "halte garderie",
+      "petite enfance",
+      "bébé",
+      "relais petite enfance",
+      "piape",
+      "préinscription"
+    ],
+    "voirAussi": [
+      "ecole-cantine",
+      "centre-loisirs"
+    ]
+  },
+  {
+    "id": "centre-loisirs",
+    "titre": "Inscrire mon enfant au centre de loisirs",
+    "titreCourt": "Centre de loisirs",
+    "resume": "Accueils de loisirs itinérants, stages multisports et service jeunesse de la Communauté de communes.",
+    "categorie": "enfance",
+    "lieu": "ailleurs",
+    "lieuDetail": "Service enfance-jeunesse de la Communauté de communes du Bassin d'Aubenas.",
+    "icone": "jeune",
+    "quoi": "La Communauté de communes du Bassin d'Aubenas (CCBA) organise des accueils de loisirs itinérants, des stages multisports et un service d'information jeunesse itinérant. Les dates, les lieux et les modalités d'inscription changent chaque période de vacances : ils sont publiés par la CCBA.",
+    "etapes": [
+      "Consulter la page enfance-jeunesse de la CCBA pour connaître les accueils proposés, leurs dates et leurs lieux.",
+      "Constituer le dossier d'inscription de l'enfant, valable en général pour l'année scolaire.",
+      "Réserver les périodes souhaitées : les places pour les vacances partent vite.",
+      "Se renseigner sur les aides de la CAF et de la MSA, selon votre situation."
+    ],
+    "pieces": [
+      "Le carnet de santé (vaccinations) de l'enfant",
+      "Votre numéro d'allocataire CAF ou MSA",
+      "Une attestation d'assurance responsabilité civile",
+      "Un justificatif de domicile"
+    ],
+    "delai": "Variable selon les périodes : se renseigner avant chaque vacances scolaires.",
+    "cout": "Variable selon le quotient familial (tarifs publiés par la CCBA).",
+    "action": {
+      "libelle": "Enfance-jeunesse sur le site de la CCBA",
+      "url": "https://www.bassin-aubenas.fr/services/",
+      "type": "externe"
+    },
+    "actionsSecondaires": [
+      {
+        "libelle": "Appeler la CCBA : 04 75 94 61 12",
+        "url": "tel:+33475946112",
+        "type": "tel"
+      },
+      {
+        "libelle": "Loisirs autour de Juvinas",
+        "url": "/enfance-jeunesse/loisirs.html",
+        "type": "interne"
+      }
+    ],
+    "aSavoir": "La mairie de Juvinas ne gère pas d'accueil de loisirs : elle peut vous orienter vers la CCBA.",
+    "motsCles": [
+      "centre de loisirs",
+      "vacances",
+      "mercredi",
+      "enfants",
+      "stage",
+      "multisports",
+      "jeunesse",
+      "accueil de loisirs",
+      "activités enfants"
+    ],
+    "voirAussi": [
+      "ecole-cantine",
+      "creche"
+    ]
+  },
+  {
+    "id": "debroussaillement",
+    "titre": "Respecter l'obligation de débroussaillement",
+    "titreCourt": "Débroussaillement",
+    "resume": "Une obligation légale autour des habitations, pour limiter le risque d'incendie de forêt.",
+    "categorie": "cadre-de-vie",
+    "lieu": "mairie",
+    "lieuDetail": "Obligation à la charge du propriétaire. Renseignements en mairie et auprès de la préfecture de l'Ardèche (direction départementale des territoires).",
+    "icone": "feu",
+    "quoi": "Le débroussaillement des abords des habitations est le moyen de prévention le plus efficace contre l'incendie de forêt : Juvinas est une commune exposée au risque de feu de forêt (Géorisques). L'obligation légale est prévue par les articles L131-10 et suivants du code forestier ; ses modalités (zones concernées, largeur, période) sont fixées par arrêté préfectoral.",
+    "etapes": [
+      "Vérifier auprès de la mairie ou de la préfecture si votre terrain est situé dans une zone soumise à l'obligation légale de débroussaillement.",
+      "Débroussailler les terrains autour des constructions sur la largeur fixée par l'arrêté préfectoral en vigueur (50 mètres autour des constructions dans le cas général, 10 mètres de part et d'autre des voies d'accès privées).",
+      "Réaliser les travaux avant la saison à risque, hors période de vent et de forte chaleur.",
+      "Évacuer ou broyer les résidus : ne jamais les brûler sans en avoir vérifié l'autorisation, l'emploi du feu étant très encadré en période à risque."
+    ],
+    "pieces": [],
+    "delai": "À réaliser chaque année, avant l'été.",
+    "cout": "À la charge du propriétaire.",
+    "action": {
+      "libelle": "Débroussaillement : la réglementation (service-public.fr)",
+      "url": "https://www.service-public.fr/particuliers/vosdroits/F31522",
+      "type": "externe"
+    },
+    "actionsSecondaires": [
+      {
+        "libelle": "Préfecture de l'Ardèche",
+        "url": "https://www.ardeche.gouv.fr/",
+        "type": "externe"
+      },
+      {
+        "libelle": "Me renseigner en mairie",
+        "url": "tel:+33475882156",
+        "type": "tel"
+      },
+      {
+        "libelle": "Risques à Juvinas",
+        "url": "/cadre-de-vie/risques.html",
+        "type": "interne"
+      }
+    ],
+    "aSavoir": "Le débroussaillement protège votre maison, mais aussi celle de vos voisins et la sécurité des secours. Le non-respect de cette obligation est sanctionné et peut engager votre responsabilité. Les largeurs ci-dessus sont celles du cas général : seul l'arrêté préfectoral fait foi.",
+    "motsCles": [
+      "débroussaillement",
+      "debroussaillage",
+      "incendie",
+      "feu de forêt",
+      "olf",
+      "obligation légale",
+      "broussailles",
+      "prévention"
+    ],
+    "voirAussi": [
+      "registre-vulnerables"
+    ]
+  },
+  {
+    "id": "association",
+    "titre": "Créer une association ou demander une subvention",
+    "titreCourt": "Association",
+    "resume": "Déclarer une association en ligne et, si besoin, solliciter la commune.",
+    "categorie": "vie-locale",
+    "lieu": "enligne",
+    "lieuDetail": "Déclaration en ligne auprès de la préfecture (portail national), puis demande éventuelle auprès de la mairie.",
+    "icone": "association",
+    "quoi": "Une association se crée librement par la signature de statuts et se déclare en ligne auprès de la préfecture du département du siège (Ardèche pour Juvinas) ; elle est alors publiée au Journal officiel des associations. Pour une aide de la commune (subvention, prêt d'une salle), il faut s'adresser à la mairie.",
+    "etapes": [
+      "Rédiger les statuts et tenir l'assemblée constitutive désignant les dirigeants.",
+      "Déclarer l'association en ligne sur le portail national des associations.",
+      "Attendre le récépissé de la préfecture, puis la parution au Journal officiel des associations.",
+      "Pour une subvention ou une salle : écrire à la mairie en précisant l'objet, la date et le budget de l'activité."
+    ],
+    "pieces": [
+      "Les statuts signés",
+      "La liste des dirigeants",
+      "Le procès-verbal de l'assemblée constitutive"
+    ],
+    "delai": "Quelques jours à quelques semaines selon la préfecture.",
+    "cout": "Gratuit (publication au Journal officiel des associations : gratuite).",
+    "action": {
+      "libelle": "Déclarer une association (service-public.fr)",
+      "url": "https://www.service-public.fr/particuliers/vosdroits/F1119",
+      "type": "externe"
+    },
+    "actionsSecondaires": [
+      {
+        "libelle": "Écrire à la mairie",
+        "url": "mailto:mairie@juvinas.fr?subject=Association%20%E2%80%94%20demande%20d%27information",
+        "type": "mail"
+      },
+      {
+        "libelle": "Les associations de Juvinas",
+        "url": "/vie-locale/associations.html",
+        "type": "interne"
+      }
+    ],
+    "aSavoir": "La mairie de Juvinas décide des subventions et des prêts de salle en conseil municipal : posez votre demande suffisamment tôt.",
+    "motsCles": [
+      "association",
+      "créer une association",
+      "loi 1901",
+      "subvention",
+      "statuts",
+      "déclaration en préfecture",
+      "bénévole"
+    ],
+    "voirAussi": [
+      "salle-communale"
+    ]
+  },
+  {
+    "id": "chien-dangereux",
+    "titre": "Déclarer un chien de catégorie 1 ou 2",
+    "titreCourt": "Chien dangereux",
+    "resume": "Permis de détention et déclaration en mairie pour les chiens dits dangereux.",
+    "categorie": "cadre-de-vie",
+    "lieu": "mairie",
+    "lieuDetail": "Secrétariat de mairie de Juvinas, commune de résidence du propriétaire.",
+    "icone": "chien",
+    "quoi": "Le propriétaire d'un chien de catégorie 1 (d'attaque) ou 2 (de garde et de défense) doit détenir un permis de détention, délivré par le maire de sa commune de résidence après une évaluation comportementale et une formation. Le chien doit être identifié, vacciné contre la rage et assuré.",
+    "etapes": [
+      "Faire évaluer le chien par un vétérinaire agréé et suivre la formation auprès d'un formateur agréé.",
+      "Réunir les justificatifs (identification, vaccination antirabique, assurance responsabilité civile).",
+      "Déposer la demande de permis de détention en mairie.",
+      "Conserver le permis : il doit pouvoir être présenté à tout contrôle."
+    ],
+    "pieces": [
+      "Pièce d'identité du propriétaire",
+      "Carte d'identification du chien",
+      "Certificat de vaccination antirabique",
+      "Attestation d'assurance responsabilité civile",
+      "Attestation d'aptitude (formation) et évaluation comportementale"
+    ],
+    "delai": "Variable selon les rendez-vous vétérinaire et formation.",
+    "cout": "Variable : formation, évaluation comportementale et éventuels frais de dossier.",
+    "action": {
+      "libelle": "Les règles pour les chiens dangereux (service-public.fr)",
+      "url": "https://www.service-public.fr/particuliers/vosdroits/F32351",
+      "type": "externe"
+    },
+    "actionsSecondaires": [
+      {
+        "libelle": "Contacter la mairie",
+        "url": "tel:+33475882156",
+        "type": "tel"
+      }
+    ],
+    "aSavoir": "Détenir un chien de catégorie 1 ou 2 sans permis est puni par la loi.",
+    "motsCles": [
+      "chien dangereux",
+      "catégorie 1",
+      "catégorie 2",
+      "pitbull",
+      "permis de détention",
+      "animaux",
+      "rottweiler"
+    ],
+    "voirAussi": [
+      "rendez-vous-elu"
+    ]
+  },
+  {
+    "id": "chasse-peche",
+    "titre": "Permis de chasse et carte de pêche",
+    "titreCourt": "Chasse et pêche",
+    "resume": "Passer son permis de chasser, valider son permis ou prendre sa carte de pêche en ligne.",
+    "categorie": "loisirs",
+    "lieu": "enligne",
+    "lieuDetail": "Fédération départementale des chasseurs de l'Ardèche et fédération de pêche, avec la plateforme nationale.",
+    "icone": "nature",
+    "quoi": "Le permis de chasser se passe auprès de l'Office français de la biodiversité (examen) et se valide chaque saison auprès de la fédération des chasseurs du département ; la carte de pêche s'achète en ligne auprès d'une association agréée de pêche (AAPPMA) ou de la fédération.",
+    "etapes": [
+      "Chasse : s'inscrire à la formation et à l'examen du permis de chasser, puis valider son permis auprès de la fédération des chasseurs de l'Ardèche.",
+      "Pêche : acheter la carte de pêche en ligne sur le site national, en choisissant l'association locale.",
+      "S'informer des périodes d'ouverture, des réserves et des consignes de sécurité avant de partir."
+    ],
+    "pieces": [
+      "Une pièce d'identité",
+      "Une photo d'identité numérique (selon la démarche)",
+      "Une attestation d'assurance (chasse)"
+    ],
+    "delai": "Variable selon la démarche.",
+    "cout": "Variable : redevances et cotisations fixées chaque année.",
+    "action": {
+      "libelle": "Carte de pêche en ligne",
+      "url": "https://www.cartedepeche.fr/",
+      "type": "externe"
+    },
+    "actionsSecondaires": [
+      {
+        "libelle": "Permis de chasser (service-public.fr)",
+        "url": "https://www.service-public.fr/particuliers/vosdroits/F2958",
+        "type": "externe"
+      }
+    ],
+    "aSavoir": "En été, l'accès aux massifs forestiers peut être réglementé selon le danger d'incendie : renseignez-vous auprès de la préfecture.",
+    "motsCles": [
+      "chasse",
+      "pêche",
+      "permis de chasser",
+      "carte de pêche",
+      "gibier",
+      "aappma",
+      "fédération des chasseurs"
+    ],
+    "voirAussi": [
+      "debroussaillement"
+    ]
+  },
+  {
+    "id": "nouvel-habitant",
+    "titre": "Je m'installe à Juvinas",
+    "titreCourt": "Nouvel habitant",
+    "resume": "Les premiers gestes à faire en arrivant dans la commune : mairie, listes électorales, déchets, eau, école.",
+    "categorie": "citoyennete",
+    "lieu": "mairie",
+    "lieuDetail": "Secrétariat de mairie : lundi et mercredi, de 13h30 à 17h30.",
+    "icone": "accueil",
+    "quoi": "Vous arrivez à Juvinas ? Voici les premières démarches utiles. La plupart se font en ligne ; la mairie vous accueille pour le reste.",
+    "etapes": [
+      "Vous inscrire sur les listes électorales de la commune (en ligne ou en mairie).",
+      "Déclarer votre changement d'adresse aux administrations (service-public.fr) et mettre à jour votre carte grise sous un mois.",
+      "Repérer les jours de collecte des déchets : ordures ménagères le lundi, emballages recyclables le mercredi des semaines impaires ; déchèteries gratuites pour les habitants de la CCBA.",
+      "Ouvrir ou transférer vos contrats d'eau et d'électricité, et vous renseigner auprès de la mairie sur le réseau d'eau qui dessert votre hameau.",
+      "Si vous avez des enfants : vous renseigner auprès de la mairie sur l'école de rattachement (Juvinas n'a pas d'école)."
+    ],
+    "pieces": [
+      "Une pièce d'identité",
+      "Un justificatif de domicile récent ou l'acte d'achat ou de location"
+    ],
+    "delai": "À faire dès l'installation.",
+    "cout": "Gratuit (hors carte grise).",
+    "action": {
+      "libelle": "M'inscrire sur les listes électorales",
+      "url": "/demarches/listes-electorales.html",
+      "type": "interne"
+    },
+    "actionsSecondaires": [
+      {
+        "libelle": "Déchets : jours de collecte",
+        "url": "/cadre-de-vie/dechets.html",
+        "type": "interne"
+      },
+      {
+        "libelle": "Contacter la mairie",
+        "url": "tel:+33475882156",
+        "type": "tel"
+      }
+    ],
+    "aSavoir": "Faites-vous connaître au secrétariat de mairie : vous recevrez les informations pratiques de la commune.",
+    "motsCles": [
+      "nouvel habitant",
+      "emménager",
+      "déménager",
+      "arrivée",
+      "installation",
+      "je m'installe",
+      "changement d'adresse",
+      "bienvenue"
+    ],
+    "voirAussi": [
+      "listes-electorales",
+      "carte-grise",
+      "registre-vulnerables"
+    ]
   }
 ]

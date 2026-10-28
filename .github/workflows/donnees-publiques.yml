@@ -1,0 +1,65 @@
+name: Mettre à jour les données publiques (défibrillateurs, comptes)
+
+# Relance chaque semaine tools/fetch-defibrillateurs.mjs (base nationale
+# Géo'DAE) et tools/fetch-finances.mjs (comptes des communes publiés par
+# l'OFGL), puis committe content/defibrillateurs.json et content/finances.json
+# s'ils ont changé — même principe que entreprises.yml. Le push qui en résulte
+# déclenche "Vérifier" (check.yml).
+#
+# Juvinas n'a pas de plan local d'urbanisme (commune au règlement national
+# d'urbanisme, vérifié sur l'API Carto du Géoportail de l'urbanisme) : le
+# script tools/fetch-zonage.mjs reste disponible mais n'est pas lancé ici.
+# À ajouter à ce fichier si la commune se dote d'un PLU ou d'une carte communale.
+#
+# Ces données bougent lentement (un défibrillateur installé, un exercice
+# comptable publié une fois par an) : une fois par semaine suffit. Si une
+# des deux API est indisponible, son script échoue sans rien écrire et
+# l'autre fichier est tout de même mis à jour : le site garde simplement
+# les derniers chiffres connus.
+
+on:
+  schedule:
+    - cron: '0 4 * * 1'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  maj-donnees-publiques:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Défibrillateurs (Géo'DAE)
+        continue-on-error: true
+        run: node tools/fetch-defibrillateurs.mjs
+
+      - name: Comptes de la commune (OFGL)
+        continue-on-error: true
+        run: node tools/fetch-finances.mjs
+
+      - name: Committer et pousser si les fichiers ont changé
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          # Seule la date de mise à jour a changé : rien de neuf, pas de commit.
+          FICHIERS="content/defibrillateurs.json content/finances.json"
+          for f in $FICHIERS; do
+            if git diff --quiet "$f"; then continue; fi
+            if [ -z "$(git diff -U0 "$f" | grep '^[-+] ' | grep -v '"misAJour"')" ]; then git checkout -- "$f"; fi
+          done
+          if git diff --quiet $FICHIERS; then
+            echo "Aucun changement dans les données publiques."
+            exit 0
+          fi
+          git add $FICHIERS
+          git commit -m "Met à jour les données publiques (défibrillateurs, comptes) — automatique"
+          git pull --rebase origin main
+          git push

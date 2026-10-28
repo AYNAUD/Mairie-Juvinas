@@ -44,7 +44,23 @@
     });
   }
 
+  // Le panneau se refermait seulement en touchant de nouveau « Affichage » :
+  // « Fermer » et Échap le referment aussi, et rendent la main au bouton
+  // qui l'a ouvert.
+  function fermerPanneau() {
+    var panneau = document.getElementById('panneau-a11y');
+    var ouvreur = document.querySelector('[data-ouvre-a11y]');
+    if (!panneau || panneau.hidden) return false;
+    panneau.hidden = true;
+    if (ouvreur) { ouvreur.setAttribute('aria-expanded', 'false'); ouvreur.focus(); }
+    return true;
+  }
+  document.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Escape' && fermerPanneau()) ev.preventDefault();
+  });
+
   document.addEventListener('click', function (ev) {
+    if (ev.target.closest('[data-ferme-a11y]')) { fermerPanneau(); return; }
     var b = ev.target.closest('[data-taille], [data-bascule], [data-theme-choix], [data-ouvre-a11y]');
     if (!b) return;
 

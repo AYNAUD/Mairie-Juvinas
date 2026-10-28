@@ -53,7 +53,7 @@
 @media (min-width: 48em) {
   .entete__annonces {
     display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
-    gap: var(--e1) var(--e4); flex: 0 0 auto;
+    gap: 0 var(--e4); flex: 0 1 auto; min-inline-size: 0;
   }
 }
 .entete__actus {
@@ -62,33 +62,68 @@
   font-size: var(--t-petit); font-weight: 500; text-decoration: none; white-space: nowrap;
 }
 .entete__actus:hover { text-decoration: underline; }
+/* Quand la barre manque de largeur (vers 800 px), une annonce trop longue
+   se coupe sur « … » au lieu de déborder sur le logo. */
+.entete__actus { min-inline-size: 0; max-inline-size: 100%; }
+.entete__actus-texte { overflow: hidden; text-overflow: ellipsis; }
+.entete__actus .icone { flex-shrink: 0; }
+/* Sous 48em, les annonces quittent la barre (masquées plus haut) pour leur
+   propre bandeau, juste sous l'en-tête : hors de sa partie collante, il
+   défile avec la page au lieu d'agrandir l'en-tête, qui ne doit jamais
+   manger plus de 64 px de hauteur d'écran. Le texte y revient à la ligne
+   plutôt que d'être coupé sur « … » : à 320 px, une annonce tronquée ne
+   dirait plus rien. Remplacé par le groupe de la barre à partir de 48em. */
+.annonces-telephone { background: var(--fond-carte); border-block-end: var(--trait) solid var(--bordure); }
+.annonces-telephone__inner { display: flex; flex-wrap: wrap; gap: 0 var(--e4); }
+.annonces-telephone .entete__actus { white-space: normal; }
+@media (min-width: 48em) { .annonces-telephone { display: none; } }
 
-.marque { display: flex; align-items: center; gap: var(--e3); text-decoration: none; color: var(--texte); flex: 1 1 0; padding-block: var(--e2); min-inline-size: 0; }
-.marque__blason { display: grid; place-items: center; inline-size: 2.5rem; block-size: 2.5rem; border-radius: var(--rayon-petit); background: var(--accent); color: var(--accent-texte); }
-.marque__blason .icone { inline-size: 1.5rem; block-size: 1.5rem; }
+.marque { display: flex; align-items: center; gap: var(--e2); text-decoration: none; color: var(--texte); flex: 1 1 0; padding-block: var(--e2); min-inline-size: 0; }
+.marque__blason { flex: none; inline-size: 2.6rem; block-size: 2.6rem; border-radius: var(--rayon-petit); background: var(--accent); color: var(--accent-texte); overflow: hidden; }
+.marque__logo { inline-size: 100%; block-size: 100%; max-inline-size: none; }
 .marque__texte { min-inline-size: 0; }
-/* white-space/overflow/text-overflow s'appliquent en toute largeur, pas
-   seulement sous 30em : à partir de 48em le blason partage la barre à
-   parts égales avec le lien "XX actualités…" et les actions (voir
-   .entete__actus plus haut), donc le nom de la commune peut aussi devoir
-   se réduire là — un ellipsis plutôt qu'un retour à la ligne qui
-   agrandirait toute la barre d'en-tête. */
-.marque__nom, .marque__sous { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.marque__nom { display: block; font-family: var(--police-titre); font-weight: 600; font-size: var(--t-grand); line-height: 1.15; letter-spacing: var(--interlettrage-titre); }
+/* Sur un petit téléphone, le nom de la commune passe sur deux lignes
+   (« Mairie de / Lecques ») plutôt que d'être coupé sur « … » : sans le
+   sous-titre, masqué ici, deux lignes tiennent dans les 64 px que l'en-tête
+   collant ne doit jamais dépasser. Taille fixée à 16 px, indépendante du
+   texte courant : à 17 px, « Mairie de » ne tenait plus sur une ligne à
+   320 px et le nom en prenait trois. */
+.marque__nom { display: block; overflow: hidden; font-family: var(--police-titre); font-weight: 600; font-size: 1rem; line-height: 1.15; letter-spacing: var(--interlettrage-titre); }
 .marque__sous { display: none; font-size: var(--t-mini); color: var(--texte-doux); }
 .marque:hover .marque__nom { text-decoration: underline; }
-/* Sous 30em, le nom de la commune tient sur une ligne : l'en-tête collant
-   ne doit jamais manger plus de 64 px de hauteur d'écran. */
-@media (min-width: 30em) { .marque__sous { display: block; } }
-@media (max-width: 29.99em) {
-  .marque__nom { font-size: var(--t-corps); }
-  .marque { gap: var(--e2); }
+@media (min-width: 30em) {
+  .marque { gap: var(--e3); }
+  .marque__nom { font-size: var(--t-grand); }
+  .marque__sous { display: block; }
+  /* Dès qu'il y a la place pour une ligne, on n'en prend qu'une. À partir
+     de 48em le blason partage la barre à parts égales avec le lien
+     "XX actualités…" et les actions (voir .entete__actus plus haut) : si
+     le nom doit s'y réduire, un ellipsis plutôt qu'un retour à la ligne
+     qui agrandirait toute la barre d'en-tête. */
+  .marque__nom, .marque__sous { white-space: nowrap; text-overflow: ellipsis; }
+  .marque__sous { overflow: hidden; }
 }
+/* Le logo et le nom gardent toujours leur place : c'est le groupe
+   d'annonces qui passe sur deux lignes quand la barre manque de largeur.
+   Sans ce plancher, vers 800 px, les deux annonces et les actions
+   prenaient toute la barre et le logo disparaissait. */
+@media (min-width: 48em) { .marque { min-inline-size: min-content; } }
+/* Pastille agrandie sur grand écran seulement : en dessous, la barre
+   partage déjà sa largeur entre logo, annonces et actions. */
+@media (min-width: 64em) { .marque__blason { inline-size: 3rem; block-size: 3rem; } }
 
-.entete__actions { display: flex; align-items: center; justify-content: flex-end; gap: var(--e1); flex: 1 1 0; }
+/* Sur téléphone, les actions ne prennent que la place de leurs boutons : le
+   reste revient au nom de la commune. À partir de 48em, blason et actions
+   se partagent la barre à parts égales pour que les annonces tombent au
+   centre (voir .entete__annonces). */
+.entete__actions { display: flex; align-items: center; justify-content: flex-end; gap: var(--e1); flex: none; }
+@media (min-width: 48em) { .entete__actions { flex: 1 1 0; } }
 .entete__recherche span, .entete__a11y span, .entete__menu span { display: none; }
 .entete__recherche { text-decoration: none; }
-@media (min-width: 30em) { .entete__recherche span, .entete__menu span { display: inline; } }
+/* Libellés « Rechercher » et « Menu » seulement quand le nom de la commune
+   tient en entier à côté (vers 530 px avec les libellés) ; en dessous, les
+   icônes seules, nommées pour les lecteurs d'écran. */
+@media (min-width: 36em) { .entete__recherche span, .entete__menu span { display: inline; } }
 @media (min-width: 64em) { .entete__a11y .entete__label { display: inline; } }
 
 .entete__menu .icone--fermer { display: none; }
@@ -102,43 +137,124 @@
    distingue les 5 rubriques au premier coup d'œil, sans peser la barre d'un
    jeu d'icônes supplémentaire. --------------------------------------------- */
 .menu { border-block-start: var(--trait) solid var(--bordure); background: var(--fond-alt); }
-.menu__liste { display: grid; gap: var(--trait); }
-.menu__liste a {
-  display: flex; align-items: flex-start; gap: var(--e3);
+.menu__liste { display: grid; }
+.menu__entree { display: flex; flex-wrap: wrap; align-items: center; border-block-end: var(--trait) solid var(--bordure); }
+.menu__entree:last-child { border-block-end: 0; }
+.menu__rubrique {
+  display: flex; align-items: flex-start; gap: var(--e3); flex: 1 1 0; min-inline-size: 0;
   padding: var(--e3) 0; text-decoration: none; color: var(--texte);
-  border-block-end: var(--trait) solid var(--bordure);
   border-inline-start: 4px solid transparent;
 }
-@media (max-width: 63.99em) { .menu__liste li:last-child a { border-block-end: 0; } }
 .menu__puce { inline-size: .55rem; block-size: .55rem; border-radius: 50%; background: var(--couleur-rubrique); flex: none; margin-block-start: .5em; }
 .menu__texte { min-inline-size: 0; }
 .menu__libelle { display: block; font-weight: 500; }
 .menu__desc { display: block; font-size: var(--t-petit); color: var(--texte-doux); }
-.menu__liste a:hover { border-inline-start-color: var(--couleur-rubrique); background: var(--fond-carte); }
-.menu__liste a:hover .menu__libelle { color: var(--couleur-rubrique); }
-.menu__liste a[aria-current="page"] { border-inline-start-color: var(--couleur-rubrique); padding-inline-start: var(--e3); background: var(--fond-carte); }
-.menu__liste a[aria-current="page"] .menu__libelle { color: var(--couleur-rubrique); }
+.menu__rubrique:hover { border-inline-start-color: var(--couleur-rubrique); background: var(--fond-carte); }
+.menu__rubrique:hover .menu__libelle { color: var(--couleur-rubrique); }
+.menu__rubrique[aria-current="page"] { border-inline-start-color: var(--couleur-rubrique); padding-inline-start: var(--e3); background: var(--fond-carte); }
+.menu__rubrique[aria-current="page"] .menu__libelle { color: var(--couleur-rubrique); }
 
-/* Sur mobile, le menu est replié — mais uniquement si JavaScript est actif. */
+/* Sur mobile, le menu est replié — mais uniquement si JavaScript est actif.
+   Ouvert, il défile dans son propre cadre entre l'en-tête collant (4rem) et
+   la barre d'accès rapides (près de 4rem) : une fois les sous-rubriques
+   dépliées, il dépasse la hauteur d'un téléphone, et la fin d'un en-tête
+   collant plus haut que l'écran ne serait jamais atteignable. */
 .js .menu { display: none; }
-.js .menu.est-ouvert { display: block; }
+.js .menu.est-ouvert {
+  display: block; overflow-y: auto; overscroll-behavior: contain;
+  max-block-size: calc(100vh - 8rem);
+  max-block-size: calc(100dvh - 8rem - env(safe-area-inset-bottom));
+}
+
+/* Sous-rubriques ----------------------------------------------------------
+   Le bouton chevron (affiché seulement quand nav.js a pris la main, classe
+   .menu--pilote) déplie les sous-rubriques de son entrée : en accordéon dans
+   le menu du téléphone, en panneau déroulant sur ordinateur (plus bas). Les
+   sous-rubriques sont masquées par défaut : sans script, elles restent
+   atteignables par la page de chaque rubrique, qui les liste toutes. */
+.menu__deplier {
+  display: none; flex: none; align-items: center; justify-content: center;
+  min-inline-size: var(--cible); min-block-size: var(--cible);
+  border-radius: var(--rayon); color: var(--texte-doux);
+}
+.menu--pilote .menu__deplier { display: inline-flex; }
+.menu__deplier:hover { background: var(--fond-carte); color: var(--texte); }
+.menu__chevron { inline-size: 1.25rem; block-size: 1.25rem; transform: rotate(90deg); transition: transform var(--transition); }
+.menu__deplier[aria-expanded="true"] .menu__chevron { transform: rotate(-90deg); }
+.menu__sous { display: none; flex-basis: 100%; padding-block-end: var(--e3); padding-inline-start: calc(4px + .55rem + var(--e3)); }
+.menu__entree.est-deplie > .menu__sous { display: block; }
+.menu__sous a {
+  display: flex; align-items: center; min-block-size: var(--cible);
+  padding: var(--e1) var(--e3); color: var(--texte); text-decoration: none;
+  border-inline-start: 3px solid var(--bordure);
+}
+.menu__sous a:hover { color: var(--lien); background: var(--fond-carte); border-inline-start-color: var(--couleur-rubrique); text-decoration: underline; }
+/* Sous-rubrique précédée d'un trait (« miseEnAvant » dans navigation.json,
+   par exemple « S'abonner aux actualités ») : elle et celles qui la suivent
+   forment un groupe à part en bas de la liste. */
+.menu__sous-avant { margin-block-start: var(--e2); padding-block-start: var(--e2); border-block-start: var(--trait) solid var(--bordure); }
+
+@keyframes menu-deroule { from { opacity: 0; transform: translateY(-.25rem); } }
 
 @media (min-width: 64em) {
-  .js .menu, .menu { display: block; background: var(--fond); border-block-start: var(--trait) solid var(--bordure); }
-  .menu__liste { grid-auto-flow: column; justify-content: start; gap: var(--e1); }
-  .menu__liste a {
-    align-items: center; border-inline-start: 0;
-    border-block-end: 3px solid transparent; padding: var(--e2) var(--e3);
-  }
-  .menu__puce { margin-block-start: 0; }
-  .menu__liste a:hover { background: var(--fond-alt); }
-  .menu__liste a[aria-current="page"] {
-    background: none; border-block-end-color: var(--couleur-rubrique); padding-inline-start: var(--e3);
-  }
+  /* Bande de la couleur principale du thème (essai d'octobre 2026) : sur
+     fond crème, la barre se confondait avec la page. Sans les pastilles de
+     couleur, qui se perdaient sur ce fond. Texte, soulignement et contour
+     de focus en --accent-texte sur --accent : la
+     paire du bouton principal, déjà contrôlée AA dans les trois thèmes
+     (tools/check.mjs). Le contour de focus habituel (--focus, terre cuite
+     en Garrigue) ne se verrait pas sur ce fond. */
+  .js .menu, .menu { display: block; background: var(--accent); border-block-start: 0; }
+  /* Menu du téléphone resté ouvert avant un agrandissement de la fenêtre :
+     son cadre de défilement rognerait les panneaux déroulants. */
+  .js .menu.est-ouvert { max-block-size: none; overflow: visible; }
+  /* Une seule ligne en temps normal ; en très grand texte, les entrées
+     passent à la ligne plutôt que de faire défiler la page. */
+  .menu__liste { display: flex; flex-wrap: wrap; gap: var(--e1); }
+  /* L'entrée entière (lien et chevron) forme un seul onglet : fond éclairci
+     au survol et pendant que son panneau est ouvert, soulignée sur la
+     rubrique en cours. */
+  .menu__entree { position: relative; flex-wrap: nowrap; align-items: stretch; }
+  .menu__liste > .menu__entree { border-block-end: 3px solid transparent; }
+  .menu__entree:hover, .menu__entree.est-deplie { background: color-mix(in srgb, var(--accent-texte) 14%, var(--accent)); }
+  .menu__entree--active { background: color-mix(in srgb, var(--accent-texte) 16%, var(--accent)); }
+  .menu__liste > .menu__entree--active { border-block-end-color: var(--accent-texte); }
+  .menu__rubrique { flex: none; align-items: center; border-inline-start: 0; color: var(--accent-texte); padding: var(--e2) var(--e3); }
+  .menu--pilote .menu__rubrique:not(:last-child) { padding-inline-end: 0; }
+  .menu__rubrique:hover, .menu__rubrique[aria-current="page"] { background: none; }
+  .menu__rubrique:hover .menu__libelle, .menu__rubrique[aria-current="page"] .menu__libelle { color: var(--accent-texte); }
+  .menu__rubrique:focus-visible, .menu__deplier:focus-visible { outline-color: var(--accent-texte); outline-offset: -4px; }
+  .menu__puce { display: none; }
   /* Sur grand écran l'en-tête reste collé en haut : on garde une seule ligne de
      navigation. Les descriptions restent visibles dans le menu mobile, sur la
      page d'accueil et sur chaque sommaire de rubrique. */
   .menu__desc { display: none; }
+  .menu__deplier { border-radius: 0; color: var(--accent-texte); }
+  .menu__deplier:hover { background: none; color: var(--accent-texte); }
+
+  /* Panneau déroulant, accroché sous son entrée. Il touche la barre : la
+     souris passe de l'entrée au panneau sans le refermer (le panneau fait
+     partie de l'entrée survolée). La dernière entrée l'aligne sur son bord
+     droit ; nav.js corrige tout panneau qui sortirait de l'écran. */
+  .menu__sous {
+    position: absolute; inset-block-start: calc(100% + 3px); inset-inline-start: 0; z-index: 1;
+    inline-size: max-content; min-inline-size: max(100%, 15rem); max-inline-size: 22rem;
+    max-block-size: 70vh; overflow-y: auto;
+    padding: var(--e2) 0; background: var(--fond-carte);
+    border: var(--trait) solid var(--bordure); border-block-start: 3px solid var(--couleur-rubrique);
+    border-radius: 0 0 var(--rayon) var(--rayon); box-shadow: var(--ombre-forte);
+    animation: menu-deroule var(--transition);
+  }
+  .menu__entree:last-child .menu__sous, .menu__sous.menu__sous--droite { inset-inline: auto 0; }
+  .menu__entree .menu__sous.menu__sous--gauche { inset-inline: 0 auto; }
+  /* Sans script : ouverture au survol et au focus clavier. */
+  .menu:not(.menu--pilote) .menu__entree:hover > .menu__sous,
+  .menu:not(.menu--pilote) .menu__entree:focus-within > .menu__sous { display: block; }
+  .menu__sous a { padding: var(--e2) var(--e4); border-inline-start-color: transparent; }
+  .menu__sous a:hover { background: var(--fond-alt); }
+  /* Contour de focus à l'intérieur du lien : le panneau, qui peut défiler,
+     rognerait un contour débordant sur ses côtés. */
+  .menu__sous a:focus-visible { outline-offset: -3px; }
 }
 
 /* --- Panneau d'affichage (accessibilité) -------------------------------- */
@@ -146,6 +262,7 @@
 .panneau-a11y__inner { display: grid; gap: var(--e4); padding-block: var(--e4); }
 .panneau-a11y legend { font-weight: 500; margin-block-end: var(--e2); }
 .panneau-a11y__aide { font-size: var(--t-petit); color: var(--texte-doux); }
+.panneau-a11y__fermer { justify-self: start; border: var(--trait) solid var(--bordure-forte); }
 .segments { display: flex; flex-wrap: wrap; gap: var(--e2); }
 .segments button {
   min-block-size: var(--cible); padding: var(--e2) var(--e3);
@@ -153,7 +270,7 @@
   background: var(--fond-carte); color: var(--texte); font-size: var(--t-petit); font-weight: 500;
 }
 .segments button[aria-pressed="true"] { background: var(--accent); color: var(--accent-texte); border-color: var(--accent); }
-@media (min-width: 48em) { .panneau-a11y__inner { grid-template-columns: auto auto; align-items: start; gap: var(--e6); } .panneau-a11y__aide { grid-column: 1 / -1; } }
+@media (min-width: 48em) { .panneau-a11y__inner { grid-template-columns: auto auto; align-items: start; gap: var(--e6); } .panneau-a11y__aide, .panneau-a11y__fermer { grid-column: 1 / -1; } }
 
 /* --- Fil d'Ariane ------------------------------------------------------ */
 .fil { inline-size: min(100% - 2 * var(--gouttiere), var(--largeur)); margin: var(--e4) auto 0; font-size: var(--t-petit); }
@@ -207,7 +324,7 @@
 
 .suggestions { display: flex; flex-wrap: wrap; gap: var(--e2); }
 .suggestions a {
-  display: inline-flex; align-items: center; min-block-size: 2.25rem; padding: var(--e1) var(--e3);
+  display: inline-flex; align-items: center; min-block-size: var(--cible); padding: var(--e1) var(--e3);
   font-size: var(--t-mini);
   background: var(--fond-carte); color: var(--texte-doux); border: var(--trait) solid var(--bordure); border-radius: var(--rayon-pilule);
   font-weight: 500; text-decoration: none; line-height: 1.35;
@@ -227,6 +344,25 @@
 .overlay__entete { display: flex; align-items: center; justify-content: space-between; gap: var(--e3); margin-block-end: var(--e4); }
 .overlay__suggestions { margin-block-start: var(--e5); }
 .overlay__suggestions h3 { font-size: var(--t-petit); text-transform: uppercase; letter-spacing: .06em; color: var(--texte-doux); margin-block-end: var(--e2); }
+
+/* --- Photo en taille réelle ---------------------------------------------
+   Ouverte par src/scripts/photo.js à la place d'une navigation vers le
+   fichier image seul (voir ce fichier : sans cette bascule, certains
+   navigateurs mobiles affichent l'image sans aucun bouton retour). Le voile
+   ET la photo ferment tous les deux la fenêtre au clic. */
+.overlay--photo { display: grid; align-items: center; justify-items: center; padding: var(--e4); }
+.overlay--photo .overlay__voile { background: rgb(0 0 0 / .85); }
+.overlay--photo .overlay__photo {
+  position: relative; max-inline-size: min(100%, 60rem); max-block-size: calc(100vh - 2 * var(--e4));
+  object-fit: contain; border-radius: var(--rayon); cursor: zoom-out;
+}
+.overlay--photo .overlay__fermer {
+  position: absolute; top: var(--e4); right: var(--e4); inline-size: 2.75rem; block-size: 2.75rem;
+  display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%;
+  background: rgb(0 0 0 / .5); color: #fff; cursor: pointer;
+}
+.overlay--photo .overlay__fermer svg { inline-size: 1.5rem; block-size: 1.5rem; }
+.overlay--photo .overlay__fermer:focus-visible { outline: var(--e1) solid var(--focus); outline-offset: 2px; }
 
 /* --- Cartes ------------------------------------------------------------ */
 .carte {
@@ -278,6 +414,17 @@
 @media (min-width: 48em) { .grille-cartes--large { grid-template-columns: repeat(2, 1fr); } }
 .grille-cartes--compacte { grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); }
 
+/* Élus du conseil : portrait rond à gauche, nom et fonction à droite — une
+   seule colonne sur téléphone, deux dès que la page est assez large. Le
+   portrait est un carré de 240 px tiré du trombinoscope ; son alt est vide
+   parce que le nom est écrit juste à côté. */
+.grille-cartes--elus { grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); }
+.carte--elu { flex-direction: row; align-items: center; gap: var(--e4); }
+.carte__portrait {
+  flex: none; inline-size: 5rem; block-size: 5rem; border-radius: 50%; object-fit: cover;
+  background: var(--fond-alt); border: var(--trait) solid var(--bordure);
+}
+
 .etiquette {
   display: inline-block; padding: .125rem var(--e2); border-radius: var(--rayon-petit);
   background: var(--fond-alt); color: var(--texte-doux); font-size: var(--t-mini); font-weight: 500;
@@ -302,7 +449,10 @@
 .lieu--fermee { color: var(--danger); }
 
 /* --- Tuiles « Je veux… » ------------------------------------------------ */
-.tuiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--e3); }
+/* minmax(0, 1fr) : une colonne 1fr ne descend pas sous son mot le plus long
+   (« Encombrants »), et en très grand texte la grille élargissait la page à
+   320 px. Le mot trop long se coupe alors dans sa tuile. */
+.tuiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e3); }
 @media (min-width: 40em) { .tuiles { grid-template-columns: repeat(3, 1fr); gap: var(--e4); } }
 @media (min-width: 64em) { .tuiles { grid-template-columns: repeat(4, 1fr); } }
 .tuile a {
@@ -314,7 +464,7 @@
 }
 .tuile a:hover { border-color: var(--accent); background: var(--fond-accentue); transform: translateY(-2px); box-shadow: var(--ombre-forte); }
 .tuile__icone { display: grid; place-items: center; inline-size: 2.75rem; block-size: 2.75rem; border-radius: var(--rayon-petit); background: var(--accent-doux); color: var(--accent-doux-texte); transition: background var(--transition), color var(--transition); }
-.tuile__titre { font-weight: 500; line-height: 1.3; }
+.tuile__titre { font-weight: 500; line-height: 1.3; hyphens: auto; overflow-wrap: break-word; }
 .tuile__lieu { font-size: var(--t-mini); color: var(--texte-doux); margin-block-start: auto; }
 
 /* --- Sections ---------------------------------------------------------- */
@@ -326,7 +476,7 @@
 .section__entete h2 { display: flex; align-items: center; gap: var(--e2); }
 .section__entete p { color: var(--texte-doux); flex: 1 1 100%; }
 .section__pied { margin-block-start: var(--e4); }
-.lien-suite { display: inline-flex; align-items: center; gap: var(--e1); font-weight: 500; text-decoration: none; }
+.lien-suite { display: inline-flex; align-items: center; gap: var(--e1); min-block-size: var(--cible); font-weight: 500; text-decoration: none; }
 .lien-suite:hover { text-decoration: underline; }
 
 .page-entete { margin-block-end: var(--e6); display: grid; gap: var(--e3); }
@@ -337,7 +487,7 @@
 .ancres { margin-block: var(--e5); }
 .ancres ul { display: flex; flex-wrap: wrap; gap: var(--e2); }
 .ancres a {
-  display: inline-flex; align-items: center; gap: var(--e1); min-block-size: 2.5rem;
+  display: inline-flex; align-items: center; gap: var(--e1); min-block-size: var(--cible);
   padding: var(--e2) var(--e3); border: var(--trait) solid var(--bordure); border-radius: var(--rayon-pilule);
   text-decoration: none; color: var(--texte); font-size: var(--t-petit); font-weight: 500;
 }
@@ -360,7 +510,9 @@
 .liste-detail h3 { margin-block-end: var(--e2); }
 .liste-documents { display: grid; gap: var(--e1); }
 .liste-documents li { padding-block: var(--e2); border-block-end: var(--trait) solid var(--bordure); }
-.liste-documents a { display: inline-flex; align-items: center; gap: var(--e2); font-weight: 500; }
+/* flex-wrap : l'étiquette « PDF, 1,7 Mo », insécable (voir .documents
+   .poids), passe sous le libellé au lieu d'élargir la page. */
+.liste-documents a { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--e2); font-weight: 500; }
 .liste-documents .indisponible { color: var(--texte-doux); display: flex; align-items: center; gap: var(--e2); }
 .liste-documents .indisponible em { font-size: var(--t-petit); }
 .titre-groupe { display: flex; align-items: center; gap: var(--e2); margin-block: var(--e5) var(--e2); }
@@ -405,6 +557,54 @@
   paint-order: stroke; stroke: var(--fond-carte); stroke-width: 3px; stroke-linejoin: round;
 }
 .carte-lecques__marqueurs a { cursor: pointer; }
+
+/* --- Plan de zonage du PLU (views.mjs, planZonage) ----------------------
+   Les couleurs de zone (--zone-u, --zone-au, --zone-a, --zone-n) suivent
+   l'usage des PLU ; tools/check.mjs vérifie que le nom d'une zone reste
+   lisible dessus, dans chaque thème. */
+.plan-zonage { margin-block: var(--e5); display: grid; gap: var(--e4); }
+.plan-zonage > :is(h2, h3), .plan-zonage p { margin: 0; }
+/* La carte en pleine largeur, la légende dessous : à côté de la légende,
+   la carte (haute et étroite) devenait trop petite pour être lue. */
+.plan-zonage__duo { display: grid; gap: var(--e4); }
+.plan-zonage__carte { margin: 0; display: grid; gap: var(--e2); }
+.plan-zonage__carte figcaption { font-size: var(--t-petit); color: var(--texte-doux); }
+.plan-zonage__carte svg {
+  display: block; inline-size: 100%; block-size: auto;
+  background: var(--fond-carte); border: 2px solid var(--bordure-forte); border-radius: var(--rayon);
+}
+.plan-zonage__zone { stroke: var(--fond-carte); stroke-width: 1; vector-effect: non-scaling-stroke; fill-rule: evenodd; }
+.plan-zonage__zone:hover { stroke: var(--texte); stroke-width: 2.5; }
+.plan-zonage__zone--u, .plan-zonage__puce--u { fill: var(--zone-u); background: var(--zone-u); }
+.plan-zonage__zone--au, .plan-zonage__puce--au { fill: var(--zone-au); background: var(--zone-au); }
+.plan-zonage__zone--a, .plan-zonage__puce--a { fill: var(--zone-a); background: var(--zone-a); }
+.plan-zonage__zone--n, .plan-zonage__puce--n { fill: var(--zone-n); background: var(--zone-n); }
+.plan-zonage__contour { fill: none; stroke: var(--bordure-forte); stroke-width: 2; vector-effect: non-scaling-stroke; }
+/* Rien de ce qui est dessiné par-dessus les zones (routes, Vidourle,
+   contour, mairie, noms) ne doit intercepter le survol : l'infobulle
+   s'ouvre partout où l'on voit la couleur d'une zone. */
+.plan-zonage svg :is(.carte-lecques__routes, .carte-lecques__riviere, .plan-zonage__contour, .carte-lecques__mairie-halo, .carte-lecques__mairie-point) { pointer-events: none; }
+.plan-zonage__zone { cursor: help; }
+.plan-zonage__zone.est-survolee { stroke: var(--texte); stroke-width: 2.5; }
+/* Infobulle de zone (src/scripts/plan-zonage.js), placée près du pointeur. */
+.infobulle-zone {
+  position: fixed; z-index: 50; max-inline-size: min(20rem, calc(100vw - 2rem));
+  padding: var(--e2) var(--e3); border-radius: var(--rayon-petit);
+  background: var(--fond-inverse); color: var(--texte-inverse); box-shadow: var(--ombre-forte);
+  font-size: var(--t-petit); line-height: 1.4; pointer-events: none;
+}
+.infobulle-zone[hidden] { display: none; }
+.infobulle-zone strong { display: block; font-size: 1rem; }
+/* Taille des noms de zone : attribut font-size posé par views.mjs, propre à
+   chaque carte (le repère du village est plus serré). */
+.plan-zonage__etiquettes text { font-weight: 700; fill: var(--texte); text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
+.plan-zonage__legende { display: grid; gap: var(--e4); }
+.plan-zonage__legende :is(h3, h4) { font-size: var(--t-petit); text-transform: uppercase; letter-spacing: .04em; color: var(--texte-doux); margin: 0 0 var(--e2); }
+.plan-zonage__legende dl { margin: 0; display: grid; gap: var(--e2); }
+.plan-zonage__legende dl > div { display: grid; grid-template-columns: 4.25rem 1fr; gap: var(--e2); align-items: baseline; }
+.plan-zonage__legende dt { font-weight: 700; display: inline-flex; align-items: center; gap: var(--e2); }
+.plan-zonage__legende dd { margin: 0; }
+.plan-zonage__puce { inline-size: 1rem; block-size: 1rem; border-radius: var(--rayon-petit); border: 1px solid var(--bordure-forte); flex-shrink: 0; }
 .carte-lecques__point { fill: var(--lien); stroke: var(--fond-carte); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
 .carte-lecques__point--association { fill: var(--accent); }
 .carte-lecques__marqueurs a:hover .carte-lecques__point,
@@ -419,6 +619,116 @@
 .carte-lecques__puce--association { background: var(--accent); }
 .carte-lecques__puce--mairie { background: var(--texte); }
 .carte-lecques__trait { inline-size: .85rem; block-size: 2px; background: var(--eau); flex-shrink: 0; }
+
+/* --- Carte « Autour de Lecques » (page Tourisme, views.mjs carteTourisme) --
+   Fond SVG dessiné au build ; repères HTML posés par-dessus, en % du plan,
+   pour garder leur taille réelle (28 px, zone sensible de 44 px) quelle que
+   soit l'échelle. Le plan ne descend pas sous 36 rem : plus petit, les
+   repères voisins se chevaucheraient. Sur un écran étroit, il défile donc
+   dans son cadre, jamais la page. Les min-inline-size: 0 empêchent cette
+   largeur minimale de remonter jusqu'à la grille de .prose. */
+.carte-tourisme, .carte-tourisme__figure, .carte-tourisme__cadre { min-inline-size: 0; }
+.carte-tourisme { display: grid; gap: var(--e4); }
+.carte-tourisme__figure { margin: 0; position: relative; display: grid; gap: var(--e2); }
+.carte-tourisme__figure figcaption { display: grid; gap: var(--e2); }
+.carte-tourisme__figure figcaption p { margin: 0; }
+.carte-tourisme__cadre {
+  overflow-x: auto; position: relative;
+  background: var(--fond-carte); border: 2px solid var(--bordure-forte); border-radius: var(--rayon);
+}
+.carte-tourisme__plan { position: relative; min-inline-size: 36rem; }
+.carte-tourisme__plan svg { display: block; inline-size: 100%; block-size: auto; }
+.carte-tourisme__limite { fill: none; stroke: var(--bordure-forte); stroke-width: 1.5; stroke-dasharray: 6 4; vector-effect: non-scaling-stroke; }
+.carte-tourisme__rivieres {
+  fill: none; stroke: var(--eau); stroke-width: 1; opacity: .7;
+  stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke;
+}
+.carte-tourisme__routes {
+  fill: none; stroke: var(--bordure-forte); stroke-width: 1.4;
+  stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke;
+}
+.carte-tourisme__routes--locale { stroke-width: .8; opacity: .55; }
+.carte-tourisme__routes--autoroute { stroke: var(--texte-doux); stroke-width: 2.4; }
+.carte-tourisme__trace {
+  fill: none; stroke: var(--succes); stroke-width: 3.5;
+  stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke;
+}
+.carte-tourisme__renvois { fill: var(--texte-doux); stroke: var(--texte-doux); stroke-width: 1; vector-effect: non-scaling-stroke; }
+/* Noms de villages : même halo que les noms de rues (.carte-lecques__etiquettes). */
+.carte-tourisme__noms { fill: var(--texte-doux); font-size: 12px; }
+.carte-tourisme__noms text { paint-order: stroke; stroke: var(--fond-carte); stroke-width: 3px; stroke-linejoin: round; }
+.carte-tourisme__lecques { font-size: 14px; font-weight: 700; fill: var(--texte); }
+.carte-tourisme__echelle path { fill: none; stroke: var(--texte); stroke-width: 1.5; }
+.carte-tourisme__echelle text { font-size: 11px; fill: var(--texte); paint-order: stroke; stroke: var(--fond-carte); stroke-width: 3px; }
+
+.prose .carte-tourisme__reperes { display: block; padding: 0; }
+.carte-tourisme__reperes { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; pointer-events: none; }
+.prose .carte-tourisme__reperes > li { list-style: none; }
+.carte-tourisme__reperes > li { position: absolute; inline-size: 0; block-size: 0; }
+/* Rond pour un site, carré pour une randonnée : le type se lit sans la couleur. */
+.carte-tourisme__repere, .tourisme-site__numero {
+  display: grid; place-items: center; flex-shrink: 0;
+  inline-size: 1.75rem; block-size: 1.75rem; border-radius: 50%;
+  background: var(--accent); color: var(--accent-texte); border: 2px solid var(--fond-carte);
+  font-size: var(--t-mini); font-weight: 700; line-height: 1; text-decoration: none;
+  font-variant-numeric: tabular-nums;
+}
+.carte-tourisme__repere--rando, .tourisme-site--rando .tourisme-site__numero {
+  border-radius: var(--rayon-petit); background: var(--fond-carte); color: var(--succes); border: 3px solid var(--succes);
+}
+.carte-tourisme__repere {
+  position: absolute; inset-block-start: -.875rem; inset-inline-start: -.875rem;
+  pointer-events: auto; box-shadow: var(--ombre-forte); transition: transform var(--transition);
+}
+.carte-tourisme__repere::before { content: ""; position: absolute; inset: -.5rem; }
+.carte-tourisme__repere:hover, .carte-tourisme__repere[aria-expanded="true"] { transform: scale(1.15); z-index: 1; }
+.carte-tourisme__repere:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; z-index: 1; }
+@media (prefers-reduced-motion: reduce) { .carte-tourisme__repere { transition: none; } }
+
+.carte-tourisme__glisser { font-size: var(--t-petit); color: var(--texte-doux); }
+@media (min-width: 40em) { .carte-tourisme__glisser { display: none; } }
+.carte-tourisme__puce { inline-size: .8rem; block-size: .8rem; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.carte-tourisme__puce--rando { border-radius: 2px; background: var(--fond-carte); border: 2px solid var(--succes); }
+.carte-tourisme__trait--trace { block-size: 3px; background: var(--succes); }
+.carte-tourisme__trait--limite { block-size: 0; background: none; border-block-start: 2px dashed var(--bordure-forte); }
+
+/* Infobulle d'un repère (src/scripts/carte-tourisme.js), placée sous le
+   repère ou au-dessus, sa pointe (--fleche) tournée vers lui. */
+.infobulle-tourisme {
+  position: absolute; z-index: 20; inline-size: min(19rem, calc(100% - 1rem));
+  display: grid; gap: var(--e2); padding: var(--e3) var(--e4);
+  background: var(--fond-carte); color: var(--texte);
+  border: 2px solid var(--bordure-forte); border-radius: var(--rayon); box-shadow: var(--ombre-forte);
+  font-size: var(--t-petit); line-height: 1.45;
+  scroll-margin-block: 9rem 4.5rem; /* entre l'en-tête collant (.entete) et la barre mobile */
+}
+.infobulle-tourisme[hidden] { display: none; }
+.infobulle-tourisme::before {
+  content: ""; position: absolute; left: calc(var(--fleche, 50%) - 7px); top: -8px;
+  inline-size: 12px; block-size: 12px; background: var(--fond-carte);
+  border-left: 2px solid var(--bordure-forte); border-top: 2px solid var(--bordure-forte); transform: rotate(45deg);
+}
+.infobulle-tourisme--dessus::before { top: auto; bottom: -8px; border: 0; border-right: 2px solid var(--bordure-forte); border-bottom: 2px solid var(--bordure-forte); }
+.infobulle-tourisme:focus { outline: none; }
+.infobulle-tourisme:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.infobulle-tourisme .tourisme-site__corps { gap: var(--e2); }
+.infobulle-tourisme__titre { font-weight: 700; font-size: 1rem; padding-inline-end: 2rem; }
+.infobulle-tourisme__fermer {
+  position: absolute; inset-block-start: 0; inset-inline-end: 0;
+  display: grid; place-items: center; inline-size: var(--cible); block-size: var(--cible);
+  background: none; border: 0; border-radius: var(--rayon); color: var(--texte); cursor: pointer;
+}
+
+/* Liste des sites sous la carte : la référence, avec ou sans JavaScript. */
+.prose .tourisme-sites { gap: var(--e5); padding: 0; }
+.prose .tourisme-sites > li { list-style: none; }
+.tourisme-site { display: grid; grid-template-columns: 1.75rem minmax(0, 1fr); gap: var(--e3); align-items: start; }
+.tourisme-site:target { outline: 2px solid var(--accent); outline-offset: var(--e2); border-radius: var(--rayon-petit); }
+.tourisme-site__corps { display: grid; gap: var(--e1); }
+.tourisme-site__corps p { margin: 0; }
+.tourisme-site__nom { font-size: var(--t-grand); margin: 0; }
+.tourisme-site__infos { font-size: var(--t-petit); color: var(--texte-doux); }
+.tourisme-site__lien a { display: inline-flex; align-items: center; gap: var(--e1); min-block-size: var(--cible); }
 
 /* --- Liste dense (annuaire Sirene, page Professionnels) -----------------
    Une colonne, deux lignes maxi par entrée (nom sur la première, activité/
@@ -437,10 +747,35 @@
 /* min-inline-size: 0 est indispensable ici : sans lui, cet élément (enfant
    d'une grille elle-même enfant d'une ligne flex) refuse de rétrécir sous
    la largeur de son contenu non coupé — l'ellipsis ne s'active jamais et
-   la ligne entière pousse la page en débordement horizontal. */
-.ligne-entreprise__nom { display: block; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+   la ligne entière pousse la page en débordement horizontal.
+   position: relative fait de ce cadre la référence de la mention cachée
+   « (nouvelle fenêtre) » (.sr-only, positionnée en absolu) : sinon elle
+   échappe à la coupe et élargit la page à 320 px. */
+.ligne-entreprise__nom { position: relative; display: block; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
 .ligne-entreprise__enseigne { font-weight: 400; color: var(--texte-doux); }
 .ligne-entreprise__meta { display: block; font-size: var(--t-petit); color: var(--texte-doux); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* --- Filtre par section NAF (annuaire Sirene) -----------------------------
+   Pastilles-liens : sans JavaScript elles mènent au groupe de leur section,
+   avec src/scripts/filtre-naf.js elles filtrent la liste ; la section
+   affichée porte aria-current. */
+.filtre-naf { margin-block: var(--e5) var(--e2); }
+.filtre-naf__titre { font-weight: 600; margin-block-end: var(--e2); }
+.filtre-naf__liste { display: flex; flex-wrap: wrap; gap: var(--e2); }
+.filtre-naf__liste a {
+  display: inline-flex; align-items: center; gap: var(--e2); min-block-size: var(--cible); padding: var(--e1) var(--e3);
+  font-size: var(--t-petit); font-weight: 500; line-height: 1.3; text-decoration: none;
+  background: var(--fond-carte); color: var(--texte); border: var(--trait) solid var(--bordure-forte); border-radius: var(--rayon-pilule);
+}
+.filtre-naf__liste a:hover { background: var(--fond-accentue); border-color: var(--accent); }
+.filtre-naf__liste a[aria-current="true"] { background: var(--accent); color: var(--accent-texte); border-color: var(--accent); }
+.filtre-naf__lettre { font-weight: 700; }
+.filtre-naf__nombre { font-size: var(--t-mini); font-variant-numeric: tabular-nums; opacity: .85; }
+.filtre-naf__statut { margin-block-start: var(--e2); font-size: var(--t-petit); color: var(--texte-doux); }
+.filtre-naf__statut:empty { display: none; }
+.groupe-naf { margin-block-start: var(--e5); scroll-margin-block-start: var(--e4); }
+.groupe-naf__nombre { font-weight: 400; font-size: var(--t-petit); color: var(--texte-doux); }
+.groupe-naf .liste-entreprises { margin-block-start: var(--e2); }
 
 /* --- Encadré ------------------------------------------------------------ */
 .encadre {
@@ -456,7 +791,7 @@
   font-size: var(--t-petit); line-height: 1.5;
 }
 @media (min-width: 48em) { .pied { margin-block-start: var(--e7); } }
-.pied h3 { font-size: var(--t-mini); text-transform: uppercase; letter-spacing: .06em; color: var(--texte-doux); margin: 0; }
+.pied h2 { font-size: var(--t-mini); text-transform: uppercase; letter-spacing: .06em; color: var(--texte-doux); margin: 0; }
 .pied ul { display: grid; gap: var(--e2); }
 .pied a { color: var(--texte); }
 .pied a:hover { color: var(--lien); }
@@ -464,7 +799,7 @@
 /* Coordonnées et horaires : bloc le plus consulté, toujours ouvert */
 .pied__contact { display: grid; gap: var(--e5); padding-block: var(--e5); border-block-end: var(--trait) solid var(--bordure); }
 @media (min-width: 40em) { .pied__contact { grid-template-columns: 1fr 1fr; gap: var(--e6); } }
-.pied__coordonnees h3, .pied__horaires-bloc h3 { margin-block-end: var(--e2); }
+.pied__coordonnees h2, .pied__horaires-bloc h2 { margin-block-end: var(--e2); }
 .pied__coordonnees address { font-style: normal; }
 .pied__horaires { gap: 0; margin-block-end: var(--e2); }
 .pied__horaires li {
@@ -483,8 +818,12 @@
   min-block-size: var(--cible); padding-block: var(--e2); cursor: pointer; list-style: none;
 }
 .pied__colonne summary::-webkit-details-marker { display: none; }
-.pied__colonne summary h3 { color: var(--texte); font-size: var(--t-petit); }
-.pied__colonne summary:hover h3 { color: var(--lien); }
+/* Même aspect que les titres du pied, sans en être un (voir piedDePage). */
+.pied__rubrique {
+  font-family: var(--police-titre); font-weight: var(--graisse-titre); line-height: var(--hauteur-ligne-titre);
+  text-transform: uppercase; letter-spacing: .06em; color: var(--texte); font-size: var(--t-petit);
+}
+.pied__colonne summary:hover .pied__rubrique { color: var(--lien); }
 .pied__chevron { color: var(--texte-doux); transition: transform var(--transition); }
 .pied__colonne[open] .pied__chevron { transform: rotate(90deg); }
 .pied__colonne ul { padding-block-end: var(--e3); }
@@ -530,14 +869,15 @@ body { padding-block-end: 3.5rem; }
 /* --- Tableaux ------------------------------------------------------------ */
 /* Un tableau trop large défile dans son propre cadre : la page, elle, ne
    défile jamais horizontalement (RGAA 10.11). Le cadre est focalisable pour
-   rester atteignable au clavier. */
-.tableau-defilant { overflow-x: auto; }
+   rester atteignable au clavier. Positionné, pour que les textes .sr-only
+   (en position absolue, ex. « (nouvelle fenêtre) » des liens externes) se
+   placent dans le cadre et y soient rognés, au lieu d'élargir la page. */
+.tableau-defilant { overflow-x: auto; position: relative; }
 .tableau-defilant:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
-/* Variante « ascenseur » : hauteur limitée avec défilement vertical et
-   en-tête collant, pour les tableaux à beaucoup de lignes (ex. les séances
-   d'un conseil municipal sur une année) sans allonger indéfiniment la page. */
-.tableau-defilant--vertical { max-block-size: 15rem; overflow-y: auto; }
-.tableau-defilant--vertical .tableau thead th { position: sticky; inset-block-start: 0; }
+/* Pas de hauteur limitée avec défilement vertical (ancienne variante
+   « ascenseur », retirée en octobre 2026) : sur les tableaux des séances,
+   seules trois lignes sur cinq à sept se voyaient, et des PV pourtant
+   publiés semblaient manquer. Les ancres d'année servent de raccourcis. */
 .tableau { font-size: var(--t-petit); min-inline-size: 22rem; }
 .tableau th, .tableau td { padding: var(--e3); text-align: start; border-block-end: var(--trait) solid var(--bordure); }
 .tableau thead th { background: var(--fond-alt); font-weight: 600; }
@@ -546,9 +886,16 @@ body { padding-block-end: 3.5rem; }
 /* Le tableau des conseils municipaux a un lien (icône + texte) en deuxième
    colonne, pas un nombre : on annule l'alignement à droite hérité ci-dessus. */
 .tableau--conseils td:not(:first-child) { text-align: start; font-variant-numeric: normal; }
+/* Bibliothèque documentaire : plusieurs thèmes possibles par document, qui
+   passent à la ligne sans se coller. */
+.tableau--bibliotheque .etiquette { margin-block: .125rem; }
 
 /* --- Prose (pages Markdown) ---------------------------------------------- */
 .prose { display: grid; gap: var(--e4); max-inline-size: 42rem; }
+/* Une adresse web ou électronique ne forme qu'un seul mot : sur un écran
+   étroit, ou en très grand texte, elle élargissait la page au lieu de
+   passer à la ligne (« multisportsloisirsLEK@yahoo.com »). */
+.prose > p, .prose a, .carte a, .contact-liste a, .pratique__contacts a { overflow-wrap: anywhere; }
 .prose h2 { margin-block-start: var(--e5); }
 .prose h3 { margin-block-start: var(--e3); }
 .prose ul, .prose ol { display: grid; gap: var(--e2); padding-inline-start: var(--e5); }
@@ -568,22 +915,28 @@ body { padding-block-end: 3.5rem; }
    filtre CSS, puis une teinte de la couleur d'accent du thème en surimpression
    — jamais de couleur codée en dur, uniquement les variables déjà définies.
    Aucun texte ne repose sur cette image : le contraste du titre, en dessous,
-   ne dépend jamais d'elle. ------------------------------------------------- */
-.banniere-page { position: relative; margin-block-end: var(--e5); border-radius: var(--rayon-grand); overflow: hidden; }
+   ne dépend jamais d'elle. Seules l'image et sa teinte sont arrondies (même
+   hauteur, même rayon) : la légende, dessous, reste hors du cadre, sans quoi
+   le coin arrondi rognait sa première lettre et la teinte la recouvrait. */
+.banniere-page { position: relative; margin-block-end: var(--e5); }
 .banniere-page img {
   display: block; inline-size: 100%; block-size: clamp(9.5rem, 24vw, 16rem); object-fit: cover;
+  border-radius: var(--rayon-grand);
   filter: saturate(.55) contrast(.94) brightness(1.04);
 }
 .banniere-page::after {
-  content: ""; position: absolute; inset: 0; background: var(--accent-doux);
+  content: ""; position: absolute; inset: 0 0 auto; block-size: clamp(9.5rem, 24vw, 16rem);
+  border-radius: var(--rayon-grand); background: var(--accent-doux);
   mix-blend-mode: multiply; opacity: .4; pointer-events: none;
 }
 .banniere-page figcaption { margin-block-start: var(--e2); font-size: var(--t-mini); color: var(--texte-doux); }
 
 .documents { margin-block-start: var(--e6); padding: var(--e5); background: var(--fond-alt); border-radius: var(--rayon); }
 .documents h2 { font-size: var(--t-h3); margin-block-end: var(--e3); }
+/* « PDF, 10,6 Mo » d'un seul tenant : sur un écran étroit, c'est le libellé
+   qui passe à la ligne, jamais l'étiquette coupée en deux cadres. */
 .documents .poids {
-  font-size: var(--t-mini); font-weight: 500; color: var(--texte-doux);
+  font-size: var(--t-mini); font-weight: 500; color: var(--texte-doux); white-space: nowrap;
   border: var(--trait) solid var(--bordure); border-radius: var(--rayon-petit); padding: 0 .35em;
 }
 
@@ -604,8 +957,12 @@ body { padding-block-end: 3.5rem; }
    src/templates/views.mjs, widgetTransportLio) ; src/scripts/transport-lio.js
    vient seulement remplir .transport-lio__statut, vide au départ. */
 .transport-lio { margin-block-start: var(--e5); padding: var(--e4); background: var(--fond-alt); border-radius: var(--rayon); }
-.transport-lio h2 { font-size: var(--t-h3); margin-block-end: var(--e3); }
+.transport-lio h2 { font-size: var(--t-h3); margin-block: 0 var(--e3); }
 .transport-lio__liste { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--e2); }
+/* Le widget est inséré dans .prose : on annule le retrait et les puces
+   de .prose ul, comme pour .direct__stations et .liste-dae. */
+.prose .transport-lio__liste { padding: 0; }
+.prose .transport-lio__liste > li { list-style: none; }
 .transport-lio__depart {
   display: grid; grid-template-columns: auto 1fr; gap: var(--e1) var(--e3); align-items: baseline;
   padding: var(--e3); background: var(--fond-carte); border: var(--trait) solid var(--bordure); border-radius: var(--rayon-petit);
@@ -636,3 +993,141 @@ body { padding-block-end: 3.5rem; }
   .transport-lio__jours { grid-column: 2; grid-row: 2; }
   .transport-lio__statut { grid-column: 3; grid-row: 1 / 3; align-self: center; text-align: end; }
 }
+
+/* --- Données en direct : Vidourle et restrictions d'eau -----------------------
+   Rendu sans JavaScript : des liens vers les sources officielles (Vigicrues,
+   VigiEau). src/scripts/vidourle.js et restrictions-eau.js remplissent
+   ensuite les mesures du jour (voir worker/donnees-publiques.mjs). Fond de
+   carte partout : les couleurs d'état (--succes, --danger…) n'y sont
+   vérifiées qu'à cet endroit par tools/check.mjs. */
+.direct {
+  margin-block: var(--e5); padding: var(--e4); background: var(--fond-carte);
+  border: var(--trait) solid var(--bordure); border-radius: var(--rayon); display: grid; gap: var(--e3);
+}
+/* "display: grid" l'emporterait sur l'attribut hidden : un encart qui ne sert
+   qu'avec JavaScript (risques à une adresse) resterait visible sans lui. */
+.direct[hidden] { display: none; }
+.direct h3 { font-size: var(--t-h3); margin: 0; }
+.direct__note { font-size: var(--t-mini); color: var(--texte-doux); margin: 0; }
+.direct__stations { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--e3); }
+.prose .direct__stations { padding: 0; }
+.prose .direct__stations li { list-style: none; }
+@media (min-width: 40em) { .direct__stations { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.station {
+  padding: var(--e3) var(--e4); border: var(--trait) solid var(--bordure); border-radius: var(--rayon-petit);
+  display: grid; gap: var(--e1); align-content: start; min-inline-size: 0;
+}
+.station__nom { font-size: var(--t-grand); margin: 0; }
+.station p { margin: 0; }
+.station__position, .station__resume, .station__reperes { font-size: var(--t-mini); color: var(--texte-doux); }
+.station__mesure { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--e1) var(--e3); margin-block: var(--e1); }
+.station__hauteur { font-size: var(--t-h2); font-variant-numeric: tabular-nums; line-height: 1.1; }
+.station__tendance { font-size: var(--t-petit); font-weight: 600; }
+.station__tendance--stable { color: var(--succes); }
+.station__tendance--hausse { color: var(--danger); }
+.station__tendance--baisse { color: var(--info); }
+.station__heure { inline-size: 100%; font-size: var(--t-mini); color: var(--texte-doux); }
+.station__courbe[hidden] { display: none; }
+.station__svg { display: block; inline-size: 100%; block-size: 4rem; }
+.station__ligne { fill: none; stroke: var(--eau); stroke-width: 2; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+
+.secheresse { display: grid; gap: var(--e3); }
+/* Qualité de l'eau du robinet (src/scripts/qualite-eau.js). */
+.qualite-eau { display: grid; gap: var(--e2); }
+.qualite-eau p, .qualite-eau ul { margin: 0; }
+.qualite-eau__verdict { font-weight: 600; }
+.qualite-eau__verdict--conforme { color: var(--succes); }
+.qualite-eau__verdict--alerte { color: var(--danger); }
+.qualite-eau__mesures { padding-inline-start: var(--e4); }
+/* « Ma maison face aux risques » (src/scripts/risques-adresse.js). */
+.adresse-risques { display: grid; gap: var(--e2); max-inline-size: 32rem; }
+.adresse-risques label { font-weight: 500; }
+.adresse-risques input {
+  inline-size: 100%; padding: var(--e3); font: inherit; color: var(--texte); background: var(--fond);
+  border: var(--trait) solid var(--bordure-forte); border-radius: var(--rayon-petit); min-block-size: var(--cible);
+}
+.adresse-risques .bouton { justify-self: start; }
+.resultat-risques { display: grid; gap: var(--e3); }
+.resultat-risques:empty { display: none; }
+.resultat-risques p, .resultat-risques ul { margin: 0; }
+.resultat-risques ul { padding-inline-start: var(--e4); display: grid; gap: var(--e2); }
+.resultat-risques__alerte { color: var(--danger); font-weight: 600; }
+.resultat-risques__ok { color: var(--succes); font-weight: 600; }
+.secheresse p { margin: 0; }
+.secheresse__aucune { color: var(--succes); font-weight: 600; }
+.secheresse__niveau { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e2) var(--e3); font-weight: 500; }
+.secheresse__badge {
+  display: inline-block; padding: var(--e1) var(--e3); border-radius: var(--rayon-pilule);
+  font-weight: 700; background: var(--attention-fond); color: var(--attention);
+}
+.secheresse__niveau--alerte_renforcee .secheresse__badge,
+.secheresse__niveau--crise .secheresse__badge { background: var(--danger-fond); color: var(--danger); }
+.secheresse__arrete { font-size: var(--t-petit); }
+.secheresse__theme { font-size: var(--t-corps); margin: var(--e2) 0 0; }
+.secheresse__usages { display: grid; gap: var(--e2); margin: 0; padding-inline-start: var(--e5); font-size: var(--t-petit); }
+.secheresse__description { white-space: pre-line; }
+
+/* --- Défibrillateurs ------------------------------------------------------- */
+.liste-dae { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--e2); }
+.prose .liste-dae { padding: 0; }
+.prose .liste-dae li { list-style: none; }
+.dae {
+  padding: var(--e3) var(--e4); background: var(--fond-carte); border: var(--trait) solid var(--bordure);
+  border-radius: var(--rayon-petit); display: grid; gap: var(--e1);
+}
+.dae--lecques { border: 2px solid var(--danger); }
+.dae p { margin: 0; }
+.dae__distance { font-size: var(--t-petit); color: var(--texte-doux); white-space: nowrap; }
+.dae__acces, .dae__carte { font-size: var(--t-petit); color: var(--texte-doux); }
+.note-source { font-size: var(--t-mini); color: var(--texte-doux); }
+
+/* --- Comptes de la commune (page Budgets) --------------------------------- */
+.comptes { display: grid; gap: var(--e5); margin-block: var(--e4); }
+@media (min-width: 48em) { .comptes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.comptes__bloc { display: grid; gap: var(--e3); align-content: start; }
+.comptes__bloc h3 { font-size: var(--t-h3); margin: 0; }
+.comptes__titre { font-size: var(--t-h3); margin-block: var(--e5) var(--e3); }
+.repartition { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--e3); }
+.repartition li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--e1) var(--e3); align-items: baseline; }
+.repartition__libelle { font-size: var(--t-petit); }
+.repartition__part { font-weight: 700; font-variant-numeric: tabular-nums; }
+.repartition__piste { grid-column: 1 / -1; display: block; block-size: .5rem; background: var(--fond-alt); border-radius: var(--rayon-pilule); overflow: hidden; }
+.repartition__valeur { display: block; block-size: 100%; background: var(--accent); border-radius: var(--rayon-pilule); }
+.comptes__historique { margin-block-start: var(--e4); }
+.comptes__historique summary { cursor: pointer; font-weight: 500; min-block-size: var(--cible); display: flex; align-items: center; color: var(--lien); }
+
+/* --- Calendriers, fiche pratique ------------------------------------------ */
+.calendriers { display: grid; gap: var(--e5); margin-block-end: var(--e5); }
+.carte--calendrier { padding: var(--e5); gap: var(--e3); }
+.carte--calendrier h2 { font-size: var(--t-h3); }
+.carte--calendrier p { margin: 0; }
+.liste-rdv { display: grid; gap: var(--e2); margin: 0; padding-inline-start: var(--e5); }
+.liste-rdv li { list-style: disc; }
+.liste-rdv li::marker { color: var(--accent); }
+.calendrier__actions { display: flex; flex-wrap: wrap; gap: var(--e3); }
+.adresse-agenda { overflow-wrap: anywhere; font-size: .95em; background: var(--fond-alt); padding: .1em .35em; border-radius: var(--rayon-petit); }
+.article__agenda { margin-block-start: var(--e4); }
+
+.fiche-pratique { display: grid; gap: var(--e4); margin-block-end: var(--e4); }
+@media (min-width: 40em) { .fiche-pratique { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.fiche-pratique__bloc {
+  padding: var(--e4); background: var(--fond-carte); border: var(--trait) solid var(--bordure);
+  border-radius: var(--rayon); display: grid; gap: var(--e2); align-content: start; min-inline-size: 0;
+}
+.fiche-pratique__bloc h2 { font-size: var(--t-h3); }
+.fiche-pratique__bloc p { margin: 0; }
+.fiche-pratique__bloc--urgence { border-color: var(--danger); }
+.fiche-pratique__horaires { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--e1); font-size: var(--t-petit); }
+.fiche-pratique__horaires li { display: flex; justify-content: space-between; gap: var(--e3); }
+.fiche-pratique__liste { display: grid; gap: var(--e2); margin: 0; padding-inline-start: var(--e5); font-size: var(--t-petit); }
+.fiche-pratique__liste li { list-style: disc; }
+
+/* --- Abonnement : choix des thèmes ---------------------------------------- */
+.champ-themes { border: 0; padding: 0; margin: 0; display: grid; gap: var(--e2); min-inline-size: 0; }
+.champ-themes legend { font-weight: 500; padding: 0; margin-block-end: var(--e1); }
+.champ-themes__facultatif { font-weight: 400; color: var(--texte-doux); }
+.champ-themes__aide { font-size: var(--t-petit); color: var(--texte-doux); margin: 0; }
+.cases { list-style: none; padding: 0; margin: 0; display: grid; gap: 0 var(--e3); grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); }
+.cases li { display: flex; align-items: center; gap: var(--e2); min-block-size: var(--cible); }
+.cases input { inline-size: 1.25rem; block-size: 1.25rem; margin: 0; flex-shrink: 0; accent-color: var(--accent); }
+.cases label { cursor: pointer; }

@@ -41,6 +41,9 @@
   --attention: #8a5300;
   --attention-fond: #fdf1de;
   --eau: #1478b4;
+  /* Plan de zonage du PLU (page Urbanisme) : couleurs d'usage des PLU —
+     urbaine, à urbaniser, agricole, naturelle. */
+  --zone-u: #f0b7b1; --zone-au: #f5cf95; --zone-a: #f1e7a6; --zone-n: #b7d7a8;
 
   /* Une couleur par rubrique du menu principal, pour les différencier au
      premier coup d'œil — indépendamment de la lecture du texte. */
@@ -50,7 +53,7 @@
   --nav-cadre-de-vie: #3f6b7a;
   --nav-mairie: #6b4a5c;
 
-  --police-titre: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  --police-titre: "Spectral", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
   --graisse-titre: 500;
   --interlettrage-titre: 0;
   --rayon: 12px;
@@ -86,6 +89,7 @@
     --info: #9dc2d4;  --info-fond: #1e2a30;
     --attention: #e8bd7c; --attention-fond: #2f2617;
     --eau: #6fc2ea;
+    --zone-u: #6a3530; --zone-au: #6b4d1e; --zone-a: #5a5326; --zone-n: #2e4f2d;
 
     --nav-demarches: #8fbf93;
     --nav-vie-locale: #e8967a;
@@ -106,26 +110,50 @@
 }
 
 /* -------------------------------------------------------------------------
-   Le bandeau d'accueil du thème Garrigue portait une photo du village de
-   Lecques (pont du Vidourle) dans le dépôt d'origine. Aucune photo de
-   Juvinas n'a encore été fournie par la mairie (voir CLAUDE.md, « État de
-   ce fork ») : plutôt que d'inventer ou de réutiliser une image qui ne
-   représente pas la commune, le héros retombe ici sur un dégradé construit
-   uniquement à partir des couleurs du thème — à remplacer par une vraie
-   photo de Juvinas (silhouette des Coirons ou du Tanargue, châtaigneraie…)
-   quand la mairie en fournira une, selon le même mécanisme que Lecques.
+   Le bandeau d'accueil du thème Garrigue porte une photo du village
+   (public/img/village-*.jpg : l'église et la rue du village de Juvinas).
+   L'image n'est téléchargée que si ce thème est actif : les deux autres
+   thèmes ne paient jamais son poids.
+   Le voile est volontairement très opaque sous la colonne de texte : le
+   contraste du titre et du champ de recherche ne dépend jamais de la photo.
    ------------------------------------------------------------------------- */
 [data-theme="garrigue"] .heros {
-  background-image: linear-gradient(170deg, var(--accent-doux) 0%, var(--fond-accentue) 45%, var(--fond) 100%);
+  background-image:
+    linear-gradient(to bottom, rgb(247 245 239 / .88), rgb(247 245 239 / .82)),
+    url("/img/village-700.jpg");
+  background-size: cover;
+  background-position: center 45%;
+}
+
+@media (min-width: 48em) {
+  [data-theme="garrigue"] .heros {
+    background-image:
+      linear-gradient(to right, rgb(247 245 239 / .88) 0%, rgb(247 245 239 / .8) 48%, rgb(247 245 239 / .32) 66%, rgb(247 245 239 / .04) 100%),
+      url("/img/village-1200.jpg");
+    /* Voile d'au moins 74 % sous le texte (jusqu'à 47 % de la largeur) : le
+       texte secondaire y garde un contraste AA même devant le plus sombre
+       de la photo ; au-delà, il s'efface pour laisser voir le village.
+       Même calcul pour le mode sombre, ci-dessous. */
+    background-position: center 40%;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
   [data-theme="garrigue"]:not([data-clair]) .heros {
-    background-image: linear-gradient(170deg, var(--accent-doux) 0%, var(--fond-accentue) 45%, var(--fond) 100%);
+    background-image:
+      linear-gradient(to bottom, rgb(29 26 22 / .9), rgb(29 26 22 / .84)),
+      url("/img/village-700.jpg");
+  }
+  @media (min-width: 48em) {
+    [data-theme="garrigue"]:not([data-clair]) .heros {
+      background-image:
+        linear-gradient(to right, rgb(29 26 22 / .92) 0%, rgb(29 26 22 / .82) 48%, rgb(29 26 22 / .42) 66%, rgb(29 26 22 / .16) 100%),
+        url("/img/village-1200.jpg");
+    }
   }
 }
 
-/* En contraste renforcé, le dégradé disparaît : rien ne doit gêner la lecture. */
+/* En contraste renforcé, la photo disparaît : rien ne doit gêner la lecture. */
 [data-theme="garrigue"][data-contraste="1"] .heros { background-image: none; }
 
 [data-theme="garrigue"] .bouton--principal:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgb(42 38 33 / .22); }

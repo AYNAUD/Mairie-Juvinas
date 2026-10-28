@@ -8,6 +8,7 @@
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { gzipSync } from 'node:zlib';
 
 const RACINE = join(dirname(fileURLToPath(import.meta.url)), '..');
 const STYLES = join(RACINE, 'src/styles');
@@ -75,9 +76,13 @@ const PAIRES = [
   ['danger', 'danger-fond', 4.5, 'message d’erreur'],
   ['succes', 'fond-carte', 4.5, 'badge « en mairie »'],
   ['info', 'fond-carte', 4.5, 'badge « en ligne »'],
-  ['attention', 'fond-carte', 4.5, 'badge « hors de Lecques »'],
+  ['attention', 'fond-carte', 4.5, 'badge « hors de la commune »'],
   ['attention', 'attention-fond', 4.5, 'bandeau d’alerte'],
-  ['info', 'info-fond', 4.5, 'réponse rapide de la recherche']
+  ['info', 'info-fond', 4.5, 'réponse rapide de la recherche'],
+  ['texte', 'zone-u', 4.5, 'étiquette d’une zone urbaine du plan de zonage'],
+  ['texte', 'zone-au', 4.5, 'étiquette d’une zone à urbaniser du plan de zonage'],
+  ['texte', 'zone-a', 4.5, 'étiquette d’une zone agricole du plan de zonage'],
+  ['texte', 'zone-n', 4.5, 'étiquette d’une zone naturelle du plan de zonage']
 ];
 
 const THEMES = ['republique', 'garrigue', 'guichet'];
@@ -155,13 +160,13 @@ if (!existsSync(DIST)) {
 
   console.log('\nStructure des pages');
   let sansH1 = 0, h1Multiples = 0, sansLang = 0, sansTitre = 0, imagesSansAlt = 0, sautsDeNiveau = 0;
-  let plusLourde = { page: '', octets: 0 };
+  let plusLourde = { page: '', octets: 0, brut: 0 };
 
   for (const page of pages) {
     const html = readFileSync(page, 'utf8');
     const rel = page.replace(DIST, '');
-    const octets = Buffer.byteLength(html);
-    if (octets > plusLourde.octets) plusLourde = { page: rel, octets };
+    const octets = gzipSync(html).length;
+    if (octets > plusLourde.octets) plusLourde = { page: rel, octets, brut: Buffer.byteLength(html) };
 
     const h1 = [...html.matchAll(/<h1[\s>]/g)].length;
     if (h1 === 0) { sansH1++; ko(`${rel} : aucun <h1>`); }
@@ -182,13 +187,22 @@ if (!existsSync(DIST)) {
   if (!imagesSansAlt) ok('toutes les images ont une alternative textuelle');
   if (!sautsDeNiveau) ok('aucun saut de niveau dans la hiérarchie des titres');
 
+  // Poids réellement transféré au visiteur : HTML, CSS et JS compressés
+  // comme les sert le serveur (gzip : tools/htaccess-ovh.conf, Cloudflare
+  // de même), plus les polices, déjà compressées (woff2) et comptées
+  // telles quelles. Les images, chargées au défilement, n'y entrent pas.
   console.log('\nPoids');
-  const css = Buffer.byteLength(readFileSync(join(DIST, 'assets/site.css')));
-  const js = Buffer.byteLength(readFileSync(join(DIST, 'assets/site.js')));
+  const gz = (f) => gzipSync(readFileSync(f)).length;
+  const css = gz(join(DIST, 'assets/site.css'));
+  const js = gz(join(DIST, 'assets/site.js'));
+  const dossierPolices = join(DIST, 'assets/polices');
+  const polices = existsSync(dossierPolices)
+    ? readdirSync(dossierPolices).filter((f) => f.endsWith('.woff2')).reduce((t, f) => t + statSync(join(dossierPolices, f)).size, 0)
+    : 0;
   const kio = (n) => `${(n / 1024).toFixed(1)} ko`;
-  const total2 = plusLourde.octets + css + js;
-  console.log(`  page la plus lourde : ${plusLourde.page} — ${kio(plusLourde.octets)}`);
-  console.log(`  + CSS ${kio(css)} + JS ${kio(js)} = ${kio(total2)} au premier chargement`);
+  const total2 = plusLourde.octets + css + js + polices;
+  console.log(`  page la plus lourde : ${plusLourde.page} — ${kio(plusLourde.octets)} compressée (${kio(plusLourde.brut)} brute)`);
+  console.log(`  + CSS ${kio(css)} + JS ${kio(js)} compressés + polices ${kio(polices)} = ${kio(total2)} transférés au premier chargement`);
   if (total2 > 250 * 1024) attention(`budget de 250 ko dépassé (${kio(total2)})`);
   else ok(`budget respecté : ${kio(total2)} < 250 ko`);
 

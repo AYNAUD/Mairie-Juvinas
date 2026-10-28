@@ -11,6 +11,9 @@ button { background: none; border: 0; cursor: pointer; }
 table { border-collapse: collapse; inline-size: 100%; }
 address { font-style: normal; }
 :target { scroll-margin-block-start: 6rem; }
+/* Sur grand écran, l'en-tête collant porte aussi la barre de menu (8,5 rem) :
+   sans cette marge, le titre de la section atteinte passait dessous. */
+@media (min-width: 64em) { :target { scroll-margin-block-start: 9.5rem; } }
 
 /* Respect de la préférence système, et de la préférence exprimée dans le panneau d'affichage. */
 @media (prefers-reduced-motion: reduce) {

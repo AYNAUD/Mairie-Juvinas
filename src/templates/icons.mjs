@@ -67,3 +67,19 @@ export function sprite(html) {
 }
 
 export const iconesDisponibles = Object.keys(P);
+
+// Emblème du site de Juvinas : la météorite tombée en 1821 (un bolide et sa
+// traînée) au-dessus des crêtes ardéchoises. Dessin plein, pas au trait comme
+// les icônes ci-dessus, donc hors du sprite : il n'apparaît qu'une fois par
+// page. En currentColor, le fond de la pastille vient du thème
+// (.marque__blason). src/styles/blason.svg (icône d'onglet) reprend les mêmes
+// tracés. Ce n'est pas un blason officiel : à remplacer par le logo de la
+// mairie si elle en possède un.
+const EMBLEME_CRETES = 'M0 100V74L20 52L33 63L56 38L78 61L89 53L100 63V100Z';
+const EMBLEME_TRAINEE = 'M63 17L13 7L61 29Z';
+const EMBLEME_BOLIDE = 'M64 22a8 8 0 1 0 16 0a8 8 0 1 0-16 0Z';
+
+export function logoCommune(classe = '') {
+  return `<svg class="${classe}" viewBox="0 0 100 100" width="48" height="48" fill="currentColor" aria-hidden="true" focusable="false">`
+    + `<path d="${EMBLEME_CRETES}"/><path d="${EMBLEME_TRAINEE}"/><path d="${EMBLEME_BOLIDE}"/></svg>`;
+}

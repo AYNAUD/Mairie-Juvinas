@@ -23,7 +23,8 @@
       "nom": "Communauté de communes du Bassin d'Aubenas",
       "sigle": "CCBA",
       "url": "https://www.bassin-aubenas.fr"
-    }
+    },
+    "codeRegion": "84"
   },
   "mairie": {
     "nom": "Mairie de Juvinas",
@@ -37,49 +38,173 @@
     "itineraire": "https://www.google.com/maps/search/?api=1&query=44.704376,4.307284",
     "horairesIntro": "Le secrétariat de mairie vous accueille :",
     "horaires": [
-      { "jour": "Lundi", "index": 1, "ouvert": true, "debut": "13:30", "fin": "17:30", "libelle": "13h30 – 17h30" },
-      { "jour": "Mardi", "index": 2, "ouvert": false, "libelle": "Fermé" },
-      { "jour": "Mercredi", "index": 3, "ouvert": true, "debut": "13:30", "fin": "17:30", "libelle": "13h30 – 17h30" },
-      { "jour": "Jeudi", "index": 4, "ouvert": false, "libelle": "Fermé" },
-      { "jour": "Vendredi", "index": 5, "ouvert": false, "libelle": "Fermé" },
-      { "jour": "Samedi", "index": 6, "ouvert": false, "libelle": "Fermé" },
-      { "jour": "Dimanche", "index": 0, "ouvert": false, "libelle": "Fermé" }
+      {
+        "jour": "Lundi",
+        "index": 1,
+        "ouvert": true,
+        "debut": "13:30",
+        "fin": "17:30",
+        "libelle": "13h30 – 17h30"
+      },
+      {
+        "jour": "Mardi",
+        "index": 2,
+        "ouvert": false,
+        "libelle": "Fermé"
+      },
+      {
+        "jour": "Mercredi",
+        "index": 3,
+        "ouvert": true,
+        "debut": "13:30",
+        "fin": "17:30",
+        "libelle": "13h30 – 17h30"
+      },
+      {
+        "jour": "Jeudi",
+        "index": 4,
+        "ouvert": false,
+        "libelle": "Fermé"
+      },
+      {
+        "jour": "Vendredi",
+        "index": 5,
+        "ouvert": false,
+        "libelle": "Fermé"
+      },
+      {
+        "jour": "Samedi",
+        "index": 6,
+        "ouvert": false,
+        "libelle": "Fermé"
+      },
+      {
+        "jour": "Dimanche",
+        "index": 0,
+        "ouvert": false,
+        "libelle": "Fermé"
+      }
     ],
-    "horairesNote": "En dehors de ces créneaux, vous pouvez demander un rendez-vous par téléphone ou par courriel. À CONFIRMER auprès de la mairie : horaires trouvés via service-public.fr et linternaute.fr, non une source officielle communale."
+    "horairesNote": "En dehors de ces créneaux, vous pouvez demander un rendez-vous par téléphone ou par courriel. Horaires indiqués par l'Annuaire de l'administration (service-public.fr, fiche modifiée le 6 mars 2025) : à reconfirmer auprès de la mairie, certains sites tiers donnent d'autres créneaux.",
+    "latitude": 44.71081,
+    "longitude": 4.307365
   },
   "alerte": {
     "actif": false,
     "niveau": "vigilance",
     "titre": "Vigilance en cours",
     "texte": "Ce bandeau s'affiche uniquement lorsque la commune diffuse une alerte.",
-    "lien": { "url": "/cadre-de-vie/risques.html", "libelle": "Consignes de sécurité" }
+    "lien": {
+      "url": "/cadre-de-vie/risques.html",
+      "libelle": "Consignes de sécurité"
+    }
   },
   "accueil": {
     "titreTuiles": "Je veux…",
     "sousTitreTuiles": "Les démarches les plus demandées à Juvinas, en un clic.",
-    "tuiles": ["carte-identite", "passeport", "acte-naissance", "listes-electorales", "permis-de-construire", "concession-cimetiere"],
+    "tuiles": [
+      "carte-identite",
+      "passeport",
+      "acte-naissance",
+      "listes-electorales",
+      "permis-de-construire",
+      "concession-cimetiere"
+    ],
     "placeholderRecherche": "Que cherchez-vous ?",
-    "suggestions": ["J'ai perdu ma carte d'identité", "Inscrire mon enfant à l'école", "Faire un permis de construire", "Réserver une concession au cimetière"],
+    "suggestions": [
+      "J'ai perdu ma carte d'identité",
+      "Inscrire mon enfant à l'école",
+      "Faire un permis de construire",
+      "Réserver une concession au cimetière"
+    ],
     "galerie": [
-      { "photo": "mairie", "alt": "La mairie de Juvinas.", "libelle": "La mairie", "url": "/mairie/contact.html" },
-      { "photo": "village", "alt": "L'église et une rue du village de Juvinas.", "libelle": "Le village", "url": "/mairie/commune.html" }
+      {
+        "photo": "mairie",
+        "alt": "La mairie de Juvinas.",
+        "libelle": "La mairie",
+        "url": "/mairie/contact.html"
+      },
+      {
+        "photo": "village",
+        "alt": "L'église et une rue du village de Juvinas.",
+        "libelle": "Le village",
+        "url": "/mairie/commune.html"
+      }
     ],
     "identite": {
       "titre": "Un nom connu jusque dans l'espace",
       "texte": "Nichée dans la vallée de la Bésorgues, entre châtaigneraies et volcans éteints d'Ardèche, la commune a donné son nom à une météorite tombée le 15 juin 1821. Cette pierre venue de l'espace est aujourd'hui conservée au Muséum national d'Histoire naturelle et étudiée par les scientifiques du monde entier.",
-      "lien": { "url": "/mairie/histoire.html", "libelle": "Découvrir l'histoire du village" }
+      "lien": {
+        "url": "/mairie/histoire.html",
+        "libelle": "Découvrir l'histoire du village"
+      }
     }
   },
   "reseaux": [],
   "liensUtiles": [
-    { "libelle": "Communauté de communes du Bassin d'Aubenas", "url": "https://www.bassin-aubenas.fr", "logo": null },
-    { "libelle": "Service-Public.fr", "url": "https://www.service-public.fr/", "logo": null },
-    { "libelle": "Préfecture de l'Ardèche", "url": "https://www.ardeche.gouv.fr/", "logo": null },
-    { "libelle": "Département de l'Ardèche", "url": "https://www.ardeche.fr/", "logo": null },
-    { "libelle": "Région Auvergne-Rhône-Alpes", "url": "https://www.auvergnerhonealpes.fr/", "logo": null }
+    {
+      "libelle": "Communauté de communes du Bassin d'Aubenas",
+      "url": "https://www.bassin-aubenas.fr",
+      "logo": null
+    },
+    {
+      "libelle": "Service-Public.fr",
+      "url": "https://www.service-public.fr/",
+      "logo": null
+    },
+    {
+      "libelle": "Préfecture de l'Ardèche",
+      "url": "https://www.ardeche.gouv.fr/",
+      "logo": null
+    },
+    {
+      "libelle": "Département de l'Ardèche",
+      "url": "https://www.ardeche.fr/",
+      "logo": null
+    },
+    {
+      "libelle": "Région Auvergne-Rhône-Alpes",
+      "url": "https://www.auvergnerhonealpes.fr/",
+      "logo": null
+    }
   ],
   "administration": {
     "urlBase": "https://admin.juvinas.invalid",
     "_note": "Placeholder — aucun Worker Cloudflare n'est déployé pour Juvinas. Les formulaires d'abonnement et de vote en direct sont visibles mais inertes tant que ce composant serveur n'existe pas (voir worker/README.md du dépôt Lecques pour le principe)."
-  }
+  },
+  "riviere": {
+    "_lisezmoi": "Cours d'eau de la commune, affiché sur la page Risques et sécurité (hauteur en direct via le Worker, route /vidourle — dormante tant qu'aucun Worker n'est déployé pour Juvinas). Orthographe officielle (Sandre, Wikipédia, OpenStreetMap) : Bézorgues ; « Bésorgues » circule aussi et fait partie du nom de la commune voisine Labastide-sur-Bésorgues.",
+    "nom": "La Bézorgues",
+    "nomsOsm": [
+      "La Bézorgues",
+      "La Bésorgues",
+      "Bézorgues",
+      "Bésorgues"
+    ],
+    "ancre": "les-crues-et-les-orages",
+    "stations": [],
+    "fichePratique": {
+      "titre": "Crue et orages violents",
+      "texte": "Ne vous engagez jamais sur une route inondée ou un gué. Consultez la vigilance de Météo-France et la situation des cours d'eau sur vigicrues.gouv.fr, et suivez les consignes de la mairie."
+    }
+  },
+  "situation": {
+    "lienRoutes": "https://www.inforoutes-ardeche.fr/",
+    "lienVigilance": "https://vigilance.meteofrance.fr/fr/ardeche",
+    "libelleConsignes": "Consignes de sécurité"
+  },
+  "rendezVousReguliers": [
+    {
+      "id": "ordures-menageres",
+      "titre": "Collecte des ordures ménagères",
+      "detail": "Collecte assurée par la Communauté de communes du Bassin d'Aubenas. Emballages recyclables : le mercredi, les semaines impaires.",
+      "url": "/cadre-de-vie/dechets.html",
+      "regle": {
+        "frequence": "hebdomadaire",
+        "jours": [
+          "lundi"
+        ]
+      }
+    }
+  ]
 }
