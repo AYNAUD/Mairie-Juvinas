@@ -206,6 +206,11 @@ function carteGalerie(item, photos) {
 </li>`;
 }
 
+// Le Worker « données en direct » (worker/README.md) est-il déployé ? Tant que
+// administration.urlBase est un domaine .invalid, les widgets en direct ne
+// font aucune requête : ils retombent sur leurs liens vers les services officiels.
+const workerPret = (ctx) => !/\.invalid(\/|$)/.test(ctx.site.administration.urlBase || '.invalid');
+
 // Situation du moment en tête de l'accueil : vigilance météo orange ou
 // rouge dans le département, cours d'eau qui monte ou crue prévue par Vigicrues. Même
 // aspect que le bandeau d'alerte de la mairie (layout.mjs, bandeauAlerte),
@@ -219,6 +224,7 @@ function carteGalerie(item, photos) {
 // l'autorisation écrite du Département (liens configurés dans
 // site.json → situation).
 function bandeauSituation(ctx) {
+  if (!workerPret(ctx)) return '';
   const urlApi = `${ctx.site.administration.urlBase}/situation`;
   const cfg = ctx.site.situation || {};
   return `<div class="alerte" role="region" aria-label="Situation en cours" data-situation="${esc(urlApi)}" hidden>
@@ -751,10 +757,10 @@ const nombreFr = (n, decimales = 2) => n.toLocaleString('fr-FR', { minimumFracti
 // navigateur du visiteur n'appelle jamais directement un service tiers.
 function widgetRiviere(ctx) {
   const config = ctx.site.riviere;
-  if (!config || !config.stations || !config.stations.length) return '';
+  if (!workerPret(ctx) || !config || !config.stations || !config.stations.length) return '';
   const urlApi = `${ctx.site.administration.urlBase}/vidourle`;
   return `<section class="direct" aria-labelledby="vidourle-titre" data-vidourle="${esc(urlApi)}">
-    <h3 id="vidourle-titre">${esc(config.nom)} en direct</h3>
+    <h3 id="vidourle-titre">${esc(config.titreDirect || `${config.nom} en direct`)}</h3>
     <ul class="direct__stations">
       ${config.stations.map((s) => `<li class="station" data-station="${esc(s.code)}">
         <h4 class="station__nom">${esc(s.nom)}</h4>
@@ -776,14 +782,14 @@ function widgetRiviere(ctx) {
 // qui interroge l'API VigiEau avec le code Insee de la commune).
 function widgetRestrictionsEau(ctx) {
   const urlApi = `${ctx.site.administration.urlBase}/eau/restrictions`;
-  return `<section class="direct" aria-labelledby="secheresse-titre" data-restrictions="${esc(urlApi)}">
+  return `<section class="direct" aria-labelledby="secheresse-titre" ${workerPret(ctx) ? `data-restrictions="${esc(urlApi)}"` : ''}>
     <h3 id="secheresse-titre">Restrictions d'eau à ${esc(ctx.site.commune.nom)} aujourd'hui</h3>
     <div class="secheresse" data-contenu>
       <p>La situation du jour est publiée par l'État sur ${lien('https://vigieau.gouv.fr/', 'VigiEau')} : indiquez-y votre adresse pour connaître les usages autorisés.</p>
     </div>
     <p class="direct__note">Eau du robinet, usages des particuliers. Vous puisez dans un puits, un forage ou un cours d'eau&nbsp;? Les règles peuvent différer : vérifiez sur ${lien('https://vigieau.gouv.fr/', 'vigieau.gouv.fr')}.</p>
   </section>
-  <script src="/assets/restrictions-eau.js" defer></script>`;
+  ${workerPret(ctx) ? '<script src="/assets/restrictions-eau.js" defer></script>' : ''}`;
 }
 
 // « Ma maison face aux risques », sur la page « Risques et sécurité ». Le
@@ -792,6 +798,7 @@ function widgetRestrictionsEau(ctx) {
 // worker/risques-adresse.mjs) : il reste donc caché sans lui, et la section
 // de la page renvoie alors vers Géorisques, le service officiel.
 function widgetRisquesAdresse(ctx) {
+  if (!workerPret(ctx)) return '';
   const urlApi = `${ctx.site.administration.urlBase}/risques/adresse`;
   return `<section class="direct" aria-labelledby="risques-adresse-titre" data-risques-adresse="${esc(urlApi)}" hidden>
     <h3 id="risques-adresse-titre">Les risques à mon adresse</h3>
@@ -813,14 +820,14 @@ function widgetRisquesAdresse(ctx) {
 // (worker/donnees-publiques.mjs, API Hub'Eau Qualité de l'eau potable).
 function widgetQualiteEau(ctx) {
   const urlApi = `${ctx.site.administration.urlBase}/eau/qualite`;
-  return `<section class="direct" aria-labelledby="qualite-eau-titre" data-qualite-eau="${esc(urlApi)}">
+  return `<section class="direct" aria-labelledby="qualite-eau-titre" ${workerPret(ctx) ? `data-qualite-eau="${esc(urlApi)}"` : ''}>
     <h3 id="qualite-eau-titre">Qualité de l'eau du robinet</h3>
     <div class="qualite-eau" data-contenu>
       <p>L'eau est contrôlée par l'Agence régionale de santé. Les résultats sont publiés commune par commune sur ${lien(`https://orobnat.sante.gouv.fr/orobnat/afficherPage.do?methode=menu&usd=AEP&idRegion=${esc(ctx.site.commune.codeRegion || '')}`, 'le site du ministère de la Santé')}.</p>
     </div>
     <p class="direct__note">Contrôle sanitaire officiel (ARS ${esc(ctx.site.commune.region)}), repris par Hub'Eau. Les limites de qualité protègent la santé ; les références de qualité sont des indicateurs du bon fonctionnement des installations.</p>
   </section>
-  <script src="/assets/qualite-eau.js" defer></script>`;
+  ${workerPret(ctx) ? '<script src="/assets/qualite-eau.js" defer></script>' : ''}`;
 }
 
 const texteDae = (d) => `${d.acces === 'extérieur' ? "À l'extérieur" : "À l'intérieur"}${d.precision ? ` (${esc(d.precision)})` : ''} · ${d.horaires ? `accessible ${esc(d.horaires)}` : "horaires d'accès non renseignés"}`;

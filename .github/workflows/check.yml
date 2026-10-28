@@ -32,3 +32,6 @@ jobs:
 
       - name: Build + accessibilité + liens + pertinence de la recherche
         run: npm run check
+
+      - name: Worker de données en direct (fonctions pures)
+        run: npm run worker:test

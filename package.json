@@ -15,7 +15,9 @@
     "carte:tourisme": "node tools/fetch-carte-tourisme.mjs",
     "zonage": "node tools/fetch-zonage.mjs",
     "pv:importer": "node tools/importer-pv.mjs",
-    "test": "node tools/test-recherche.mjs"
+    "test": "node tools/test-recherche.mjs",
+    "worker:test": "node worker/test-local.mjs",
+    "worker:deploy": "npx wrangler deploy --config worker/wrangler.toml"
   },
   "dependencies": {
     "unpdf": "^1.8.1"

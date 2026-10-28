@@ -1,0 +1,14 @@
+# Worker « données en direct » du site de Juvinas : aucun secret, aucune base
+# de données, aucun déclencheur. Voir worker/README.md pour le déploiement.
+#
+# Toujours préciser --config worker/wrangler.toml : c'est le seul Worker de
+# ce dépôt, mais le site lui-même n'est pas un Worker (il est statique).
+
+name = "mairie-juvinas-donnees"
+main = "index.mjs"
+compatibility_date = "2026-01-01"
+
+# L'adresse https://mairie-juvinas-donnees.<compte>.workers.dev est ici le
+# bon choix : ce Worker ne sert que des données publiques en lecture, sans
+# aucun accès protégé qu'un faux en-tête pourrait contourner.
+workers_dev = true

@@ -102,7 +102,7 @@ Le fichier physique va toujours dans `public/documents/`. Son rattachement à un
 `content/documents.json`, registre à clés de catégorie (`conseils/<année>`, `bibliotheque/<année>`,
 `budgets`, `elus`, `bulletins`, `commissions`, `pages/<slug>`). Même fonctionnement que sur Lecques :
 chaque document a sa page dans le site, avec format et poids annoncés (voir `worker/README.md` du
-dépôt Lecques pour le circuit par email, non porté ici).
+dépôt Lecques pour le circuit par email, non porté ici — le `worker/` de ce dépôt-ci ne fait que les données en direct).
 
 ## Données publiques automatiques (« services sans entretien »)
 
@@ -123,17 +123,19 @@ dépôt Lecques pour le circuit par email, non porté ici).
 - **Recherche dans les comptes-rendus** : voir `tools/importer-pv.mjs` (`npm run pv:importer`) et
   `src/scripts/recherche-pv.js`.
 
-Des widgets « en direct » existent dans le moteur mais restent **inertes** tant qu'aucun Worker
-n'est déployé pour Juvinas (`site.administration.urlBase` est un domaine factice) : cours d'eau,
-restrictions d'eau (VigiEau), qualité de l'eau (Hub'Eau), risques à l'adresse, situation du moment,
-horaires de car en temps réel (`site.transport`, absent). Ils retombent sur des liens vers les
-services officiels.
+Des widgets « en direct » (cours d'eau voisins, restrictions d'eau, qualité de l'eau, risques à
+l'adresse, bandeau de situation) sont servis par `worker/` : un Worker Cloudflare public, sans
+secret ni compte tiers (voir `worker/README.md`). Tant que `site.administration.urlBase` se termine
+par `.invalid`, il n'est pas déployé : le site n'émet alors aucune requête et ces widgets restent
+des liens vers les services officiels. Après `npm run worker:deploy`, reporter son adresse dans
+`urlBase`. Aucune station ne mesure la Bézorgues : on suit la Volane et l'Ardèche (voir README).
+Horaires de car en temps réel : `site.transport`, absent.
 
 ## Ce qui n'est pas porté de Lecques
 
-- **Le Worker d'administration** (`worker/` : formulaire de publication, comptes valideurs,
-  abonnements et courriels, alertes automatiques) : composant serveur à part, avec secrets et
-  comptes Cloudflare/GitHub/Brevo à créer. Tant qu'il n'existe pas, `content/actualites.json`,
+- **L'administration du Worker de Lecques** (formulaire de publication par email, comptes
+  valideurs, abonnements et courriels, vote en ligne, alertes automatiques) : composant serveur
+  avec secrets et comptes GitHub/Brevo et un sous-domaine d'email à créer. Tant qu'il n'existe pas, `content/actualites.json`,
   `content/documents.json` et le formulaire d'abonnement se modifient à la main, et le formulaire
   d'abonnement reste visuellement présent mais inerte.
 - Le déploiement OVH/Cloudflare, le guide Word de l'habitant, la carte « Autour de la commune »
@@ -194,6 +196,8 @@ npm run entreprises    Relit le répertoire Sirene (automatique chaque nuit)
 npm run carte          Refait le fond de carte (contour, voirie, Bézorgues), à la main
 npm run defibrillateurs / npm run finances
                        Relit Géo'DAE / les comptes OFGL (automatique chaque semaine)
+npm run worker:test    Test du Worker de données en direct (--direct : API réelles)
+npm run worker:deploy  Déploie le Worker (compte Cloudflare, voir worker/README.md)
 npm run zonage         Plan de zonage du PLU — sans objet tant que Juvinas n'a pas de PLU
 npm run carte:tourisme Fond de la carte Tourisme, après saisie de content/tourisme-sites.json
 npm run pv:importer -- <dossier> [--essai]

@@ -170,10 +170,10 @@
   ],
   "administration": {
     "urlBase": "https://admin.juvinas.invalid",
-    "_note": "Placeholder — aucun Worker Cloudflare n'est déployé pour Juvinas. Les formulaires d'abonnement et de vote en direct sont visibles mais inertes tant que ce composant serveur n'existe pas (voir worker/README.md du dépôt Lecques pour le principe)."
+    "_note": "Adresse du Worker « données en direct » (worker/README.md). Tant qu'elle se termine par .invalid, le Worker n'est pas déployé : les widgets en direct restent des liens vers les services officiels, sans aucune requête."
   },
   "riviere": {
-    "_lisezmoi": "Cours d'eau de la commune, affiché sur la page Risques et sécurité (hauteur en direct via le Worker, route /vidourle — dormante tant qu'aucun Worker n'est déployé pour Juvinas). Bézorgues et Bésorgues désignent la même rivière : le site emploie « Bézorgues » (Sandre, Wikipédia, OpenStreetMap) ; « Bésorgues » reste dans les noms propres, comme la commune voisine Labastide-sur-Bésorgues.",
+    "_lisezmoi": "Cours d'eau de la commune, affiché sur la page Risques et sécurité. Aucune station Vigicrues ne mesure la Bézorgues : la hauteur en direct (Worker, route /vidourle) porte sur les deux stations en service les plus proches, listées ici et dans worker/donnees-publiques.mjs (à garder identiques). Bézorgues et Bésorgues désignent la même rivière : le site emploie « Bézorgues » (Sandre, Wikipédia, OpenStreetMap) ; « Bésorgues » reste dans les noms propres, comme la commune voisine Labastide-sur-Bésorgues.",
     "nom": "La Bézorgues",
     "nomsOsm": [
       "La Bézorgues",
@@ -182,11 +182,23 @@
       "Bésorgues"
     ],
     "ancre": "les-crues-et-les-orages",
-    "stations": [],
+    "stations": [
+      {
+        "code": "V501521001",
+        "nom": "Vals-les-Bains",
+        "position": "La Volane, dans laquelle se jette la Bézorgues"
+      },
+      {
+        "code": "V501403001",
+        "nom": "Ucel",
+        "position": "L'Ardèche, en aval de la Volane"
+      }
+    ],
     "fichePratique": {
       "titre": "Crue et orages violents",
       "texte": "Ne vous engagez jamais sur une route inondée ou un gué. Consultez la vigilance de Météo-France et la situation des cours d'eau sur vigicrues.gouv.fr, et suivez les consignes de la mairie."
-    }
+    },
+    "titreDirect": "Les rivières voisines en direct"
   },
   "situation": {
     "lienRoutes": "https://www.inforoutes-ardeche.fr/",
