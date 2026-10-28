@@ -53,7 +53,12 @@ ok('deux stations suivies, codes uniques', () => assert.equal(new Set(STATIONS_R
   const d = await worker.fetch(new Request('https://x.test/desabonnement', { method: 'POST', headers: { Referer: 'https://exemple.evil/x' } }), {}, {});
   assert.ok((await d.text()).includes('href="https://aynaud.github.io"'), 'retour limité aux sites de la mairie');
   assert.equal((await worker.fetch(new Request('https://x.test/abonnement'), {}, {})).status, 404);
-  n += 3; console.log('  ✓ POST /abonnement et /desabonnement : message, retour limité aux sites de la mairie, GET refusé');
+  const v = await worker.fetch(new Request('https://x.test/consultation/piscine-2026/voter', { method: 'POST', body: new URLSearchParams({ optionId: 'oui', commentaire: 'secret' }) }), {}, {});
+  const tv = await v.text();
+  assert.equal(v.status, 200);
+  assert.ok(tv.includes('Service en cours de préparation, merci pour votre attente !'));
+  assert.ok(tv.includes("Votre réponse n'a pas été enregistrée") && !tv.includes('secret'));
+  n += 4; console.log('  ✓ POST /abonnement, /desabonnement et vote : message, retour limité aux sites de la mairie, GET refusé');
 }
 
 if (process.argv.includes('--direct')) {

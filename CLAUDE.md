@@ -138,7 +138,8 @@ Horaires de car en temps réel : `site.transport`, absent.
   avec secrets et comptes GitHub/Brevo et un sous-domaine d'email à créer. Tant qu'il n'existe pas, `content/actualites.json`,
   `content/documents.json` et le formulaire d'abonnement se modifient à la main ; le formulaire
   d'abonnement reste visible mais le Worker répond « Service en cours de préparation, merci pour
-  votre attente ! » sans rien enregistrer.
+  votre attente ! » sans rien enregistrer, comme pour le vote des consultations (aucune consultation
+  n'est publiée pour l'instant).
 - Le déploiement OVH/Cloudflare, le guide Word de l'habitant et le plan de zonage du PLU
   (**Juvinas n'a pas de PLU** : commune au règlement national d'urbanisme, vérifié sur l'API Carto du
   Géoportail de l'urbanisme).

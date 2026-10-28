@@ -1,9 +1,10 @@
 /* =====================================================================
    Abonnement aux actualités et désabonnement : les formulaires de
-   /vie-locale/abonnement.html envoient ici. Le service d'envoi de
-   courriels de Lecques (inscription confirmée, lien de désabonnement,
-   Brevo) n'est pas porté à Juvinas : le Worker répond donc une page qui
-   le dit, sans lire, garder ni transmettre l'adresse saisie.
+   /vie-locale/abonnement.html et le vote des consultations citoyennes
+   envoient ici. Le service d'envoi de courriels de Lecques (inscription
+   confirmée, lien de désabonnement, Brevo) et le vote en ligne ne sont pas
+   portés à Juvinas : le Worker répond donc une page qui le dit, sans lire,
+   garder ni transmettre ce qui a été saisi (adresse, vote, commentaire).
 
    La réponse est une page complète (le formulaire est un envoi classique,
    il fonctionne sans JavaScript). Elle ne charge rien d'extérieur.
@@ -25,7 +26,10 @@ function adresseRetour(request) {
 
 const echapper = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-export function pageServiceEnPreparation(request) {
+export const DETAIL_ABONNEMENT = "Votre adresse n'a pas été enregistrée. Les actualités de la mairie restent consultables sur le site.";
+export const DETAIL_VOTE = "Votre réponse n'a pas été enregistrée. La consultation reste lisible sur le site.";
+
+export function pageServiceEnPreparation(request, detail = DETAIL_ABONNEMENT) {
   const retour = adresseRetour(request);
   const html = `<!doctype html>
 <html lang="fr">
@@ -46,7 +50,7 @@ export function pageServiceEnPreparation(request) {
 <body>
 <main>
   <h1>${echapper(MESSAGE_SERVICE_EN_PREPARATION)}</h1>
-  <p>Votre adresse n'a pas été enregistrée. Les actualités de la mairie restent consultables sur le site.</p>
+  <p>${echapper(detail)}</p>
   <a href="${echapper(retour)}">Revenir au site</a>
 </main>
 </body>
