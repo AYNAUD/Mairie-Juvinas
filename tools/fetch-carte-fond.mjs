@@ -9,7 +9,7 @@
    sans aucun appel réseau : la page publiée ne parle à aucun service de
    cartographie tiers, conformément à la règle "zéro requête tierce".
    ===================================================================== */
-import { writeFileSync } from 'node:fs';
+import { readFileSync, existsSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -36,7 +36,7 @@ async function requeteOverpass(ql, tentative = 1) {
     body: `data=${encodeURIComponent(ql)}`
   });
   if (!r.ok) {
-    if ((r.status === 504 || r.status === 429) && tentative < 4) {
+    if ([429, 502, 503, 504].includes(r.status) && tentative < 5) {
       console.log(`  (${r.status}, nouvelle tentative dans ${tentative * 5}s…)`);
       await attendre(tentative * 5000);
       return requeteOverpass(ql, tentative + 1);
@@ -137,8 +137,17 @@ const lieux = lieuxBruts.elements
     nom: e.tags.name,
     type: e.tags.place === 'village' ? 'village' : 'hameau',
     position: [arrondi(e.lon ?? e.center.lon), arrondi(e.lat ?? e.center.lat)]
-  }))
-  .sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
+  }));
+
+// Lieux que OpenStreetMap ne classe pas comme village ou hameau mais qui en
+// sont (content/carte-lieux-complements.json) : ajoutés, sans doublon de nom.
+const fichierComplements = join(RACINE, 'content/carte-lieux-complements.json');
+if (existsSync(fichierComplements)) {
+  for (const c of JSON.parse(readFileSync(fichierComplements, 'utf8')).lieux || []) {
+    if (!lieux.some((l) => l.nom === c.nom)) lieux.push({ nom: c.nom, type: c.type, position: c.position });
+  }
+}
+lieux.sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
 
 // La Bésorgues traverse une bien plus vaste zone que la commune : la requête
 // par boîte englobante renvoie la géométrie COMPLÈTE des voies qui la

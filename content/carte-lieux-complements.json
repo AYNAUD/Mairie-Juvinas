@@ -1,0 +1,11 @@
+{
+  "_lisezmoi": "Hameaux et lieux habités à faire figurer sur la carte du territoire (page « Découvrir Juvinas ») alors qu'OpenStreetMap ne les classe pas comme tels : le script « npm run carte » (tools/fetch-carte-fond.mjs) les ajoute à ceux qu'il relève. type : « hameau » ou « village ». position : [longitude, latitude]. source : d'où vient la position. Ne pas y mettre un lieu dont la position n'est pas vérifiée.",
+  "lieux": [
+    {
+      "nom": "Moulin Lacoste",
+      "type": "hameau",
+      "position": [4.31803, 44.71154],
+      "source": "point nommé « Moulin Lacoste » dans OpenStreetMap (n°9995368993), sans étiquette de hameau ; signalé comme hameau par la mairie"
+    }
+  ]
+}

@@ -177,9 +177,10 @@ Rien de ce site n'a été relu par la mairie de Juvinas. Niveau de confiance des
 - **Accueil** : la carte « Un nom connu jusque dans l'espace » (`site.accueil.identite`) met en
   avant la météorite de Juvinas ; la galerie « Juvinas en images » porte les deux photos fournies.
 - **Carte du territoire** (page « Découvrir Juvinas ») : contour, routes, Bézorgues, village et
-  8 hameaux nommés, dessinés depuis `content/carte-fond.json` (relevé OpenStreetMap). Les noms des
-  hameaux sont ceux d'OpenStreetMap, la commune n'en publiant pas de liste officielle : à faire relire
-  par la mairie (la page de présentation parle de « neuf hameaux » d'après Wikipédia, sans les nommer).
+  9 hameaux nommés, dessinés depuis `content/carte-fond.json` (relevé OpenStreetMap, plus
+  `content/carte-lieux-complements.json` pour Moulin Lacoste, que la mairie a signalé et qu'OpenStreetMap
+  ne classe pas comme hameau). La commune ne publiant pas de liste officielle, les noms sont à faire
+  relire par la mairie (la page de présentation parle de « neuf hameaux » d'après Wikipédia, sans les nommer).
 - **Photos** : seules `mairie` et `village` existent (`public/img/`). Le fichier brut
   `public/img/Village_juvinas.jpg` (1914 × 1280, original de la photo du village) est versionné mais non
   référencé : les versions du site sont `village-700.jpg` et `village-1200.jpg`.

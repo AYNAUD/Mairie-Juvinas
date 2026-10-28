@@ -1283,7 +1283,7 @@ function carteCommune(ctx) {
           <span><span class="carte-commune__trait" aria-hidden="true"></span>Routes de liaison</span>
           ${nomRiviere ? `<span><span class="carte-lecques__trait carte-lecques__trait--riviere" aria-hidden="true"></span>${esc(nomRiviere)}</span>` : ''}
         </p>
-        <p class="carte__detail">Les noms des hameaux sont ceux relevés par les contributeurs d'${lien('https://www.openstreetmap.org/copyright', 'OpenStreetMap')} : la commune n'en publie pas de liste officielle. Fond de carte : routes et limites d'OpenStreetMap, mises à jour le ${dateFr(carteFond.misAJour)}.</p>
+        <p class="carte__detail">Les noms des hameaux sont ceux relevés par les contributeurs d'${lien('https://www.openstreetmap.org/copyright', 'OpenStreetMap')}, complétés par la mairie : la commune n'en publie pas de liste officielle. Fond de carte : routes et limites d'OpenStreetMap, mises à jour le ${dateFr(carteFond.misAJour)}.</p>
       </figcaption>
     </figure>
     <p><strong>Village et hameaux :</strong> ${liste.map((l) => esc(l.nom)).join(', ')}.</p>
