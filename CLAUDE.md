@@ -176,6 +176,10 @@ Rien de ce site n'a été relu par la mairie de Juvinas. Niveau de confiance des
   pas le logo de la commune : à remplacer par le logo officiel si la mairie en possède un.
 - **Accueil** : la carte « Un nom connu jusque dans l'espace » (`site.accueil.identite`) met en
   avant la météorite de Juvinas ; la galerie « Juvinas en images » porte les deux photos fournies.
+- **Carte du territoire** (page « Découvrir Juvinas ») : contour, routes, Bézorgues, village et
+  8 hameaux nommés, dessinés depuis `content/carte-fond.json` (relevé OpenStreetMap). Les noms des
+  hameaux sont ceux d'OpenStreetMap, la commune n'en publiant pas de liste officielle : à faire relire
+  par la mairie (la page de présentation parle de « neuf hameaux » d'après Wikipédia, sans les nommer).
 - **Photos** : seules `mairie` et `village` existent (`public/img/`). Le fichier brut
   `public/img/Village_juvinas.jpg` (1914 × 1280, original de la photo du village) est versionné mais non
   référencé : les versions du site sont `village-700.jpg` et `village-1200.jpg`.
@@ -200,7 +204,7 @@ npm run dev            Génère puis sert dist/ sur http://localhost:4173 (PORT=
 npm run check          Build + contrôles complets + test de pertinence de la recherche
 npm test               Test de pertinence de la recherche seul
 npm run entreprises    Relit le répertoire Sirene (automatique chaque nuit)
-npm run carte          Refait le fond de carte (contour, voirie, Bézorgues), à la main
+npm run carte          Refait le fond de carte (contour, voirie, Bézorgues, village et hameaux), à la main
 npm run defibrillateurs / npm run finances
                        Relit Géo'DAE / les comptes OFGL (automatique chaque semaine)
 npm run worker:test    Test du Worker de données en direct (--direct : API réelles)

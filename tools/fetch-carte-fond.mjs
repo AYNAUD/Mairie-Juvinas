@@ -15,7 +15,7 @@ import { fileURLToPath } from 'node:url';
 
 const RACINE = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CODE_INSEE = '07111';
-const OVERPASS = 'https://overpass-api.de/api/interpreter';
+const OVERPASS = process.env.OVERPASS_URL || 'https://overpass-api.de/api/interpreter';
 
 const attendre = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -117,9 +117,28 @@ const PRINCIPALES = ['primary', 'secondary', 'tertiary'];
 const routes = routesBrutes.elements
   .map((w) => ({
     points: simplifier(w.geometry.map((p) => [p.lon, p.lat]), 0.00003).map(([lon, lat]) => [arrondi(lon), arrondi(lat)]),
-    nom: PRINCIPALES.includes(w.tags.highway) ? (w.tags.name || null) : null
+    nom: PRINCIPALES.includes(w.tags.highway) ? (w.tags.name || null) : null,
+    // Sert à la carte simplifiée de la commune (page « Découvrir Juvinas »),
+    // qui ne trace en gras que les routes de liaison.
+    principale: PRINCIPALES.includes(w.tags.highway)
   }))
   .filter((r) => r.points.length >= 2);
+
+// Villages et hameaux de la commune, avec leur nom d'usage : la liste
+// officielle des hameaux n'est pas publiée en données ouvertes, OpenStreetMap
+// (relevé par les habitants et les cartographes) est la seule source locale
+// utilisable. Seuls les lieux typés village ou hameau sont gardés, pas les
+// habitations isolées ni les lieux-dits (granges, quartiers).
+const lieuxBruts = await requeteOverpass(
+  `[out:json][timeout:25];rel["boundary"="administrative"]["admin_level"="8"]["ref:INSEE"="${CODE_INSEE}"];map_to_area->.c;nwr["place"~"^(village|hamlet)$"]["name"](area.c);out center tags;`
+);
+const lieux = lieuxBruts.elements
+  .map((e) => ({
+    nom: e.tags.name,
+    type: e.tags.place === 'village' ? 'village' : 'hameau',
+    position: [arrondi(e.lon ?? e.center.lon), arrondi(e.lat ?? e.center.lat)]
+  }))
+  .sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
 
 // La Bésorgues traverse une bien plus vaste zone que la commune : la requête
 // par boîte englobante renvoie la géométrie COMPLÈTE des voies qui la
@@ -154,11 +173,13 @@ const sortie = {
   bbox: { minlat: arrondi(minlat), maxlat: arrondi(maxlat), minlon: arrondi(minlon), maxlon: arrondi(maxlon) },
   communeContour: contour,
   routes,
-  riviere
+  riviere,
+  lieux
 };
 
 writeFileSync(join(RACINE, 'content/carte-fond.json'), JSON.stringify(sortie) + '\n');
 console.log(`  Contour communal : ${contour.length} points (${contourBrut.length} avant simplification)`);
 console.log(`  Voirie : ${routes.length} tronçons, dont ${routes.filter((r) => r.nom).length} nommés (voies principales)`);
+console.log(`  Villages et hameaux : ${lieux.map((l) => l.nom).join(', ')}`);
 console.log(`  Bésorgues : ${riviere.length} tronçon(s) dans la zone`);
 console.log('  → content/carte-fond.json mis à jour\n');

@@ -1131,3 +1131,29 @@ body { padding-block-end: 3.5rem; }
 .cases li { display: flex; align-items: center; gap: var(--e2); min-block-size: var(--cible); }
 .cases input { inline-size: 1.25rem; block-size: 1.25rem; margin: 0; flex-shrink: 0; accent-color: var(--accent); }
 .cases label { cursor: pointer; }
+
+/* --- Carte simplifiée du territoire (views.mjs, carteCommune) ------------
+   Le dessin défile dans son propre cadre sur petit écran plutôt que de
+   rétrécir ses noms jusqu'à l'illisible : la page, elle, ne défile jamais. */
+.carte-commune { margin-block: var(--e4); }
+.carte-commune__figure { margin: 0; display: grid; gap: var(--e2); }
+.carte-commune__cadre {
+  overflow-x: auto; border: 2px solid var(--bordure-forte); border-radius: var(--rayon);
+  background: var(--fond-carte); box-shadow: var(--ombre);
+}
+.carte-commune__cadre svg { display: block; inline-size: 100%; min-inline-size: 36rem; block-size: auto; }
+.carte-commune__principales {
+  fill: none; stroke: var(--texte-doux); stroke-width: 2.4;
+  stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke;
+}
+.carte-commune__points circle { fill: var(--accent); stroke: var(--fond-carte); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.carte-commune__noms text {
+  font-size: 14px; fill: var(--texte); dominant-baseline: auto;
+  paint-order: stroke; stroke: var(--fond-carte); stroke-width: 3.5px; stroke-linejoin: round;
+}
+.carte-commune__noms .carte-commune__nom--village { font-size: 16px; font-weight: 700; }
+.carte-commune__echelle path { fill: none; stroke: var(--texte); stroke-width: 1.5; }
+.carte-commune__echelle text { font-size: 12px; fill: var(--texte); paint-order: stroke; stroke: var(--fond-carte); stroke-width: 3px; }
+.carte-commune__glisser { margin: 0; font-size: var(--t-petit); color: var(--texte-doux); }
+.carte-commune__puce { inline-size: .75rem; block-size: .75rem; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.carte-commune__trait { inline-size: 1.25rem; block-size: 0; border-block-start: 3px solid var(--texte-doux); flex-shrink: 0; }

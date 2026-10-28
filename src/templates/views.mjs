@@ -1203,6 +1203,93 @@ function carteTourisme(ctx) {
   ${carte ? '<script src="/assets/carte-tourisme.js" defer></script>' : ''}`;
 }
 
+// Carte simplifiée du territoire de la commune, sur la page « Découvrir
+// Juvinas » : contour, routes (les routes de liaison en plus gras), cours
+// d'eau, village et hameaux nommés. Mêmes données que la carte des acteurs
+// économiques (content/carte-fond.json, relevé OpenStreetMap par
+// tools/fetch-carte-fond.mjs) et même projection faite à la main : aucun
+// service de cartographie n'est appelé par le navigateur. Les noms sont
+// aussi donnés en liste sous la carte : le dessin seul n'est pas une
+// alternative textuelle.
+function carteCommune(ctx) {
+  const { carteFond, site } = ctx;
+  if (!carteFond || !carteFond.communeContour || !carteFond.communeContour.length || !(carteFond.lieux || []).length) return '';
+  const { bbox, communeContour, routes, riviere, lieux } = carteFond;
+  const mLat = 111320;
+  const mLon = 111320 * Math.cos((((bbox.minlat + bbox.maxlat) / 2) * Math.PI) / 180);
+  const MARGE = 24;
+  const echelle = (700 - 2 * MARGE) / ((bbox.maxlon - bbox.minlon) * mLon);
+  const LARGEUR = 700;
+  const HAUTEUR = Math.round((bbox.maxlat - bbox.minlat) * mLat * echelle + 2 * MARGE);
+  const proj = ([lon, lat]) => [Math.round(MARGE + (lon - bbox.minlon) * mLon * echelle), Math.round(MARGE + (bbox.maxlat - lat) * mLat * echelle)];
+  const trace = (pts) => pts.map((p) => proj(p).join(',')).join(' ');
+
+  const contour = trace(communeContour);
+  const principales = routes.filter((r) => r.principale).map((r) => `<polyline points="${trace(r.points)}"/>`).join('');
+  const locales = routes.filter((r) => !r.principale).map((r) => `<polyline points="${trace(r.points)}"/>`).join('');
+  const eau = (riviere || []).map((r) => `<polyline points="${trace(r)}"/>`).join('');
+
+  // Noms posés au plus près du point, du côté où il reste de la place : à
+  // droite, à gauche, au-dessus ou en dessous, sans recouvrir un autre nom
+  // ni un autre point (largeur estimée : 7,5 unités par lettre à 14 px).
+  const points = lieux.map((l) => ({ ...l, xy: proj(l.position), chef: l.type === 'village' && l.nom === site.commune.nom }));
+  const occupes = points.map((l) => ({ x1: l.xy[0] - 8, x2: l.xy[0] + 8, y1: l.xy[1] - 8, y2: l.xy[1] + 8 }));
+  const mairie = proj([site.mairie.longitude, site.mairie.latitude]);
+  occupes.push({ x1: mairie[0] - 10, x2: mairie[0] + 10, y1: mairie[1] - 10, y2: mairie[1] + 10 });
+  const croise = (a, b) => a.x1 < b.x2 && a.x2 > b.x1 && a.y1 < b.y2 && a.y2 > b.y1;
+  const noms = [...points].sort((a, b) => b.chef - a.chef).map((l) => {
+    const libelle = l.chef ? `${l.nom} — le village` : l.nom;
+    const w = libelle.length * (l.chef ? 8.4 : 7.5), h = 16, [x, y] = l.xy;
+    const options = [
+      { x: x + 11, y: y + 5, ancre: 'start', boite: { x1: x + 9, x2: x + 13 + w, y1: y - h / 2, y2: y + h / 2 } },
+      { x: x - 11, y: y + 5, ancre: 'end', boite: { x1: x - 13 - w, x2: x - 9, y1: y - h / 2, y2: y + h / 2 } },
+      { x, y: y + 24, ancre: 'middle', boite: { x1: x - w / 2, x2: x + w / 2, y1: y + 10, y2: y + 10 + h } },
+      { x, y: y - 14, ancre: 'middle', boite: { x1: x - w / 2, x2: x + w / 2, y1: y - 14 - h, y2: y - 8 } }
+    ];
+    const libre = (o) => o.boite.x1 >= 2 && o.boite.x2 <= LARGEUR - 2 && o.boite.y1 >= 2 && o.boite.y2 <= HAUTEUR - 2 && !occupes.some((b) => croise(o.boite, b));
+    const choix = options.find(libre) || options[0];
+    occupes.push(choix.boite);
+    return `<text x="${Math.round(choix.x)}" y="${Math.round(choix.y)}" text-anchor="${choix.ancre}"${l.chef ? ' class="carte-commune__nom--village"' : ''}>${esc(libelle)}</text>`;
+  }).join('');
+
+  const dots = points.map((l) => `<circle cx="${l.xy[0]}" cy="${l.xy[1]}" r="${l.chef ? 6 : 4.5}"/>`).join('');
+  const km = 1000 * echelle; // longueur de 1 km sur le dessin
+  const nomRiviere = (site.riviere && site.riviere.nom) || '';
+  const liste = [...lieux].sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
+
+  return `<div class="carte-commune">
+    <h3 id="carte-commune-titre">Le territoire de la commune</h3>
+    <figure class="carte-commune__figure">
+      <div class="carte-commune__cadre" tabindex="0" role="region" aria-labelledby="carte-commune-titre">
+        <svg viewBox="0 0 ${LARGEUR} ${HAUTEUR}" role="img" aria-label="Carte simplifiée de la commune de ${esc(site.commune.nom)} : contour de la commune, routes${nomRiviere ? `, ${esc(nomRiviere)}` : ''}, village et hameaux. Leurs noms sont listés sous la carte.">
+          <defs><clipPath id="carte-commune-limite"><polygon points="${contour}"/></clipPath></defs>
+          <polygon class="carte-lecques__contour" points="${contour}"/>
+          <g clip-path="url(#carte-commune-limite)">
+            <g class="carte-lecques__routes">${locales}</g>
+            <g class="carte-commune__principales">${principales}</g>
+            <g class="carte-lecques__riviere">${eau}</g>
+          </g>
+          <g class="carte-commune__points">${dots}</g>
+          <circle cx="${mairie[0]}" cy="${mairie[1]}" r="9" class="carte-lecques__mairie-halo"/><circle cx="${mairie[0]}" cy="${mairie[1]}" r="3.5" class="carte-lecques__mairie-point"/>
+          <g class="carte-commune__noms">${noms}</g>
+          <g class="carte-commune__echelle"><path d="M${MARGE} ${HAUTEUR - 14}h${Math.round(km)}M${MARGE} ${HAUTEUR - 19}v10M${MARGE + Math.round(km)} ${HAUTEUR - 19}v10"/><text x="${MARGE + Math.round(km) + 8}" y="${HAUTEUR - 9}">1 km</text></g>
+        </svg>
+      </div>
+      <figcaption>
+        <p class="carte-commune__glisser">Faites glisser la carte pour voir tout le territoire.</p>
+        <p class="carte-lecques__legende">
+          <span><span class="carte-commune__puce" aria-hidden="true"></span>Village et hameaux</span>
+          <span><span class="carte-lecques__puce carte-lecques__puce--mairie" aria-hidden="true"></span>Mairie</span>
+          <span><span class="carte-commune__trait" aria-hidden="true"></span>Routes de liaison</span>
+          ${nomRiviere ? `<span><span class="carte-lecques__trait carte-lecques__trait--riviere" aria-hidden="true"></span>${esc(nomRiviere)}</span>` : ''}
+        </p>
+        <p class="carte__detail">Les noms des hameaux sont ceux relevés par les contributeurs d'${lien('https://www.openstreetmap.org/copyright', 'OpenStreetMap')} : la commune n'en publie pas de liste officielle. Fond de carte : routes et limites d'OpenStreetMap, mises à jour le ${dateFr(carteFond.misAJour)}.</p>
+      </figcaption>
+    </figure>
+    <p><strong>Village et hameaux :</strong> ${liste.map((l) => esc(l.nom)).join(', ')}.</p>
+  </div>`;
+}
+
 function insererApresSection(html, ancreSection, widget) {
   const debut = html.indexOf(`id="${ancreSection}"`);
   if (debut === -1) return html + widget;
@@ -1217,6 +1304,7 @@ export function pageMarkdown(ctx, p) {
   let { html, sommaire } = rendre(p.corps);
   if (p.slug === 'transports') html = insererApresSection(html, 'les-cars-lio', widgetTransportLio(ctx));
   if (p.slug === 'urbanisme') html = insererApresSection(html, 'avant-tout-projet-consultez-le-plu', planZonage(ctx));
+  if (p.slug === 'commune') html = insererApresSection(html, 'une-commune-de-moyenne-montagne-en-ardeche', carteCommune(ctx));
   if (p.slug === 'tourisme') html = insererApresSection(html, `autour-de-${site.commune.nom.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-')}`, carteTourisme(ctx));
   if (p.slug === 'eau') {
     html = insererApresSection(html, 'l-eau-potable', widgetQualiteEau(ctx));
