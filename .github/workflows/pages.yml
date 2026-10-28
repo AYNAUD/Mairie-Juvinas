@@ -1,0 +1,51 @@
+name: Publier le site de test
+
+# Publie dist/ sur GitHub Pages (https://aynaud.github.io/Mairie-Juvinas/).
+# C'est un site de TEST : contenu non relu par la mairie, non référencé
+# (robots.txt et meta noindex ajoutés par tools/prefixer.mjs). Le vrai
+# déploiement dépendra du nom de domaine choisi (voir CLAUDE.md).
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deployer:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - run: npm ci
+
+      - name: Contrôles complets
+        run: npm run check
+
+      - name: Préfixer les chemins pour le sous-chemin du dépôt
+        run: BASE_PATH=/${{ github.event.repository.name }} node tools/prefixer.mjs --noindex
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - id: deploiement
+        uses: actions/deploy-pages@v4
