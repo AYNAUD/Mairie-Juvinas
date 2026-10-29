@@ -1,5 +1,5 @@
 {
-  "misAJour": "2026-09-18",
+  "misAJour": "2026-10-29",
   "source": "https://recherche-entreprises.api.gouv.fr/search",
   "entreprises": [
     {
@@ -43,6 +43,20 @@
       "icone": "feu",
       "association": false,
       "dateCreation": "2023-03-09"
+    },
+    {
+      "siren": "851660464",
+      "siret": "85166046400021",
+      "nom": "ANISSA BELAKBIR (LE CHANT DES MONTS)",
+      "enseigne": "LE CHANT DES MONTS",
+      "adresse": "219 ROUTE DU PRADEL 07600 JUVINAS",
+      "lat": 44.697788985,
+      "lon": 4.3270060127,
+      "naf": "01.29Z",
+      "nafLibelle": "Culture et production animale, chasse et services annexes",
+      "icone": "vegetal",
+      "association": false,
+      "dateCreation": "2023-10-18"
     },
     {
       "siren": "893629139",
@@ -277,20 +291,6 @@
       "lat": 44.718544149,
       "lon": 4.3135773422,
       "naf": "01.24Z",
-      "nafLibelle": "Culture et production animale, chasse et services annexes",
-      "icone": "vegetal",
-      "association": false,
-      "dateCreation": "2008-01-01"
-    },
-    {
-      "siren": "407734540",
-      "siret": "40773454000013",
-      "nom": "HERVE LUROIS",
-      "enseigne": null,
-      "adresse": "HAUTE BLACHERE 07600 JUVINAS",
-      "lat": null,
-      "lon": null,
-      "naf": "01.43Z",
       "nafLibelle": "Culture et production animale, chasse et services annexes",
       "icone": "vegetal",
       "association": false,
