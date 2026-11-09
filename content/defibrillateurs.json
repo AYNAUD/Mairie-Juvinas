@@ -1,5 +1,5 @@
 {
-  "misAJour": "2026-10-28",
+  "misAJour": "2026-11-09",
   "source": "Géo'DAE — Base nationale des défibrillateurs (ministère de la Santé), via data.gouv.fr",
   "rayonKm": 8,
   "defibrillateurs": [
@@ -31,7 +31,7 @@
       "adresse": "30 route du pont des issoux",
       "acces": "intérieur",
       "precision": "salle des fêtes hall d'entrée - Selon évènements",
-      "horaires": null,
+      "horaires": "OFF",
       "latitude": 44.651493,
       "longitude": 4.322413,
       "distanceKm": 6.7
@@ -64,7 +64,7 @@
       "adresse": "5 Place de la gare",
       "acces": "intérieur",
       "precision": "Face au comptoir d'entrée - Selon évènements",
-      "horaires": null,
+      "horaires": "OFF",
       "latitude": 44.64565,
       "longitude": 4.326387,
       "distanceKm": 7.4
