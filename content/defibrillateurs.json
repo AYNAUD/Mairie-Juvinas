@@ -1,5 +1,5 @@
 {
-  "misAJour": "2026-11-09",
+  "misAJour": "2026-11-16",
   "source": "Géo'DAE — Base nationale des défibrillateurs (ministère de la Santé), via data.gouv.fr",
   "rayonKm": 8,
   "defibrillateurs": [
@@ -9,7 +9,7 @@
       "adresse": "815 Quartier Champagne les Soubeyrols",
       "acces": "intérieur",
       "precision": "Après le comptoir d’accueil - L au V 7h30/12h 13h30/17h30 S 8h30/11h30",
-      "horaires": null,
+      "horaires": "lun. 7h30-12h,13h30-17h30 ; mar. 7h30-12h,13h30-17h30 ; mer. 7h30-12h,13h30-17h30 ; jeu. 7h30-12h,13h30-17h30 ; ven. 7h30-12h,13h30-17h30 ; sam. 8h30-11h30",
       "latitude": 44.701942,
       "longitude": 4.225555,
       "distanceKm": 6.5
@@ -42,7 +42,7 @@
       "adresse": "10 -12 avenue Centrale",
       "acces": "intérieur",
       "precision": "Hall mairie - L au V 07h30 / 17h30",
-      "horaires": null,
+      "horaires": "lun. 7h30-17h30 ; mar. 7h30-17h30 ; mer. 7h30-17h30 ; jeu. 7h30-17h30 ; ven. 7h30-17h30",
       "latitude": 44.64997,
       "longitude": 4.322162,
       "distanceKm": 6.9
@@ -53,7 +53,7 @@
       "adresse": "21 rue jean jaurès",
       "acces": "intérieur",
       "precision": "dans la pièce centrale ou d'activités - Jeudi 14h30/16h30",
-      "horaires": null,
+      "horaires": "jeu. 14h30-16h30",
       "latitude": 44.664577,
       "longitude": 4.365535,
       "distanceKm": 6.9
